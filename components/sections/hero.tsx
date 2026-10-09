@@ -1,6 +1,7 @@
 import { ArrowDownIcon, ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 
+import { HeroVisual } from "@/components/motion/hero-visual";
 import { Button } from "@/components/ui/button";
 import { brand, hero, primaryCta } from "@/content/data";
 
@@ -60,7 +61,7 @@ export function Hero() {
         </div>
 
         <div className={`${enter} delay-300`}>
-          <SystemsDiagram />
+          <HeroVisual fallback={<SystemsDiagram />} />
         </div>
       </div>
     </section>

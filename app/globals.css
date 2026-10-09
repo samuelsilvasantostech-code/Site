@@ -245,6 +245,29 @@
     mask-image: linear-gradient(to bottom, #000 45%, transparent 100%);
   }
 
+  /* Cards com inclinação 3D (componente Tilt). */
+  .tilt {
+    transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transition: transform 300ms var(--ease);
+    will-change: transform;
+  }
+  .tilt-glare {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-lg);
+    background: radial-gradient(
+      420px circle at var(--mx, 50%) var(--my, 50%),
+      color-mix(in srgb, var(--grad-to) 16%, transparent),
+      transparent 45%
+    );
+    opacity: 0;
+    transition: opacity 300ms var(--ease);
+  }
+  .tilt:hover .tilt-glare {
+    opacity: 1;
+  }
+
   /* Bordas laterais esmaecidas na faixa de logos. */
   .marquee-mask {
     mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);

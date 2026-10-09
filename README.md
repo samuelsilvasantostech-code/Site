@@ -23,7 +23,7 @@ Endereços antigos `/cases/*` redirecionam para `/projetos/*`.
 
 ## Stack
 
-Next.js 16 (App Router, Cache Components) · React 19 · TypeScript strict · Tailwind CSS 4 · shadcn/ui · GSAP · react-hook-form + zod · Lucide · Vercel Analytics e Speed Insights · Playwright + axe-core · ESLint, Prettier, Husky, lint-staged, commitlint.
+Next.js 16 (App Router, Cache Components) · React 19 · TypeScript strict · Tailwind CSS 4 · shadcn/ui · GSAP · three.js (React Three Fiber) · react-hook-form + zod · Lucide · Vercel Analytics e Speed Insights · Playwright + axe-core · ESLint, Prettier, Husky, lint-staged, commitlint.
 
 ## Rodar localmente
 
@@ -104,7 +104,7 @@ components/
 ├── sections/            Seções das páginas
 ├── shared/              Cards de serviço e projeto, CTAs, seção, links rastreados
 ├── layout/              Header, rodapé, logo, menu de comandos, tema
-└── motion/              GSAP (fade-in no scroll, movimento reduzido)
+└── motion/              GSAP (fade-in no scroll), cena 3D do hero (three.js) e inclinação 3D dos cards
 content/data.ts          Todo o conteúdo
 lib/                     Constantes, schema zod, analytics, utilitários
 tests/                   Playwright + axe
