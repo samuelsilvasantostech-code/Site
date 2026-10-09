@@ -49,22 +49,36 @@ export type CaseStudy = {
   /** `true` exibe os passos numerados (use quando forem uma sequência). */
   stepsOrdered?: boolean;
   steps: string[];
-  /** Só números verificáveis. Deixe vazio quando não houver. */
+  /** O que a solução automatiza ou melhora (benefício operacional, sem números). */
+  benefit: string;
+  /** Serviço da SSNEX relacionado, para os links entre páginas. */
+  service: ServiceSlug;
+  /** Aparece na página inicial (escolha 3 ou 4). */
+  featured?: boolean;
+  /** Números de resultado. Só são exibidos com `metricsVerified: true`. */
   metrics: Metric[];
+  /**
+   * Confirme que os números foram medidos, em que período, e que podem ser
+   * publicados (sem dados de cliente) antes de marcar `true`.
+   */
+  metricsVerified: boolean;
   stack: string[];
 };
 
-export type IntegrationItem = { name: string; note: string };
-
-export type IntegrationGroup =
-  { name: string; items: IntegrationItem[] } | { name: string; chips: string[] };
+/** Tecnologias agrupadas por finalidade (sem parcerias ou certificações implícitas). */
+export type TechGroup = { name: string; purpose: string; items: string[] };
 
 export type ServiceSlug = "automacao" | "integracao" | "ia" | "consultoria";
 
 export type Service = {
   slug: ServiceSlug;
+  /** Automação e integração são o foco; IA e consultoria complementam. */
+  tier: "principal" | "complementar";
   icon: IconName;
   name: string;
+  /** Uma frase curta para a página inicial. */
+  summary: string;
+  /** Problema que o serviço resolve e como a SSNEX ajuda (página /servicos). */
   description: string;
   examples: string[];
   cta: string;
@@ -91,7 +105,7 @@ export const brand = {
 export const links = {
   email: "samuelsilvasantos.tech@gmail.com",
   /** Telefone para exibição e para o link "tel:". */
-  phone: "(38) 99747-2560",
+  phone: "+55 (38) 99747-2560",
   phoneHref: "tel:+5538997472560",
   /** wa.me/ + 55 + DDD + número, só dígitos. Deixe "" para ocultar o WhatsApp. */
   whatsapp: "https://wa.me/5538997472560",
@@ -114,7 +128,7 @@ export const profile = {
 };
 
 export const seo = {
-  title: `${brand.name} | Consultoria de tecnologia, automação e integração de sistemas`,
+  title: `${brand.name} | Automação de processos e integração de sistemas para empresas`,
   description:
     "Consultoria de tecnologia para pequenas e médias empresas: automação de processos, integração de sistemas e APIs, soluções com inteligência artificial e suporte tecnológico.",
   ogAlt: `${brand.name} ${brand.descriptor}: Your systems. More possibilities.`,
@@ -157,11 +171,14 @@ export const ui = {
   footerNav: "Rodapé",
   social: "Redes e contato",
   home: "Página inicial",
-  problem: "Problema",
-  approach: "Abordagem",
-  objective: "Objetivo",
+  problem: "Problema de negócio",
+  solution: "Solução",
+  benefit: "O que melhora",
+  flow: "Fluxo da integração",
+  relatedService: "Serviço relacionado",
+  relatedProjects: "Exemplos relacionados",
   implementation: "Implementação",
-  results: "Resultados",
+  results: "Resultado verificado",
   stack: "Tecnologias",
   allProjects: "Todos os projetos",
   previousProject: "Projeto anterior",
@@ -175,6 +192,7 @@ export const ui = {
   backHome: "Voltar ao início",
   search: "Buscar",
   whatsapp: "Falar no WhatsApp",
+  orWhatsapp: "Prefere conversar agora?",
   commandTitle: "Menu de comandos",
   commandDescription: "Navegue pelo site, abra um projeto ou entre em contato.",
   commandPlaceholder: "Digite um comando ou procure um projeto…",
@@ -190,7 +208,7 @@ export const hero = {
   headline: "Sua empresa pode trabalhar melhor. A tecnologia precisa acompanhar.",
   description:
     "Conectamos sistemas, automatizamos processos e desenvolvemos soluções digitais para empresas que querem operar com mais eficiência.",
-  secondaryCta: { label: "Conhecer soluções", href: "#servicos" },
+  secondaryCta: { label: "Conhecer soluções", href: "/servicos" },
   /** Rótulos da ilustração de sistemas conectados (decorativa). */
   diagram: {
     hub: brand.name,
@@ -199,48 +217,56 @@ export const hero = {
 };
 
 export const problems = {
-  headline: "Tecnologia para resolver problemas reais.",
-  intro: "Antes da ferramenta, vem o problema. Estes são os pontos em que a SSNEX costuma ajudar.",
+  headline: "Problemas que resolvemos",
+  intro: "Reconhece algum destes cenários na sua operação? Cada um tem um caminho prático.",
   cards: [
     {
       icon: "repeat" as IconName,
-      title: "Processos manuais",
-      description: "Automatize tarefas repetitivas e reduza retrabalho.",
+      title: "Processos manuais e repetitivos",
+      description:
+        "A equipe repete tarefas que poderiam rodar sozinhas, com risco de erro e atraso.",
+      solution: { label: "Automação de Processos", href: "/servicos#automacao" },
     },
     {
       icon: "unplug" as IconName,
-      title: "Sistemas desconectados",
-      description: "Integre plataformas e mantenha informações sincronizadas.",
+      title: "Sistemas que não se comunicam",
+      description: "O mesmo dado é digitado em mais de um sistema, e as informações não batem.",
+      solution: { label: "Integração de Sistemas", href: "/servicos#integracao" },
     },
     {
       icon: "database" as IconName,
-      title: "Dados dispersos",
-      description: "Organize informações e facilite o acompanhamento dos indicadores.",
+      title: "Informações espalhadas em diferentes plataformas",
+      description: "Os dados existem, mas estão em lugares diferentes e dão trabalho para juntar.",
+      solution: { label: "Integração de Sistemas", href: "/servicos#integracao" },
     },
     {
       icon: "network" as IconName,
-      title: "Operações complexas",
-      description: "Simplifique fluxos de trabalho e identifique oportunidades para aplicar IA.",
+      title: "Operações difíceis de acompanhar e controlar",
+      description: "Falta visibilidade sobre o que acontece no processo e onde ele trava.",
+      solution: { label: "Consultoria e Suporte Tecnológico", href: "/servicos#consultoria" },
     },
   ],
 };
 
 export const services: { headline: string; intro: string; items: Service[] } = {
-  headline: "Soluções tecnológicas para sua operação.",
+  headline: "Soluções tecnológicas para sua operação",
   intro:
-    "Quatro frentes que se combinam conforme a necessidade. O escopo é definido junto com você, antes de começar.",
+    "Automação e integração são o centro do trabalho. Inteligência artificial e consultoria entram quando agregam valor real.",
   items: [
     {
       slug: "automacao",
+      tier: "principal",
       icon: "workflow",
       name: "Automação de Processos",
+      summary: "Rotinas, notificações e fluxos que hoje dependem de alguém lembrar de fazer.",
       description:
-        "Desenvolvimento de fluxos automatizados para eliminar tarefas repetitivas e conectar etapas operacionais.",
+        "Tarefas repetitivas consomem tempo da equipe e abrem espaço para erros. Automatizamos atividades operacionais, notificações, fluxos de trabalho e rotinas de dados, com registro do que foi executado.",
       examples: [
-        "Automação de tarefas administrativas.",
-        "Workflows com ferramentas como n8n.",
-        "Notificações e processamento de solicitações.",
-        "Integração entre formulários, planilhas e sistemas.",
+        "Lembretes de cobrança automatizados.",
+        "Distribuição e qualificação de leads.",
+        "Comunicação automática com clientes.",
+        "Fluxos operacionais e notificações.",
+        "Sincronização de dados e tarefas agendadas.",
       ],
       cta: "Explorar automação",
       problems: [
@@ -250,32 +276,35 @@ export const services: { headline: string; intro: string; items: Service[] } = {
       ],
       deliverables: [
         "Mapeamento do processo atual e do fluxo automatizado proposto.",
-        "Workflows configurados e testados com dados reais.",
+        "Fluxos configurados e testados com dados reais.",
         "Registro das execuções e tratamento de falhas.",
         "Documentação de funcionamento e orientação à equipe.",
       ],
       included: [
         "Levantamento do processo dentro do escopo combinado.",
         "Desenvolvimento, testes e entrada em produção.",
-        "Ajustes durante o período de acompanhamento acordado.",
+        "Ajustes durante o acompanhamento combinado na proposta.",
       ],
       separate: [
         "Licenças de ferramentas e serviços de terceiros.",
         "Novos fluxos ou mudanças de escopo depois da entrega.",
-        "Suporte contínuo, contratado à parte.",
+        "Suporte contínuo, quando contratado.",
       ],
     },
     {
       slug: "integracao",
+      tier: "principal",
       icon: "plug",
       name: "Integração de Sistemas",
+      summary: "ERP, CRM, WhatsApp, pagamentos e bancos de dados trocando informações sozinhos.",
       description:
-        "Conexão entre aplicações e plataformas para reduzir operações duplicadas e melhorar a consistência dos dados.",
+        "Quando os sistemas não conversam, a equipe vira a ponte entre eles. Conectamos ERPs, CRMs, plataformas de mensagens, meios de pagamento, bancos de dados e aplicações por APIs, webhooks e plataformas de automação.",
       examples: [
-        "Integração de APIs.",
-        "CRM e plataformas de atendimento.",
-        "Sincronização de informações.",
-        "Tratamento de falhas e documentação técnica.",
+        "Integração entre ERP e CRM.",
+        "WhatsApp integrado aos sistemas da empresa.",
+        "Sincronização do status de pagamentos.",
+        "Criação e atualização automática de registros.",
+        "Centralização de dados de diferentes plataformas.",
       ],
       cta: "Explorar integrações",
       problems: [
@@ -297,20 +326,22 @@ export const services: { headline: string; intro: string; items: Service[] } = {
       separate: [
         "Custos de API, planos ou licenças dos sistemas envolvidos.",
         "Desenvolvimento dentro dos sistemas de terceiros.",
-        "Manutenção contínua, contratada à parte.",
+        "Manutenção contínua, quando contratada.",
       ],
     },
     {
       slug: "ia",
+      tier: "complementar",
       icon: "sparkles",
       name: "Soluções com Inteligência Artificial",
+      summary: "IA aplicada a tarefas específicas, quando ela traz valor de negócio.",
       description:
-        "Aplicação prática de IA em tarefas específicas, com atenção à confiabilidade, segurança e supervisão humana.",
+        "Nem todo projeto precisa de IA. Quando faz sentido, aplicamos inteligência artificial ao processamento de informações, ao atendimento assistido e à classificação de demandas, integrada aos sistemas que a empresa já usa e com supervisão humana.",
       examples: [
-        "Assistentes para tarefas empresariais.",
-        "Classificação de solicitações.",
-        "Extração e organização de informações.",
-        "Apoio à equipe de atendimento.",
+        "Processamento de informações com apoio de IA.",
+        "Classificação e encaminhamento de solicitações.",
+        "Fluxos de atendimento apoiados por IA.",
+        "IA integrada aos sistemas existentes.",
       ],
       cta: "Explorar soluções com IA",
       problems: [
@@ -327,25 +358,27 @@ export const services: { headline: string; intro: string; items: Service[] } = {
       included: [
         "Definição do caso de uso e dos critérios de qualidade.",
         "Implementação e testes dentro do escopo.",
-        "Ajustes durante o período de acompanhamento acordado.",
+        "Ajustes durante o acompanhamento combinado na proposta.",
       ],
       separate: [
         "Custos de uso de modelos e plataformas de IA.",
         "Novos casos de uso além do escopo combinado.",
-        "Acompanhamento contínuo, contratado à parte.",
+        "Acompanhamento contínuo, quando contratado.",
       ],
     },
     {
       slug: "consultoria",
+      tier: "complementar",
       icon: "compass",
       name: "Consultoria e Suporte Tecnológico",
+      summary: "Diagnóstico, planejamento e evolução da tecnologia que a empresa já tem.",
       description:
-        "Análise de necessidades técnicas, planejamento de melhorias e acompanhamento de soluções implementadas.",
+        "Antes de implementar, é preciso saber onde está o gargalo. Identificamos pontos de melhoria, avaliamos requisitos técnicos, recomendamos soluções e apoiamos a evolução da tecnologia da empresa.",
       examples: [
-        "Diagnóstico de processos.",
-        "Análise de arquitetura e integrações.",
-        "Documentação técnica.",
-        "Manutenção e evolução conforme contrato.",
+        "Diagnóstico técnico.",
+        "Avaliação de processos e integrações.",
+        "Planejamento de arquitetura e implementação.",
+        "Melhoria contínua e suporte técnico.",
       ],
       cta: "Conhecer consultoria",
       problems: [
@@ -357,7 +390,7 @@ export const services: { headline: string; intro: string; items: Service[] } = {
         "Diagnóstico com os pontos de melhoria priorizados.",
         "Recomendações de solução, com escopo e próximos passos.",
         "Documentação técnica do que existe hoje.",
-        "Suporte e evolução nas condições contratadas.",
+        "Suporte e evolução nas condições combinadas.",
       ],
       included: [
         "Reuniões de levantamento e análise dentro do escopo.",
@@ -365,30 +398,33 @@ export const services: { headline: string; intro: string; items: Service[] } = {
       ],
       separate: [
         "Implementação das melhorias recomendadas.",
-        "Suporte contínuo, com escopo e horas definidos em contrato.",
+        "Suporte contínuo, com escopo definido em contrato.",
       ],
     },
   ],
 };
 
 export const howItWorks = {
-  headline: "Do problema à solução, com clareza.",
+  headline: "Como trabalhamos",
+  intro: "Um caminho claro do problema à solução em funcionamento.",
   steps: [
     {
       title: "Entendimento",
-      description: "Compreendemos o processo, os objetivos e as limitações da operação.",
+      description: "Entendemos o processo, os desafios e o resultado que a empresa espera.",
     },
     {
       title: "Planejamento",
-      description: "Definimos o escopo, a solução recomendada, o prazo e o investimento.",
+      description:
+        "Definimos a solução adequada, o escopo técnico, os requisitos e o plano de implementação.",
     },
     {
       title: "Implementação",
-      description: "Desenvolvemos, configuramos e testamos a solução acordada.",
+      description: "Desenvolvemos, configuramos, integramos e testamos a solução combinada.",
     },
     {
       title: "Acompanhamento",
-      description: "Documentamos a entrega e oferecemos suporte conforme as condições contratadas.",
+      description:
+        "Validamos o resultado, documentamos a solução e avaliamos o suporte ou as melhorias combinadas.",
     },
   ],
 };
@@ -426,9 +462,9 @@ export const principles = {
 };
 
 export const finalCta = {
-  headline: "Vamos identificar oportunidades na sua operação?",
+  headline: "Vamos identificar onde a tecnologia pode melhorar sua operação?",
   description:
-    "Conte um pouco sobre o desafio da sua empresa. Vamos avaliar o problema e entender se a SSNEX pode ajudar.",
+    "Conte um pouco sobre o processo que deseja melhorar. A partir disso, podemos avaliar os próximos passos.",
   secondaryLabel: "Falar com a SSNEX",
   whatsappMessage:
     "Olá! Vim pelo site da SSNEX e quero conversar sobre um desafio da minha empresa.",
@@ -438,15 +474,19 @@ export const finalCta = {
 /* Projetos                                                            */
 /* ================================================================== */
 
+/** Aviso de origem exibido junto dos projetos. Ajuste se a autoria for mais específica. */
+export const portfolioDisclaimer =
+  "Os exemplos apresentados demonstram experiências e soluções técnicas desenvolvidas pelo fundador ao longo de sua trajetória profissional. Nem todos representam projetos contratados diretamente pela SSNEX. Informações confidenciais e dados de clientes não são divulgados.";
+
 export const projectKinds: Record<ProjectKind, { label: string; description: string }> = {
   cliente: {
     label: "Projeto SSNEX",
-    description: "Projeto entregue pela SSNEX, publicado com autorização do cliente.",
+    description: "Projeto contratado e entregue diretamente pela SSNEX, publicado com autorização.",
   },
   fundador: {
-    label: "Experiência do fundador",
+    label: "Experiência profissional do fundador",
     description:
-      "Projeto entregue em produção pelo fundador da SSNEX em sua atuação profissional anterior. O cliente não é identificado.",
+      "Solução desenvolvida pelo fundador em atuação profissional anterior à SSNEX. Clientes e dados confidenciais não são identificados.",
   },
   demonstracao: {
     label: "Demonstração",
@@ -455,14 +495,18 @@ export const projectKinds: Record<ProjectKind, { label: string; description: str
 };
 
 export const projects: { headline: string; intro: string; items: CaseStudy[] } = {
-  headline: "Tecnologia aplicada na prática.",
+  headline: "Projetos e aplicações reais",
   intro:
-    "Projetos de automação, integração e dados entregues em produção. Cada um mostra o problema, a abordagem, as tecnologias e, quando verificável, o resultado.",
+    "Exemplos de automação, integração e dados em produção: o problema, a solução, o fluxo entre os sistemas e o que melhorou na operação.",
   items: [
     {
       kind: "fundador",
       slug: "disparo-boletos",
-      title: "Disparo automatizado de boletos",
+      title: "Automação de cobranças via WhatsApp",
+      service: "automacao",
+      featured: true,
+      benefit:
+        "Elimina o envio manual de boletos, um a um, e reduz erros de digitação no processo de cobrança.",
       flow: ["Conta Azul", "n8n", "WhatsApp"],
       summary:
         "O ERP gera as cobranças e o WhatsApp entrega, sem ninguém copiar boleto por boleto.",
@@ -480,12 +524,17 @@ export const projects: { headline: string; intro: string; items: CaseStudy[] } =
         { value: "450–600", label: "cobranças por mês" },
         { value: "2", label: "execuções diárias" },
       ],
+      metricsVerified: false,
       stack: ["n8n", "API Conta Azul", "WhatsApp", "JavaScript"],
     },
     {
       kind: "fundador",
       slug: "regua-cobranca",
-      title: "Régua de cobrança inteligente",
+      title: "Régua de cobrança automatizada",
+      service: "automacao",
+      featured: true,
+      benefit:
+        "Organiza o envio das mensagens conforme a situação de cada cobrança, evitando mensagens duplicadas.",
       flow: ["ERP", "n8n", "Supabase", "WhatsApp"],
       summary: "Cinco workflows coordenados decidem quem recebe qual mensagem, e quando.",
       problem:
@@ -501,12 +550,17 @@ export const projects: { headline: string; intro: string; items: CaseStudy[] } =
         "Envio em lote: dispara as mensagens e grava o resultado no Supabase",
       ],
       metrics: [{ value: "5", label: "workflows coordenados" }],
+      metricsVerified: false,
       stack: ["n8n", "Supabase (PostgREST)", "OAuth 2.0", "SQL", "WhatsApp"],
     },
     {
       kind: "fundador",
       slug: "vendas-automaticas",
       title: "Criação automática de vendas",
+      service: "integracao",
+      featured: true,
+      benefit:
+        "Dispensa o recadastro manual de vendas no ERP e reduz divergências entre os sistemas.",
       flow: ["CRM", "Webhook", "n8n", "ERP"],
       summary: "Venda fechada no CRM vira venda no ERP, sem recadastro.",
       problem:
@@ -520,13 +574,16 @@ export const projects: { headline: string; intro: string; items: CaseStudy[] } =
         "Validação de cliente e produto antes de gravar no ERP",
       ],
       metrics: [],
+      metricsVerified: false,
       stack: ["Webhooks", "n8n", "API REST", "ERP"],
     },
     {
       kind: "fundador",
       slug: "integracao-omie",
-      title: "Integração com o ERP Omie",
-      flow: ["Omie", "API", "Atendimento"],
+      title: "Integração de ERP com atendimento",
+      service: "integracao",
+      benefit: "Leva as informações do ERP para o contexto do atendimento, sem troca de tela.",
+      flow: ["Omie", "API", "Plataforma de atendimento"],
       summary: "Dados do ERP disponíveis para quem está atendendo o cliente.",
       problem:
         "A equipe de atendimento precisava consultar o ERP em outra tela para responder dúvidas de cadastro, pedidos e financeiro, o que deixava o cliente esperando.",
@@ -538,13 +595,16 @@ export const projects: { headline: string; intro: string; items: CaseStudy[] } =
         "Sincronização dos dados para consulta durante o atendimento",
       ],
       metrics: [],
-      stack: ["API Omie", "API REST", "Kentro", "n8n"],
+      metricsVerified: false,
+      stack: ["API Omie", "API REST", "Plataforma de atendimento", "n8n"],
     },
     {
       kind: "fundador",
       slug: "integracao-cielo",
-      title: "Integração com a Cielo",
-      flow: ["Cielo", "n8n", "Sistemas"],
+      title: "Integração de pagamentos",
+      service: "integracao",
+      benefit: "Substitui a conferência e o repasse manual de informações de vendas e pagamentos.",
+      flow: ["Cielo", "n8n", "Sistemas integrados"],
       summary: "Vendas e pagamentos saem do portal e entram no processo automaticamente.",
       problem:
         "As informações de vendas e pagamentos ficavam no portal do meio de pagamento e eram conferidas e repassadas manualmente.",
@@ -556,12 +616,16 @@ export const projects: { headline: string; intro: string; items: CaseStudy[] } =
         "Envio das informações para os sistemas de destino",
       ],
       metrics: [],
+      metricsVerified: false,
       stack: ["API Cielo", "API REST", "n8n"],
     },
     {
       kind: "fundador",
       slug: "leads-tempo-real",
-      title: "Captura de leads em tempo real",
+      title: "Integração de leads",
+      service: "integracao",
+      featured: true,
+      benefit: "Leva cada lead ao CRM assim que o formulário é preenchido, sem exportar planilhas.",
       flow: ["Lead Ads", "Webhook", "CRM"],
       summary: "Formulário preenchido no Facebook vira lead no CRM na mesma hora.",
       problem:
@@ -574,12 +638,15 @@ export const projects: { headline: string; intro: string; items: CaseStudy[] } =
         "Criação do lead no CRM com origem e campanha identificadas",
       ],
       metrics: [],
+      metricsVerified: false,
       stack: ["Facebook Lead Ads", "Webhooks", "Graph API", "CRM"],
     },
     {
       kind: "fundador",
       slug: "bi-atendimento",
-      title: "BI de atendimento",
+      title: "Centralização de dados e dashboards",
+      service: "integracao",
+      benefit: "Reúne em uma só visão dados que estavam espalhados em fontes diferentes.",
       flow: ["Atendimento", "BigQuery", "Power BI"],
       summary: "Atendimento, CRM, leads e Meta Ads na mesma visão.",
       problem:
@@ -592,12 +659,16 @@ export const projects: { headline: string; intro: string; items: CaseStudy[] } =
         "Dashboards com os indicadores de cada área",
       ],
       metrics: [],
+      metricsVerified: false,
       stack: ["BigQuery", "SQL", "Power BI", "Meta Ads"],
     },
     {
       kind: "fundador",
       slug: "scripts-manutencao",
-      title: "Scripts de manutenção de CRM",
+      title: "Integração por API para manutenção de CRM",
+      service: "integracao",
+      benefit:
+        "Permite corrigir e carregar dados em massa com mais segurança, simulando as alterações antes de executá-las.",
       flow: ["Script", "API", "CRM"],
       summary: "Limpeza em massa com simulação antes de qualquer alteração.",
       problem:
@@ -610,6 +681,7 @@ export const projects: { headline: string; intro: string; items: CaseStudy[] } =
         "Upload em massa via API para cargas iniciais e correções",
       ],
       metrics: [],
+      metricsVerified: false,
       stack: ["Python", "Node.js", "API REST", "Postman"],
     },
   ],
@@ -622,7 +694,7 @@ export const projects: { headline: string; intro: string; items: CaseStudy[] } =
 export const about = {
   headline: "Tecnologia a serviço da operação.",
   intro:
-    "A SSNEX é uma marca de consultoria em tecnologia focada em resolver problemas práticos de empresas: sistemas que não conversam, processos manuais e dados difíceis de acompanhar.",
+    "A SSNEX nasceu da experiência prática com operações, implantação de tecnologia e integração de sistemas. O objetivo é transformar necessidades operacionais em soluções digitais úteis, sustentáveis e alinhadas à realidade de cada negócio.",
   approachTitle: "Como pensamos tecnologia",
   approach: [
     {
@@ -643,49 +715,40 @@ export const about = {
   ],
   founderTitle: "Quem está por trás da SSNEX",
   founderParagraphs: [
-    "A SSNEX foi fundada por Samuel Silva Santos. Ele começou no atendimento: foram dois anos na operação da AeC Contact Center, vendo de perto o que acontece quando um sistema não conversa com o outro.",
-    "Depois foi para a tecnologia. Como Analista de Implantação na Kentro Sistemas, implanta plataformas de atendimento omnichannel e constrói integrações entre ERPs, CRMs, meios de pagamento e WhatsApp.",
-    "Essa passagem pela operação define o jeito SSNEX de trabalhar: antes de escolher a ferramenta, entender quem vai usar o fluxo às 8h de uma segunda-feira.",
+    "A SSNEX foi fundada por Samuel Silva Santos. A trajetória começou na operação de atendimento ao cliente, vendo de perto o efeito de sistemas que não se comunicam: cliente esperando, informação digitada duas vezes, fila que não anda.",
+    "Depois veio a tecnologia: implantação de plataformas de atendimento omnichannel e desenvolvimento de integrações entre ERPs, CRMs, meios de pagamento e WhatsApp, como Analista de Implantação.",
+    "Essa combinação de operação e tecnologia define o jeito SSNEX de trabalhar: antes de escolher a ferramenta, entender quem usa o processo no dia a dia e o que acontece quando algo falha.",
   ],
   /** Foto opcional em `public/` (ex.: "/samuel.webp", 600×600). `null` oculta. */
   photo: null as string | null,
   photoAlt: `Foto de ${profile.name}`,
 };
 
-export const integrations: { title: string; intro: string; groups: IntegrationGroup[] } = {
-  title: "Plataformas com que o fundador já trabalhou",
-  intro: "Sistemas integrados em projetos reais. Cada um tem a sua autenticação e os seus limites.",
+export const integrations: { title: string; intro: string; groups: TechGroup[] } = {
+  title: "Ferramentas e tecnologias",
+  intro:
+    "Usadas em projetos reais, conforme a necessidade de cada solução. Nenhuma delas é obrigatória, e nenhuma indica parceria formal com o fornecedor.",
   groups: [
+    { name: "Automação", purpose: "Fluxos e rotinas automatizadas", items: ["n8n", "Make"] },
     {
-      name: "ERPs",
-      items: [
-        { name: "Conta Azul", note: "Cobranças, vendas avulsas e recorrentes" },
-        { name: "Omie", note: "Sincronização com a plataforma de atendimento" },
-      ],
+      name: "Integração",
+      purpose: "Conexão entre sistemas",
+      items: ["APIs REST", "Webhooks", "Postman"],
     },
     {
-      name: "Pagamentos e bancos",
-      items: [{ name: "Cielo", note: "Informações de vendas e pagamentos via API" }],
+      name: "Dados",
+      purpose: "Armazenamento, análise e relatórios",
+      items: ["SQL", "Supabase", "BigQuery", "Power BI"],
     },
     {
-      name: "Atendimento e CRM",
-      items: [
-        { name: "Kentro / atenderbem", note: "Plataforma omnichannel" },
-        { name: "WhatsApp", note: "Envio de cobranças e notificações" },
-        { name: "Facebook Lead Ads", note: "Leads em tempo real no CRM" },
-      ],
+      name: "Desenvolvimento",
+      purpose: "Scripts e ajustes sob medida",
+      items: ["Python", "Node.js", "Git"],
     },
     {
-      name: "Dados e infraestrutura",
-      items: [
-        { name: "Supabase", note: "PostgREST como camada de estado" },
-        { name: "BigQuery", note: "Base analítica de atendimento e mídia" },
-        { name: "Power BI", note: "Dashboards de gestão" },
-      ],
-    },
-    {
-      name: "Automação e desenvolvimento",
-      chips: ["n8n", "Make", "Webhooks", "APIs REST", "Node.js", "Python", "SQL", "Postman", "Git"],
+      name: "Sistemas de negócio",
+      purpose: "Onde as integrações acontecem",
+      items: ["ERPs", "CRMs", "Plataformas de atendimento", "WhatsApp"],
     },
   ],
 };
@@ -727,15 +790,23 @@ export const servicesPage = {
   intro:
     "Explicamos cada serviço em linguagem de negócio: os problemas que resolve, o que é entregue e o que fica fora do escopo.",
   labels: {
-    problems: "Problemas comuns",
-    deliverables: "O que é entregue",
-    included: "Incluído no projeto",
+    problems: "Problemas que o serviço resolve",
+    deliverables: "Possíveis entregas",
+    included: "Normalmente incluído",
     separate: "Pode exigir contratação à parte",
-    examples: "Exemplos",
+    examples: "Casos de uso",
   },
-  scopeNote: {
-    title: "Escopo, prazo e investimento",
-    text: "Cada empresa tem sistemas e processos diferentes. Por isso, escopo, prazo e valor dependem da complexidade do projeto e são definidos na proposta, depois do diagnóstico. Não trabalhamos com preços genéricos nem prometemos economias específicas.",
+  complementaryTitle: "Serviços complementares",
+  complementaryIntro:
+    "Entram quando agregam valor ao processo, sozinhos ou junto com automação e integração.",
+  hiring: {
+    title: "Como funciona a contratação",
+    items: [
+      "Cada projeto é dimensionado conforme as necessidades da operação e os requisitos técnicos.",
+      "A implementação pode ser contratada como um projeto com escopo definido.",
+      "Suporte contínuo, monitoramento e melhorias podem ser combinados à parte, quando fizer sentido.",
+      "Escopo, prazo, entregas e investimento finais dependem do diagnóstico.",
+    ],
   },
   faq: {
     title: "Dúvidas frequentes",
@@ -753,7 +824,7 @@ export const servicesPage = {
       {
         question: "E se a integração parar de funcionar?",
         answer:
-          "Os fluxos registram as execuções e permitem reprocessar o que falhou. O suporte depois da entrega segue as condições combinadas em contrato.",
+          "Quando faz sentido, os fluxos registram as execuções e permitem reprocessar o que falhou. O suporte depois da entrega, se contratado, segue as condições combinadas.",
       },
       {
         question: "Como é definido o valor de um projeto?",
@@ -770,26 +841,33 @@ export const servicesPage = {
 
 export const serviceOptions = [
   "Automação de processos",
-  "Integração de sistemas e APIs",
-  "Inteligência artificial",
-  "Consultoria ou suporte tecnológico",
-  "Ainda não sei; preciso de orientação",
+  "Integração de sistemas",
+  "Soluções com inteligência artificial",
+  "Consultoria e suporte tecnológico",
+  "Ainda preciso entender a melhor solução",
 ] as const;
 
 export const contactPage = {
-  headline: "Solicite um diagnóstico.",
+  headline: "Vamos conversar sobre o que sua empresa precisa melhorar?",
   intro:
-    "Conte sobre o desafio da sua empresa. Vamos analisar o cenário e responder pelo canal que você indicar, com perguntas e um possível caminho.",
+    "Conte um pouco sobre sua operação e o desafio que deseja resolver. Vamos entender o contexto e avaliar os próximos passos.",
+  firstTalkTitle: "O que a primeira conversa esclarece",
+  firstTalk: [
+    "Como o processo funciona hoje e onde ele trava.",
+    "Quais sistemas estão envolvidos.",
+    "Se a solução é tecnicamente viável.",
+    "Quais seriam os próximos passos.",
+  ],
   nextStepsTitle: "Como funciona o primeiro contato",
   nextSteps: [
     "Você descreve o desafio pelo formulário ou pelos canais diretos.",
     "Analisamos a mensagem e, se precisar, pedimos mais detalhes.",
     "Combinamos uma conversa para entender o processo e os sistemas.",
-    "Se a SSNEX puder ajudar, enviamos uma proposta com escopo, prazo e investimento.",
+    "Se a SSNEX puder ajudar, enviamos uma proposta com escopo, entregas, prazo e investimento.",
   ],
   channelsTitle: "Canais diretos",
   form: {
-    name: "Seu nome",
+    name: "Nome",
     company: "Empresa",
     email: "E-mail profissional",
     contact: "WhatsApp ou telefone",
@@ -799,13 +877,15 @@ export const contactPage = {
     messagePlaceholder:
       "Ex.: hoje copiamos os pedidos do e-commerce para o ERP manualmente, e isso gera erros.",
     optional: "opcional",
-    consent: "Concordo com o uso destes dados para que a SSNEX responda ao meu contato, conforme a",
-    privacyLink: "Política de Privacidade",
+    consent: "Li e estou de acordo com o",
+    privacyLink: "Aviso de Privacidade",
     submit: "Enviar solicitação",
     sending: "Enviando…",
     success:
-      "Solicitação enviada. Recebemos as informações e vamos responder pelo canal que você indicou.",
-    error: "Não foi possível enviar agora. Tente de novo em instantes ou escreva para",
+      "Mensagem enviada com sucesso! Obrigado pelo contato. Vamos analisar as informações e retornar assim que possível.",
+    error:
+      "Não foi possível enviar sua mensagem agora. Tente novamente ou entre em contato diretamente pelo WhatsApp ou e-mail:",
+    tooFast: "Por segurança, aguarde alguns segundos e envie novamente.",
     notConfigured:
       "O envio pelo formulário ainda não está ativo. Para falar com a SSNEX agora, escreva para",
   },
@@ -816,61 +896,57 @@ export const contactPage = {
 /* ================================================================== */
 
 export const privacy = {
-  headline: "Política de Privacidade",
+  headline: "Aviso de Privacidade",
   updatedAt: "9 de outubro de 2026",
-  /** Cada seção: título + parágrafos. Mantenha alinhado com o que o site realmente faz. */
+  /** Mantenha alinhado com o que o site realmente faz. Revisão por profissional de privacidade é recomendada. */
   sections: [
     {
       title: "Quem é o responsável",
       paragraphs: [
-        `Este site é da SSNEX, marca de consultoria em tecnologia de ${profile.name}. Para qualquer assunto sobre seus dados, escreva para ${links.email}.`,
+        `Este site é da SSNEX, marca de consultoria em tecnologia de ${profile.name}. Para qualquer assunto sobre seus dados pessoais, escreva para ${links.email}.`,
       ],
     },
     {
-      title: "Quais dados coletamos",
+      title: "Quais dados coletamos e por quê",
       paragraphs: [
-        "Pelo formulário de contato: nome, empresa (opcional), e-mail profissional, WhatsApp ou telefone (opcional), o serviço de interesse e a mensagem que você escrever.",
-        "Pelo funcionamento do site: dados técnicos de acesso registrados pela hospedagem (como endereço IP, navegador e páginas acessadas) e métricas agregadas de uso e de desempenho.",
+        "Formulário de contato: nome, empresa (opcional), e-mail profissional, WhatsApp ou telefone (opcional), o serviço de interesse e a mensagem. Esses dados servem apenas para responder ao seu contato e, se fizer sentido, preparar uma proposta. A base legal é o seu consentimento, dado ao marcar a caixa no formulário.",
+        "Contato direto: se você escrever por e-mail ou WhatsApp, recebemos as informações que você enviar por esses canais, com a mesma finalidade.",
+        "Uso do site: a hospedagem registra dados técnicos de acesso (como endereço IP, navegador e páginas acessadas) para segurança e funcionamento. Também coletamos métricas agregadas de visitas e de desempenho, e eventos de uso (como o início e o envio do formulário e cliques em botões de contato), sem identificar você.",
         "Não pedimos dados sensíveis. Por favor, não os envie pela mensagem.",
       ],
     },
     {
-      title: "Para que usamos",
+      title: "Serviços de terceiros",
       paragraphs: [
-        "Os dados do formulário servem apenas para responder ao seu contato e, se fizer sentido, preparar uma proposta. A base legal é o seu consentimento, dado ao marcar a caixa no formulário.",
-        "Os dados técnicos servem para manter o site seguro, funcionando e com bom desempenho.",
-      ],
-    },
-    {
-      title: "Com quem compartilhamos",
-      paragraphs: [
-        "O envio do formulário passa por um serviço de recebimento de formulários (Formspree), que entrega a mensagem por e-mail. O site é hospedado na Vercel, que também fornece as métricas de uso e de desempenho.",
-        "Não vendemos nem cedemos seus dados para fins de marketing.",
+        "Hospedagem, métricas de visitas (Vercel Web Analytics) e de desempenho (Vercel Speed Insights): Vercel Inc.",
+        "Recebimento do formulário, quando ativo: Formspree, que entrega a mensagem por e-mail. As mensagens chegam à caixa de e-mail do responsável.",
+        "WhatsApp, LinkedIn e Instagram: só quando você clica nos links para esses serviços, que têm políticas próprias.",
+        "Alguns desses fornecedores processam dados fora do Brasil, especialmente nos Estados Unidos. Não vendemos nem cedemos seus dados para fins de marketing.",
       ],
     },
     {
       title: "Cookies e armazenamento local",
       paragraphs: [
-        "O site não usa cookies de publicidade nem de rastreamento. As métricas de uso da Vercel são agregadas e não usam cookies.",
-        "Sua preferência de tema (claro ou escuro) fica salva apenas no seu navegador.",
+        "O site não usa cookies de publicidade. As métricas da Vercel são agregadas e, segundo o fornecedor, não usam cookies.",
+        "Sua preferência de tema (claro ou escuro) fica salva apenas no seu navegador, no armazenamento local.",
       ],
     },
     {
       title: "Por quanto tempo guardamos",
       paragraphs: [
-        "As mensagens do formulário são mantidas pelo tempo necessário para tratar o seu contato e uma eventual proposta. Você pode pedir a exclusão a qualquer momento.",
+        "As mensagens de contato são mantidas pelo tempo necessário para tratar a solicitação e uma eventual proposta. Você pode pedir a exclusão a qualquer momento. Os prazos de retenção dos fornecedores seguem as políticas de cada um.",
       ],
     },
     {
       title: "Seus direitos",
       paragraphs: [
-        `Pela Lei Geral de Proteção de Dados (LGPD), você pode pedir confirmação, acesso, correção ou exclusão dos seus dados e revogar o consentimento. Basta escrever para ${links.email}.`,
+        `Pela Lei Geral de Proteção de Dados (LGPD), você pode pedir confirmação de tratamento, acesso, correção, anonimização ou exclusão dos seus dados, informações sobre compartilhamento e a revogação do consentimento. Basta escrever para ${links.email}.`,
       ],
     },
     {
       title: "Alterações",
       paragraphs: [
-        "Esta política pode ser atualizada quando o site mudar a forma de tratar dados. A data da última atualização aparece no topo da página.",
+        "Este aviso é atualizado quando o site muda a forma de tratar dados. A data da última atualização aparece no topo da página.",
       ],
     },
   ],

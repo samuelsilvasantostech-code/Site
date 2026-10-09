@@ -12,20 +12,17 @@ import {
   services,
 } from "@/content/data";
 import { prettyUrl } from "@/lib/format";
+import { canonical } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: resume.title,
   description: resume.summary,
   robots: { index: false },
-  alternates: { canonical: "/curriculo" },
+  alternates: canonical("/curriculo"),
 };
 
 const jobs = [...experience.jobs].reverse();
-const tools = [
-  ...integrations.groups.flatMap((group) =>
-    "chips" in group ? group.chips : group.items.map((item) => item.name),
-  ),
-];
+const tools = integrations.groups.flatMap((group) => group.items);
 
 function Block({ title, children }: { title: string; children: ReactNode }) {
   return (

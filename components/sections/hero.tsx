@@ -1,4 +1,4 @@
-import { ArrowDownIcon, ArrowRightIcon } from "lucide-react";
+import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
 
 import { HeroVisual } from "@/components/motion/hero-visual";
@@ -52,10 +52,7 @@ export function Hero() {
               variant="outline"
               className="h-12 border-line-strong bg-transparent px-6 text-base transition-colors duration-300 ease-in-out hover:bg-surface dark:bg-transparent"
             >
-              <a href={hero.secondaryCta.href}>
-                {hero.secondaryCta.label}
-                <ArrowDownIcon aria-hidden="true" />
-              </a>
+              <Link href={hero.secondaryCta.href}>{hero.secondaryCta.label}</Link>
             </Button>
           </div>
         </div>

@@ -7,12 +7,13 @@ import { Integrations } from "@/components/sections/integrations";
 import { PageIntro } from "@/components/shared/page-intro";
 import { about, brand, links, profile } from "@/content/data";
 import { SITE_URL } from "@/lib/constants";
+import { canonical } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Sobre a SSNEX",
   description:
-    "A SSNEX é uma consultoria de tecnologia focada em resolver problemas práticos de empresas: integração de sistemas, automação de processos e dados.",
-  alternates: { canonical: "/sobre" },
+    "A SSNEX nasceu da experiência prática com operações, implantação de tecnologia e integração de sistemas. Conheça a abordagem e o fundador.",
+  alternates: canonical("/sobre"),
 };
 
 /** O fundador, com dados reais de trajetória. */

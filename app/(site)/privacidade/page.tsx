@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 
 import { privacy } from "@/content/data";
+import { canonical } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Política de Privacidade",
+  title: "Aviso de Privacidade",
   description:
     "Como a SSNEX trata os dados pessoais coletados pelo site, conforme a Lei Geral de Proteção de Dados (LGPD).",
-  alternates: { canonical: "/privacidade" },
+  alternates: canonical("/privacidade"),
 };
 
 export default function PrivacyPage() {

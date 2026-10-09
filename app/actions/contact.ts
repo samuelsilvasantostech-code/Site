@@ -7,6 +7,7 @@ export type ContactResult =
   | { status: "ok" }
   | { status: "invalid"; fieldErrors: Partial<Record<keyof ContactInput, string>> }
   | { status: "not-configured" }
+  | { status: "too-fast" }
   | { status: "error" };
 
 /**
@@ -31,9 +32,13 @@ export async function sendContact(input: unknown): Promise<ContactResult> {
 
   const { website, startedAt, consent: _consent, ...lead } = parsed.data;
 
-  // Honeypot preenchido ou envio rápido demais: robô. Responde como sucesso
-  // para não dar pistas, mas não encaminha nada.
-  if (website || Date.now() - startedAt < CONTACT_MIN_FILL_MS) return { status: "ok" };
+  // Honeypot preenchido: robô. Responde como sucesso para não dar pistas,
+  // mas não encaminha nada (pessoas não veem esse campo).
+  if (website) return { status: "ok" };
+
+  // Envio rápido demais: provável robô, mas pode ser alguém com preenchimento
+  // automático. Nunca fingimos sucesso: pedimos para tentar de novo.
+  if (Date.now() - startedAt < CONTACT_MIN_FILL_MS) return { status: "too-fast" };
 
   const endpoint = process.env.FORMSPREE_ENDPOINT;
   if (!endpoint) return { status: "not-configured" };

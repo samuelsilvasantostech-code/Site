@@ -1,5 +1,4 @@
 import { Cases } from "@/components/sections/cases";
-import { Differentiators } from "@/components/sections/differentiators";
 import { FinalCta } from "@/components/sections/final-cta";
 import { Hero } from "@/components/sections/hero";
 import { Problems } from "@/components/sections/problems";
@@ -41,9 +40,8 @@ export default function HomePage() {
       <Hero />
       <Problems />
       <Services />
-      <Process />
       <Cases />
-      <Differentiators />
+      <Process />
       <FinalCta source="home" />
     </>
   );

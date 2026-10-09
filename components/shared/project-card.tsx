@@ -5,10 +5,9 @@ import { Tilt } from "@/components/motion/tilt";
 import { projectKinds, ui, type CaseStudy } from "@/content/data";
 import { cn } from "@/lib/utils";
 
-import { DataFlow } from "./data-flow";
-import { TagList } from "./tag-list";
+import { FlowDiagram } from "./flow-diagram";
 
-/** Selo que identifica a origem do projeto (cliente, fundador ou demonstração). */
+/** Selo que identifica a origem do projeto (SSNEX, fundador ou demonstração). */
 export function ProjectKindBadge({ kind }: { kind: CaseStudy["kind"] }) {
   return (
     <span className="inline-flex items-center rounded-full border border-line bg-background px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
@@ -17,7 +16,15 @@ export function ProjectKindBadge({ kind }: { kind: CaseStudy["kind"] }) {
   );
 }
 
-/** Card de projeto reutilizável (home e /projetos). `large` mostra métricas e tecnologias. */
+/** Métricas só aparecem quando foram confirmadas (`metricsVerified`). */
+export function hasVerifiedMetrics(item: CaseStudy) {
+  return item.metricsVerified && item.metrics.length > 0;
+}
+
+/**
+ * Card de projeto reutilizável (home e /projetos): origem, título, problema,
+ * fluxo entre sistemas e o que melhora. `large` mostra também o problema.
+ */
 export function ProjectCard({ item, large = false }: { item: CaseStudy; large?: boolean }) {
   return (
     <li data-animate className="h-full">
@@ -26,25 +33,31 @@ export function ProjectCard({ item, large = false }: { item: CaseStudy; large?: 
           href={`/projetos/${item.slug}`}
           className={cn(
             "group flex h-full flex-col rounded-lg border border-line bg-surface transition-colors duration-300 ease-in-out hover:border-line-strong",
-            large ? "p-8" : "p-6",
+            large ? "p-7 md:p-8" : "p-6",
           )}
         >
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <DataFlow steps={item.flow} />
-            <ProjectKindBadge kind={item.kind} />
-          </div>
+          <ProjectKindBadge kind={item.kind} />
           <h3
             className={cn(
-              "mt-4 font-bold tracking-tight text-balance",
-              large ? "text-2xl" : "text-lg",
+              "mt-4 font-bold tracking-tight text-balance group-hover:text-link",
+              large ? "text-xl md:text-2xl" : "text-lg",
             )}
           >
             {item.title}
           </h3>
-          <p className="mt-2 leading-relaxed text-pretty text-muted-foreground">{item.summary}</p>
+          <p className="mt-2 leading-relaxed text-pretty text-muted-foreground">
+            {large ? item.problem : item.summary}
+          </p>
 
-          {large && item.metrics.length > 0 && (
-            <dl className="mt-8 flex flex-wrap gap-x-10 gap-y-4 border-t border-line pt-6">
+          <FlowDiagram steps={item.flow} className="mt-5" />
+
+          <p className="mt-5 border-t border-line pt-4 text-sm leading-relaxed text-pretty">
+            <span className="font-semibold">{ui.benefit}: </span>
+            <span className="text-muted-foreground">{item.benefit}</span>
+          </p>
+
+          {large && hasVerifiedMetrics(item) && (
+            <dl className="mt-5 flex flex-wrap gap-x-10 gap-y-4">
               {item.metrics.map((metric) => (
                 <div key={metric.label} className="flex flex-col-reverse">
                   <dt className="text-sm text-muted-foreground">{metric.label}</dt>
@@ -56,16 +69,13 @@ export function ProjectCard({ item, large = false }: { item: CaseStudy; large?: 
             </dl>
           )}
 
-          <div className="mt-auto flex items-end justify-between gap-4 pt-6">
-            {large ? <TagList tags={item.stack} label={ui.stack} /> : <span />}
-            <span className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-link">
-              {ui.viewProject}
-              <ArrowUpRightIcon
-                aria-hidden="true"
-                className="size-4 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-              />
-            </span>
-          </div>
+          <span className="mt-auto inline-flex items-center gap-1 pt-6 text-sm font-semibold text-link">
+            {ui.viewProject}
+            <ArrowUpRightIcon
+              aria-hidden="true"
+              className="size-4 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            />
+          </span>
         </Link>
       </Tilt>
     </li>

@@ -12,7 +12,7 @@ export function FinalCta({ source = "final-cta" }: { source?: string }) {
         >
           <div
             aria-hidden="true"
-            className="absolute -top-40 left-1/2 -z-10 size-[30rem] -translate-x-1/2 rounded-full bg-grad-from/20 blur-3xl"
+            className="absolute -top-40 left-1/2 -z-10 size-[30rem] -translate-x-1/2 rounded-full bg-grad-from/10 blur-3xl"
           />
           <h2
             id="cta-final-title"

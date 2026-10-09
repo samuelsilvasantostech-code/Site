@@ -12,29 +12,54 @@ const HeroScene = dynamic(() => import("./hero-scene"), { ssr: false });
 
 const subscribeNoop = () => () => {};
 
-/** `true` se o navegador consegue desenhar WebGL. No servidor, assume que não. */
-function useWebGL() {
-  return useSyncExternalStore(
-    subscribeNoop,
-    () => {
-      try {
-        const canvas = document.createElement("canvas");
-        return Boolean(canvas.getContext("webgl2") ?? canvas.getContext("webgl"));
-      } catch {
-        return false;
-      }
-    },
+const WIDE = "(min-width: 768px)";
+
+function subscribeWide(onChange: () => void) {
+  const query = window.matchMedia(WIDE);
+  query.addEventListener("change", onChange);
+  return () => query.removeEventListener("change", onChange);
+}
+
+/* Verificado uma vez só: cada teste cria um contexto WebGL, e o navegador limita quantos existem. */
+let capableCache: boolean | undefined;
+
+function detectCapable() {
+  if (capableCache !== undefined) return capableCache;
+  const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection
+    ?.saveData;
+  if (saveData) return (capableCache = false);
+  try {
+    const canvas = document.createElement("canvas");
+    capableCache = Boolean(canvas.getContext("webgl2") ?? canvas.getContext("webgl"));
+  } catch {
+    capableCache = false;
+  }
+  return capableCache;
+}
+
+/**
+ * `true` quando vale a pena carregar a cena 3D: tela a partir de 768px,
+ * WebGL disponível e sem o modo de economia de dados. No celular, a
+ * ilustração em SVG (leve) fica no lugar. No servidor, assume que não.
+ */
+function useCanRender3D() {
+  const wide = useSyncExternalStore(
+    subscribeWide,
+    () => window.matchMedia(WIDE).matches,
     () => false,
   );
+  const capable = useSyncExternalStore(subscribeNoop, detectCapable, () => false);
+  return wide && capable;
 }
 
 /**
  * Visual do hero: mostra a ilustração em SVG (`fallback`) de imediato e a
- * troca pela cena 3D animada quando ela termina de carregar. Sem WebGL, a
- * ilustração continua. Com "reduzir movimento", a cena 3D aparece parada.
+ * troca pela cena 3D animada quando ela termina de carregar. No celular, sem
+ * WebGL ou com economia de dados, a ilustração continua (a cena nem é baixada).
+ * Com "reduzir movimento", a cena 3D aparece parada.
  */
 export function HeroVisual({ fallback }: { fallback: ReactNode }) {
-  const webgl = useWebGL();
+  const webgl = useCanRender3D();
   const reduceMotion = useReducedMotion();
   const [ready, setReady] = useState(false);
 

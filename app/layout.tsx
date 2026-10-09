@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/layout/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { brand, profile, seo, ui } from "@/content/data";
 import { SITE_URL, THEME_COLOR_DARK } from "@/lib/constants";
+import { canonical } from "@/lib/seo";
 
 import "./globals.css";
 
@@ -25,7 +26,7 @@ export const metadata: Metadata = {
   applicationName: brand.name,
   authors: [{ name: profile.name, url: SITE_URL }],
   creator: profile.name,
-  alternates: { canonical: "/" },
+  alternates: canonical("/"),
   openGraph: {
     type: "website",
     locale: "pt_BR",

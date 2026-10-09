@@ -24,6 +24,7 @@ export const contactSchema = z.object({
     .trim()
     .min(1, "Informe o seu e-mail.")
     .max(L.emailMax, `O e-mail pode ter no máximo ${L.emailMax} caracteres.`)
+    .toLowerCase()
     .pipe(z.email("Informe um e-mail válido, por exemplo nome@empresa.com.br.")),
   contact: z
     .string()

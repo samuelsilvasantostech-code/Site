@@ -1,15 +1,16 @@
-import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
+import { ArrowLeftIcon, ArrowRightIcon, InfoIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 
 import { FinalCta } from "@/components/sections/final-cta";
-import { DataFlow } from "@/components/shared/data-flow";
+import { FlowDiagram } from "@/components/shared/flow-diagram";
 import { Metrics } from "@/components/shared/metrics";
-import { ProjectKindBadge } from "@/components/shared/project-card";
+import { hasVerifiedMetrics, ProjectKindBadge } from "@/components/shared/project-card";
 import { TagList } from "@/components/shared/tag-list";
-import { projectKinds, projects, ui } from "@/content/data";
+import { projectKinds, projects, services, ui } from "@/content/data";
+import { canonical } from "@/lib/seo";
 
 function findProject(slug: string) {
   const index = projects.items.findIndex((item) => item.slug === slug);
@@ -31,15 +32,12 @@ export async function generateMetadata({
   const { slug } = await params;
   const found = findProject(slug);
   if (!found) return {};
+  const description = `${found.item.summary} ${found.item.benefit}`;
   return {
     title: found.item.title,
-    description: found.item.summary,
-    alternates: { canonical: `/projetos/${slug}` },
-    openGraph: {
-      title: found.item.title,
-      description: found.item.summary,
-      url: `/projetos/${slug}`,
-    },
+    description,
+    alternates: canonical(`/projetos/${slug}`),
+    openGraph: { title: found.item.title, description, url: `/projetos/${slug}` },
   };
 }
 
@@ -58,6 +56,7 @@ export default async function ProjectPage({ params }: PageProps<"/projetos/[slug
   if (!found) notFound();
   const { item, previous, next } = found;
   const StepList = item.stepsOrdered ? "ol" : "ul";
+  const service = services.items.find((s) => s.slug === item.service);
 
   return (
     <>
@@ -71,26 +70,27 @@ export default async function ProjectPage({ params }: PageProps<"/projetos/[slug
         </Link>
 
         <header className="mt-6">
-          <div className="flex flex-wrap items-center gap-3">
-            <ProjectKindBadge kind={item.kind} />
-            <DataFlow steps={item.flow} />
-          </div>
+          <ProjectKindBadge kind={item.kind} />
           <h1 className="mt-5 text-4xl leading-[1.1] font-bold tracking-tight text-balance md:text-5xl">
             {item.title}
           </h1>
-          <p className="mt-3 text-sm text-muted-foreground">
+          <p className="mt-4 text-lg leading-relaxed text-pretty text-muted-foreground">
+            {item.summary}
+          </p>
+          <p className="mt-6 flex gap-3 rounded-md border border-line bg-surface px-4 py-3 text-sm leading-relaxed text-muted-foreground">
+            <InfoIcon aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-link" />
             {projectKinds[item.kind].description}
           </p>
         </header>
 
-        <Block title={ui.objective}>
-          <p className="text-lg leading-relaxed text-pretty">{item.summary}</p>
-        </Block>
         <Block title={ui.problem}>
           <p className="leading-relaxed text-pretty">{item.problem}</p>
         </Block>
-        <Block title={ui.approach}>
+        <Block title={ui.solution}>
           <p className="leading-relaxed text-pretty">{item.solution}</p>
+        </Block>
+        <Block title={ui.flow}>
+          <FlowDiagram steps={item.flow} variant="full" />
         </Block>
         {item.steps.length > 0 && (
           <Block title={ui.implementation}>
@@ -112,13 +112,34 @@ export default async function ProjectPage({ params }: PageProps<"/projetos/[slug
         <Block title={ui.stack}>
           <TagList tags={item.stack} />
         </Block>
-        {item.metrics.length > 0 && (
+        <Block title={ui.benefit}>
+          <p className="leading-relaxed text-pretty">{item.benefit}</p>
+        </Block>
+        {hasVerifiedMetrics(item) && (
           <Block title={ui.results}>
             <Metrics metrics={item.metrics} size="lg" className="border-y border-line py-6" />
           </Block>
         )}
 
-        <nav aria-label="Outros projetos" className="mt-16 grid gap-3 sm:grid-cols-2">
+        {service && (
+          <Link
+            href={`/servicos#${service.slug}`}
+            className="group mt-14 flex items-center justify-between gap-4 rounded-lg border border-line bg-surface p-5 transition-colors hover:border-line-strong"
+          >
+            <span>
+              <span className="block text-sm text-muted-foreground">{ui.relatedService}</span>
+              <span className="mt-0.5 block font-display font-bold tracking-tight group-hover:text-link">
+                {service.name}
+              </span>
+            </span>
+            <ArrowRightIcon
+              aria-hidden="true"
+              className="size-5 shrink-0 text-link transition-transform duration-300 group-hover:translate-x-1"
+            />
+          </Link>
+        )}
+
+        <nav aria-label="Outros projetos" className="mt-8 grid gap-3 sm:grid-cols-2">
           {previous ? (
             <Link
               href={`/projetos/${previous.slug}`}

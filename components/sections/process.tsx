@@ -4,7 +4,7 @@ import { howItWorks } from "@/content/data";
 /** Etapas em sequência: aqui a numeração é informação, não enfeite. */
 export function Process() {
   return (
-    <Section id="como-funciona" tone="invert" title={howItWorks.headline}>
+    <Section id="como-funciona" tone="invert" title={howItWorks.headline} intro={howItWorks.intro}>
       <ol className="relative grid gap-10 md:grid-cols-4 md:gap-6">
         <span
           aria-hidden="true"

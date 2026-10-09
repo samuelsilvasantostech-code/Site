@@ -1,4 +1,4 @@
-import { MailIcon, MessageCircleIcon, PhoneIcon } from "lucide-react";
+import { CheckIcon, MailIcon, MessageCircleIcon, PhoneIcon } from "lucide-react";
 import type { Metadata } from "next";
 
 import { InstagramIcon, LinkedinIcon } from "@/components/layout/brand-icons";
@@ -7,12 +7,13 @@ import { ContactForm } from "@/components/sections/contact-form";
 import { WhatsappLink } from "@/components/shared/whatsapp-link";
 import { contactPage, finalCta, links } from "@/content/data";
 import { prettyUrl } from "@/lib/format";
+import { canonical } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Contato",
+  title: "Contato e diagnóstico",
   description:
-    "Solicite um diagnóstico: conte o desafio da sua empresa com automação, integração de sistemas, inteligência artificial ou suporte tecnológico.",
-  alternates: { canonical: "/contato" },
+    "Conte o desafio da sua empresa com automação de processos, integração de sistemas, inteligência artificial ou suporte tecnológico e solicite um diagnóstico.",
+  alternates: canonical("/contato"),
 };
 
 const channelClass =
@@ -37,6 +38,19 @@ export default function ContactPage() {
             {contactPage.intro}
           </p>
 
+          <h2 className="mt-12 font-display text-sm font-semibold">{contactPage.firstTalkTitle}</h2>
+          <ul className="mt-4 grid gap-2.5">
+            {contactPage.firstTalk.map((item) => (
+              <li
+                key={item}
+                className="flex gap-3 leading-relaxed text-pretty text-muted-foreground"
+              >
+                <CheckIcon aria-hidden="true" className="mt-1 size-4 shrink-0 text-link" />
+                {item}
+              </li>
+            ))}
+          </ul>
+
           <h2 className="mt-12 font-display text-sm font-semibold">{contactPage.nextStepsTitle}</h2>
           <ol className="mt-4 grid gap-4">
             {contactPage.nextSteps.map((step, i) => (
@@ -56,7 +70,10 @@ export default function ContactPage() {
             <li>
               <a href={`mailto:${links.email}`} className={channelClass}>
                 <MailIcon aria-hidden="true" className="size-5 shrink-0 text-link" />
-                <span className="break-all">{links.email}</span>
+                <span className="break-all">
+                  <span className="block text-xs text-muted-foreground">E-mail</span>
+                  {links.email}
+                </span>
               </a>
             </li>
             {links.whatsapp && (
@@ -67,14 +84,20 @@ export default function ContactPage() {
                   className={channelClass}
                 >
                   <MessageCircleIcon aria-hidden="true" className="size-5 shrink-0 text-link" />
-                  WhatsApp {links.phone}
+                  <span>
+                    <span className="block text-xs text-muted-foreground">WhatsApp</span>
+                    {links.phone}
+                  </span>
                 </WhatsappLink>
               </li>
             )}
             <li>
               <a href={links.phoneHref} className={channelClass}>
                 <PhoneIcon aria-hidden="true" className="size-5 shrink-0 text-link" />
-                {links.phone}
+                <span>
+                  <span className="block text-xs text-muted-foreground">Telefone</span>
+                  {links.phone}
+                </span>
               </a>
             </li>
             <li>
@@ -85,7 +108,10 @@ export default function ContactPage() {
                 className={channelClass}
               >
                 <LinkedinIcon className="size-5 shrink-0 text-link" />
-                {prettyUrl(links.linkedin)}
+                <span className="min-w-0 break-all">
+                  <span className="block text-xs text-muted-foreground">LinkedIn</span>
+                  {prettyUrl(links.linkedin)}
+                </span>
               </a>
             </li>
             <li>
@@ -96,7 +122,10 @@ export default function ContactPage() {
                 className={channelClass}
               >
                 <InstagramIcon className="size-5 shrink-0 text-link" />
-                {prettyUrl(links.instagram)}
+                <span className="min-w-0 break-all">
+                  <span className="block text-xs text-muted-foreground">Instagram</span>
+                  {prettyUrl(links.instagram)}
+                </span>
               </a>
             </li>
           </ul>

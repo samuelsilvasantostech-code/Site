@@ -2,7 +2,7 @@ import { ArrowRightIcon, MessageCircleIcon } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import { finalCta, primaryCta } from "@/content/data";
+import { finalCta, links, primaryCta, ui } from "@/content/data";
 import { cn } from "@/lib/utils";
 
 import { WhatsappLink } from "./whatsapp-link";
@@ -10,35 +10,35 @@ import { WhatsappLink } from "./whatsapp-link";
 type CtaButtonsProps = {
   /** De onde veio o clique, para as métricas do WhatsApp. */
   source: string;
-  secondaryLabel?: string;
   className?: string;
 };
 
-/** Par de CTAs padrão: "Solicitar diagnóstico" (principal) + WhatsApp. */
-export function CtaButtons({
-  source,
-  secondaryLabel = finalCta.secondaryLabel,
-  className,
-}: CtaButtonsProps) {
+/**
+ * CTA padrão: um único botão principal ("Solicitar diagnóstico") e, como
+ * alternativa discreta, um link para o WhatsApp. Evita botões disputando atenção.
+ */
+export function CtaButtons({ source, className }: CtaButtonsProps) {
   return (
-    <div className={cn("flex flex-wrap gap-3", className)}>
+    <div className={cn("flex flex-wrap items-center gap-x-6 gap-y-4", className)}>
       <Button asChild size="lg" className="btn-glow h-12 px-6 text-base">
         <Link href={primaryCta.href}>
           {primaryCta.label}
           <ArrowRightIcon aria-hidden="true" />
         </Link>
       </Button>
-      <Button
-        asChild
-        size="lg"
-        variant="outline"
-        className="h-12 border-line-strong bg-transparent px-6 text-base transition-colors duration-300 ease-in-out hover:bg-surface dark:bg-transparent"
-      >
-        <WhatsappLink message={finalCta.whatsappMessage} source={source}>
-          <MessageCircleIcon aria-hidden="true" />
-          {secondaryLabel}
-        </WhatsappLink>
-      </Button>
+      {links.whatsapp && (
+        <p className="text-sm text-muted-foreground">
+          {ui.orWhatsapp}{" "}
+          <WhatsappLink
+            message={finalCta.whatsappMessage}
+            source={source}
+            className="inline-flex items-center gap-1 font-semibold text-link underline-offset-4 hover:underline"
+          >
+            <MessageCircleIcon aria-hidden="true" className="size-4" />
+            {ui.whatsapp}
+          </WhatsappLink>
+        </p>
+      )}
     </div>
   );
 }

@@ -92,7 +92,7 @@ export function SiteFooter() {
             href="/privacidade"
             className="transition-colors duration-300 hover:text-foreground"
           >
-            Política de Privacidade
+            Aviso de Privacidade
           </Link>
         </div>
       </div>

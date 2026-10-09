@@ -39,6 +39,8 @@ export function ContactForm() {
   const [status, setStatus] = useState<Status>(null);
   const [pending, startTransition] = useTransition();
   const started = useRef(false);
+  // Evita envio duplicado (duplo clique ou Enter repetido) antes do botão desabilitar.
+  const submitting = useRef(false);
 
   const form = useForm<ContactFormValues, unknown, ContactInput>({
     resolver: zodResolver(contactSchema),
@@ -71,9 +73,13 @@ export function ContactForm() {
   }
 
   function onSubmit(values: ContactInput) {
+    if (submitting.current) return;
+    submitting.current = true;
     setStatus(null);
     startTransition(async () => {
-      const result = await sendContact(values);
+      const result = await sendContact(values).finally(() => {
+        submitting.current = false;
+      });
       switch (result.status) {
         case "ok":
           track("contact_form_submit", { service: values.service });
@@ -85,6 +91,9 @@ export function ContactForm() {
           for (const [name, message] of Object.entries(result.fieldErrors)) {
             form.setError(name as keyof ContactFormValues, { message }, { shouldFocus: true });
           }
+          break;
+        case "too-fast":
+          setStatus({ tone: "error", text: f.tooFast });
           break;
         case "not-configured":
           setStatus({ tone: "error", text: f.notConfigured, withEmail: true });
@@ -98,7 +107,7 @@ export function ContactForm() {
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={(event) => void form.handleSubmit(onSubmit)(event)}
         onFocusCapture={onFirstInteraction}
         noValidate
         className="grid gap-5"

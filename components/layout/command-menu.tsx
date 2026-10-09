@@ -111,7 +111,7 @@ export function CommandMenu({ compact = false }: { compact?: boolean }) {
             {[
               { href: "/", label: "Início" },
               ...nav,
-              { href: "/privacidade", label: "Política de Privacidade" },
+              { href: "/privacidade", label: "Aviso de Privacidade" },
             ].map((item) => (
               <CommandItem key={item.href} onSelect={() => run(() => router.push(item.href))}>
                 <FileIcon aria-hidden="true" />
