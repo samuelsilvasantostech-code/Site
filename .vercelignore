@@ -1,0 +1,8 @@
+# Fora do deploy: backup do site estático antigo e artefatos locais
+legacy
+assets
+.next
+node_modules
+test-results
+playwright-report
+.env*.local

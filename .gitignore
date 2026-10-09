@@ -55,3 +55,6 @@ next-env.d.ts
 
 # sistema
 Thumbs.db
+
+# vercel cli (projeto vinculado)
+.vercel
