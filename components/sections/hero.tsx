@@ -1,7 +1,9 @@
 import { ArrowRightIcon } from "lucide-react";
 import Link from "next/link";
+import { Fragment } from "react";
 
 import { HeroVisual } from "@/components/motion/hero-visual";
+import { PointerSpotlight } from "@/components/motion/pointer-spotlight";
 import { Button } from "@/components/ui/button";
 import { brand, hero, primaryCta } from "@/content/data";
 
@@ -18,6 +20,7 @@ export function Hero() {
       className="relative isolate overflow-hidden pt-[calc(var(--header-h)+3.5rem)] pb-20 md:pt-[calc(var(--header-h)+5rem)] md:pb-28"
     >
       <div aria-hidden="true" className="hero-backdrop absolute inset-0 -z-10" />
+      <PointerSpotlight />
 
       <div className="mx-auto grid max-w-6xl items-center gap-14 px-6 lg:grid-cols-[1.25fr_1fr]">
         <div>
@@ -28,9 +31,22 @@ export function Hero() {
 
           <h1
             id="hero-title"
-            className={`${enter} mt-5 text-4xl leading-[1.1] font-bold tracking-tight text-balance delay-100 sm:text-5xl lg:text-[3.25rem]`}
+            className="mt-5 text-4xl leading-[1.1] font-bold tracking-tight text-balance sm:text-5xl lg:text-[3.25rem]"
+            aria-label={hero.headline}
           >
-            {hero.headline}
+            {/* Palavra por palavra, em CSS: aparece antes mesmo do JavaScript carregar. */}
+            {hero.headline.split(" ").map((word, i) => (
+              <Fragment key={`${word}-${i}`}>
+                {i > 0 && " "}
+                <span
+                  aria-hidden="true"
+                  className="inline-block animate-in duration-700 ease-out fill-mode-both fade-in slide-in-from-bottom-3"
+                  style={{ animationDelay: `${120 + i * 70}ms` }}
+                >
+                  {word}
+                </span>
+              </Fragment>
+            ))}
           </h1>
 
           <p

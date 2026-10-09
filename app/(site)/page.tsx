@@ -4,6 +4,7 @@ import { Hero } from "@/components/sections/hero";
 import { Problems } from "@/components/sections/problems";
 import { Process } from "@/components/sections/process";
 import { Services } from "@/components/sections/services";
+import { TechMarquee } from "@/components/sections/tech-marquee";
 import { brand, links, seo } from "@/content/data";
 import { SITE_URL } from "@/lib/constants";
 
@@ -38,6 +39,7 @@ export default function HomePage() {
         }}
       />
       <Hero />
+      <TechMarquee />
       <Problems />
       <Services />
       <Cases />

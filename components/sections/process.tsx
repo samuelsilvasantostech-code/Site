@@ -8,7 +8,8 @@ export function Process() {
       <ol className="relative grid gap-10 md:grid-cols-4 md:gap-6">
         <span
           aria-hidden="true"
-          className="absolute top-6 right-[12.5%] left-[12.5%] hidden h-px bg-gradient-to-r from-grad-from/60 to-grad-to/60 md:block"
+          data-scrub-line
+          className="absolute top-6 right-[12.5%] left-[12.5%] hidden h-0.5 origin-left rounded-full bg-gradient-to-r from-grad-from to-grad-to md:block"
         />
         {howItWorks.steps.map((step, i) => (
           <li key={step.title} data-animate className="relative md:text-center">

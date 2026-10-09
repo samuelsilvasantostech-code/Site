@@ -71,7 +71,7 @@ function LogoMark3D({ animate }: { animate: boolean }) {
   useFrame((state, delta) => {
     if (!animate || !group.current) return;
     const t = state.clock.elapsedTime;
-    const targetY = Math.sin(t * 0.35) * 0.45 + state.pointer.x * 0.35;
+    const targetY = Math.sin(t * 0.4) * 0.7 + state.pointer.x * 0.4;
     const targetX = -state.pointer.y * 0.25 + Math.sin(t * 0.25) * 0.08;
     group.current.rotation.y = THREE.MathUtils.damp(group.current.rotation.y, targetY, 3, delta);
     group.current.rotation.x = THREE.MathUtils.damp(group.current.rotation.x, targetX, 3, delta);
@@ -99,23 +99,18 @@ function LogoMark3D({ animate }: { animate: boolean }) {
 /* ------------------------------------------------------------------ */
 
 /**
- * Posições dos sistemas numa elipse em volta do núcleo. O raio horizontal
- * acompanha a largura visível, para os rótulos não saírem da área da cena.
+ * Sistemas num anel em volta do núcleo. O raio acompanha a largura visível,
+ * para os rótulos não saírem da área da cena.
  */
 function useOrbitNodes() {
   const width = useThree((state) => state.viewport.width);
   return useMemo(() => {
-    const rx = Math.min(3.15, width / 2 - 0.85);
-    const ry = Math.min(1.75, rx * 0.62);
+    const radius = Math.min(3.0, width / 2 - 0.75);
     return hero.diagram.nodes.map((label, i, all) => {
-      const angle = (i / all.length) * Math.PI * 2 + Math.PI / 6;
+      const angle = (i / all.length) * Math.PI * 2;
       return {
         label,
-        position: new THREE.Vector3(
-          Math.cos(angle) * rx,
-          Math.sin(angle) * ry,
-          -0.4 + Math.sin(angle * 2) * 0.35,
-        ),
+        position: new THREE.Vector3(Math.cos(angle) * radius, Math.sin(angle) * radius, 0),
       };
     });
   }, [width]);
@@ -136,7 +131,7 @@ function Packet({
 
   useFrame((state) => {
     if (!mesh.current) return;
-    const t = animate ? (state.clock.elapsedTime * 0.32 + offset) % 1 : 0.5;
+    const t = animate ? (state.clock.elapsedTime * 0.38 + offset) % 1 : 0.5;
     mesh.current.position.lerpVectors(from, to, t);
     const material = mesh.current.material as THREE.MeshBasicMaterial;
     // Aparece ao sair do sistema e some ao chegar no núcleo.
@@ -145,7 +140,7 @@ function Packet({
 
   return (
     <mesh ref={mesh}>
-      <sphereGeometry args={[0.055, 16, 16]} />
+      <sphereGeometry args={[0.06, 16, 16]} />
       <meshBasicMaterial
         color="#22D3EE"
         transparent
@@ -156,62 +151,92 @@ function Packet({
   );
 }
 
+/** Um sistema em órbita. O rótulo esmaece quando o sistema passa por trás do núcleo. */
+function OrbitNode({ label, position }: { label: string; position: THREE.Vector3 }) {
+  const ref = useRef<THREE.Group>(null);
+  const labelRef = useRef<HTMLSpanElement>(null);
+  const world = useMemo(() => new THREE.Vector3(), []);
+
+  useFrame(() => {
+    if (!ref.current || !labelRef.current) return;
+    ref.current.getWorldPosition(world);
+    const opacity = THREE.MathUtils.clamp(0.55 + world.z * 0.35, 0.18, 1);
+    labelRef.current.style.opacity = opacity.toFixed(2);
+  });
+
+  return (
+    <group ref={ref} position={position}>
+      <RoundedBox args={[0.42, 0.42, 0.42]} radius={0.09} smoothness={4}>
+        <meshPhysicalMaterial
+          color="#111827"
+          metalness={0.6}
+          roughness={0.25}
+          clearcoat={1}
+          emissive="#168BFF"
+          emissiveIntensity={0.18}
+        />
+      </RoundedBox>
+      <Html center position={[0, 0, 0.55]} zIndexRange={[10, 0]} pointerEvents="none">
+        <span
+          ref={labelRef}
+          className="block translate-y-7 rounded-full border border-line bg-background/80 px-2.5 py-0.5 text-xs font-semibold whitespace-nowrap text-foreground backdrop-blur"
+        >
+          {label}
+        </span>
+      </Html>
+    </group>
+  );
+}
+
+/** Ângulo do anel em relação à tela: inclinado para dar profundidade. */
+const RING_TILT = -1.08;
+
 function SystemsOrbit({ animate }: { animate: boolean }) {
-  const group = useRef<THREE.Group>(null);
+  const tilt = useRef<THREE.Group>(null);
+  const spin = useRef<THREE.Group>(null);
   const nodes = useOrbitNodes();
 
   useFrame((state, delta) => {
-    if (!animate || !group.current) return;
-    const t = state.clock.elapsedTime;
-    group.current.rotation.y = THREE.MathUtils.damp(
-      group.current.rotation.y,
-      Math.sin(t * 0.18) * 0.22 + state.pointer.x * 0.12,
+    if (!animate || !tilt.current || !spin.current) return;
+    // Os sistemas giram continuamente em volta do núcleo…
+    spin.current.rotation.z += delta * 0.16;
+    // …e o anel inclina levemente na direção do ponteiro.
+    tilt.current.rotation.x = THREE.MathUtils.damp(
+      tilt.current.rotation.x,
+      RING_TILT - state.pointer.y * 0.15,
       2,
       delta,
     );
-    group.current.rotation.x = THREE.MathUtils.damp(
-      group.current.rotation.x,
-      -state.pointer.y * 0.1,
+    tilt.current.rotation.y = THREE.MathUtils.damp(
+      tilt.current.rotation.y,
+      state.pointer.x * 0.2,
       2,
       delta,
     );
   });
 
   return (
-    <group ref={group}>
-      {nodes.map((node, i) => (
-        <group key={node.label}>
-          <Line
-            points={[node.position, [0, 0, 0]]}
-            color="#2563EB"
-            lineWidth={1.2}
-            transparent
-            opacity={0.35}
-          />
-          <Packet from={node.position} offset={i / nodes.length} animate={animate} />
-          <Packet from={node.position} offset={i / nodes.length + 0.5} animate={animate} />
-
-          <Float speed={animate ? 1.6 : 0} rotationIntensity={0.25} floatIntensity={0.4}>
-            <group position={node.position}>
-              <RoundedBox args={[0.42, 0.42, 0.42]} radius={0.09} smoothness={4}>
-                <meshPhysicalMaterial
-                  color="#111827"
-                  metalness={0.6}
-                  roughness={0.25}
-                  clearcoat={1}
-                  emissive="#168BFF"
-                  emissiveIntensity={0.12}
-                />
-              </RoundedBox>
-              <Html center position={[0, -0.48, 0]} zIndexRange={[10, 0]} pointerEvents="none">
-                <span className="rounded-full border border-line bg-background/80 px-2.5 py-0.5 text-xs font-semibold whitespace-nowrap text-foreground backdrop-blur">
-                  {node.label}
-                </span>
-              </Html>
-            </group>
-          </Float>
-        </group>
-      ))}
+    <group ref={tilt} rotation={[RING_TILT, 0, 0]}>
+      <group ref={spin}>
+        <mesh>
+          <torusGeometry args={[nodes[0]?.position.length() ?? 3, 0.006, 8, 160]} />
+          <meshBasicMaterial color="#2563EB" transparent opacity={0.35} />
+        </mesh>
+        {nodes.map((node, i) => (
+          <group key={node.label}>
+            <Line
+              points={[node.position, [0, 0, 0]]}
+              color="#2563EB"
+              lineWidth={1.2}
+              transparent
+              opacity={0.3}
+            />
+            <Packet from={node.position} offset={i / nodes.length} animate={animate} />
+            <Packet from={node.position} offset={i / nodes.length + 0.5} animate={animate} />
+            <OrbitNode label={node.label} position={node.position} />
+          </group>
+        ))}
+      </group>
     </group>
   );
 }
@@ -267,10 +292,13 @@ function Particles({ animate, count = 260 }: { animate: boolean; count?: number 
 type HeroSceneProps = {
   /** `false` com "reduzir movimento": a cena aparece parada. */
   animate: boolean;
+  /** `low` no celular: menos partículas e resolução menor. */
+  quality?: "high" | "low";
   onReady?: () => void;
 };
 
-export default function HeroScene({ animate, onReady }: HeroSceneProps) {
+export default function HeroScene({ animate, quality = "high", onReady }: HeroSceneProps) {
+  const low = quality === "low";
   const container = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(true);
 
@@ -291,7 +319,7 @@ export default function HeroScene({ animate, onReady }: HeroSceneProps) {
     <div ref={container} className="absolute inset-0">
       <Canvas
         frameloop={frameloop}
-        dpr={[1, 1.75]}
+        dpr={low ? [1, 1.25] : [1, 1.75]}
         camera={{ position: [0, 0, 8.2], fov: 38 }}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
         onCreated={() => onReady?.()}
@@ -305,10 +333,10 @@ export default function HeroScene({ animate, onReady }: HeroSceneProps) {
           <LogoMark3D animate={animate} />
         </Float>
         <SystemsOrbit animate={animate} />
-        <Particles animate={animate} />
+        <Particles animate={animate} count={low ? 120 : 260} />
 
         {/* Reflexos do símbolo: luzes de estúdio geradas na hora, sem baixar imagens. */}
-        <Environment resolution={256}>
+        <Environment resolution={low ? 128 : 256}>
           <Lightformer form="rect" intensity={3} position={[0, 5, -4]} scale={[10, 2, 1]} />
           <Lightformer
             form="rect"

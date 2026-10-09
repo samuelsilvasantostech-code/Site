@@ -27,6 +27,24 @@ export function ScrollReveal() {
             overwrite: true,
           }),
       });
+
+      // Linhas de progresso: se desenham conforme a seção atravessa a tela.
+      gsap.utils.toArray<HTMLElement>("[data-scrub-line]").forEach((line) => {
+        gsap.fromTo(
+          line,
+          { scaleX: 0 },
+          {
+            scaleX: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: line.closest("section") ?? line,
+              start: "top 75%",
+              end: "center 45%",
+              scrub: 0.6,
+            },
+          },
+        );
+      });
     });
   });
 

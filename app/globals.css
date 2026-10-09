@@ -123,6 +123,43 @@
   --animate-marquee: marquee 40s linear infinite;
 }
 
+/* Ângulo animável da borda de luz dos cards principais. */
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes spin-border {
+  to {
+    --angle: 360deg;
+  }
+}
+
+/* Setas dos fluxos: um "empurrão" curto, como dados passando. */
+@keyframes nudge-x {
+  0%,
+  100% {
+    transform: translateX(-2px);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translateX(3px);
+    opacity: 1;
+  }
+}
+@keyframes nudge-y {
+  0%,
+  100% {
+    transform: translateY(-2px);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translateY(3px);
+    opacity: 1;
+  }
+}
+
 /* Fluxo de dados nas linhas do diagrama do hero. */
 @keyframes flow {
   to {
@@ -243,6 +280,43 @@
       64px 64px,
       64px 64px;
     mask-image: linear-gradient(to bottom, #000 45%, transparent 100%);
+  }
+
+  /* Borda de luz girando (cards de destaque). Mais forte no hover. */
+  .glow-border::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    z-index: 1;
+    border-radius: inherit;
+    padding: 1px;
+    background: conic-gradient(
+      from var(--angle),
+      transparent 0 65%,
+      var(--grad-from) 80%,
+      var(--grad-to) 92%,
+      transparent
+    );
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    animation: spin-border 6s linear infinite;
+    opacity: 0.55;
+    transition: opacity 300ms var(--ease);
+    pointer-events: none;
+  }
+  .glow-border:hover::before {
+    opacity: 1;
+  }
+
+  /* Luz que acompanha o ponteiro (componente PointerSpotlight). */
+  .pointer-spotlight {
+    background: radial-gradient(
+      520px circle at var(--spot-x, 70%) var(--spot-y, 30%),
+      color-mix(in srgb, var(--grad-from) calc(var(--glow-opacity) * 70%), transparent),
+      transparent 60%
+    );
   }
 
   /* Cards com inclinação 3D (componente Tilt). */

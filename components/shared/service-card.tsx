@@ -19,7 +19,7 @@ export function ServiceCard({ service }: { service: Service }) {
         className={cn(
           "flex flex-col rounded-lg border bg-surface transition-colors duration-300 ease-in-out",
           principal
-            ? "border-line-strong p-7 hover:border-link/60 md:p-9"
+            ? "glow-border border-line-strong p-7 md:p-9"
             : "border-line p-6 hover:border-line-strong",
         )}
       >

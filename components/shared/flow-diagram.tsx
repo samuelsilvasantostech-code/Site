@@ -23,7 +23,13 @@ export function FlowDiagram({ steps, variant = "compact", className }: FlowDiagr
         <span className="sr-only">{description}</span>
         {steps.map((step, i) => (
           <Fragment key={`${step}-${i}`}>
-            {i > 0 && <ArrowRightIcon aria-hidden="true" className="size-3.5 shrink-0 text-link" />}
+            {i > 0 && (
+              <ArrowRightIcon
+                aria-hidden="true"
+                className="size-3.5 shrink-0 animate-[nudge-x_1.6s_ease-in-out_infinite] text-link"
+                style={{ animationDelay: `${i * 200}ms` }}
+              />
+            )}
             <span
               aria-hidden="true"
               className="rounded-md border border-line bg-background px-2 py-0.5 text-xs font-medium whitespace-nowrap"
@@ -47,8 +53,14 @@ export function FlowDiagram({ steps, variant = "compact", className }: FlowDiagr
           <Fragment key={`${step}-${i}`}>
             {i > 0 && (
               <li className="flex justify-center text-link sm:px-1">
-                <ArrowDownIcon className="size-5 sm:hidden" />
-                <ArrowRightIcon className="hidden size-5 sm:block" />
+                <ArrowDownIcon
+                  className="size-5 animate-[nudge-y_1.6s_ease-in-out_infinite] sm:hidden"
+                  style={{ animationDelay: `${i * 200}ms` }}
+                />
+                <ArrowRightIcon
+                  className="hidden size-5 animate-[nudge-x_1.6s_ease-in-out_infinite] sm:block"
+                  style={{ animationDelay: `${i * 200}ms` }}
+                />
               </li>
             )}
             <li

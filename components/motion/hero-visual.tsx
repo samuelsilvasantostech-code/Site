@@ -37,29 +37,34 @@ function detectCapable() {
   return capableCache;
 }
 
-/**
- * `true` quando vale a pena carregar a cena 3D: tela a partir de 768px,
- * WebGL disponível e sem o modo de economia de dados. No celular, a
- * ilustração em SVG (leve) fica no lugar. No servidor, assume que não.
- */
-function useCanRender3D() {
-  const wide = useSyncExternalStore(
+/** Telas a partir de 768px recebem a cena em qualidade alta; menores, a versão leve. */
+function useWide() {
+  return useSyncExternalStore(
     subscribeWide,
     () => window.matchMedia(WIDE).matches,
     () => false,
   );
-  const capable = useSyncExternalStore(subscribeNoop, detectCapable, () => false);
-  return wide && capable;
+}
+
+/**
+ * `true` quando dá para carregar a cena 3D: WebGL disponível e sem o modo de
+ * economia de dados. Caso contrário, a ilustração em SVG fica no lugar.
+ * No servidor, assume que não.
+ */
+function useCanRender3D() {
+  return useSyncExternalStore(subscribeNoop, detectCapable, () => false);
 }
 
 /**
  * Visual do hero: mostra a ilustração em SVG (`fallback`) de imediato e a
- * troca pela cena 3D animada quando ela termina de carregar. No celular, sem
- * WebGL ou com economia de dados, a ilustração continua (a cena nem é baixada).
+ * troca pela cena 3D animada quando ela termina de carregar (versão leve no
+ * celular). Sem WebGL ou com economia de dados, a ilustração continua e a cena
+ * nem é baixada.
  * Com "reduzir movimento", a cena 3D aparece parada.
  */
 export function HeroVisual({ fallback }: { fallback: ReactNode }) {
   const webgl = useCanRender3D();
+  const wide = useWide();
   const reduceMotion = useReducedMotion();
   const [ready, setReady] = useState(false);
 
@@ -80,7 +85,11 @@ export function HeroVisual({ fallback }: { fallback: ReactNode }) {
             ready && "opacity-100",
           )}
         >
-          <HeroScene animate={!reduceMotion} onReady={() => setReady(true)} />
+          <HeroScene
+            animate={!reduceMotion}
+            quality={wide ? "high" : "low"}
+            onReady={() => setReady(true)}
+          />
         </div>
       )}
     </div>
