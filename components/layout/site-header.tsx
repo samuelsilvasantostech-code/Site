@@ -1,111 +1,104 @@
 "use client";
 
+import { MenuIcon, XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { useActiveSection } from "@/components/motion/use-active-section";
-import { nav, profile, ui } from "@/content/data";
+import { Button } from "@/components/ui/button";
+import { contact, links, nav, ui } from "@/content/data";
+import { whatsappUrl } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
-import { BrandMark } from "./brand-mark";
-import { iconButtonClass } from "./icon-button";
+import { Brand } from "./brand";
+import { CommandMenu } from "./command-menu";
 import { ThemeToggle } from "./theme-toggle";
 
 const SECTION_IDS = nav.map((item) => item.id);
 
+/** Header fixo com efeito de vidro. Ganha borda quando a página rola. */
 export function SiteHeader() {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const active = useActiveSection(SECTION_IDS);
 
   useEffect(() => {
-    if (!menuOpen) return;
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    if (!open) return;
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setMenuOpen(false);
-        document.getElementById("menu-toggle")?.focus();
-      }
+      if (event.key === "Escape") setOpen(false);
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [menuOpen]);
+  }, [open]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line bg-background/88 backdrop-blur-[10px]">
-      <div className="wrap flex h-(--header-h) items-center gap-4">
-        <a
-          href="#topo"
-          className="mr-auto inline-flex items-center gap-[0.7rem] font-semibold tracking-[-0.01em] no-underline"
-        >
-          <BrandMark className="size-[34px]" />
-          <span className="text-[1.05rem] max-lg:sr-only">{profile.shortName}</span>
-        </a>
+    <header
+      className={cn(
+        "fixed inset-x-0 top-0 z-50 border-b transition-colors duration-300 ease-in-out",
+        scrolled || open
+          ? "border-line bg-background/70 backdrop-blur-xl"
+          : "border-transparent bg-transparent",
+      )}
+    >
+      <div className="mx-auto flex h-(--header-h) max-w-6xl items-center gap-6 px-6">
+        <Brand />
 
         <nav
           id="site-nav"
           aria-label={ui.mainNav}
           className={cn(
-            "max-lg:fixed max-lg:inset-x-0 max-lg:top-(--header-h) max-lg:border-b max-lg:border-line max-lg:bg-background max-lg:px-(--pad) max-lg:pt-3 max-lg:pb-5",
-            !menuOpen && "max-lg:hidden",
+            "ml-auto max-md:absolute max-md:inset-x-0 max-md:top-(--header-h) max-md:border-b max-md:border-line max-md:bg-background max-md:px-6 max-md:py-4",
+            !open && "max-md:hidden",
           )}
           onClick={(event) => {
-            if ((event.target as HTMLElement).closest("a")) setMenuOpen(false);
+            if ((event.target as HTMLElement).closest("a")) setOpen(false);
           }}
         >
-          <ul className="flex gap-1 max-lg:flex-col max-lg:gap-0">
-            {nav.map((item) => {
-              const current = active === item.id;
-              return (
-                <li key={item.id}>
-                  <a
-                    href={`#${item.id}`}
-                    aria-current={current ? "true" : undefined}
-                    className={cn(
-                      "block rounded-sm px-[0.7rem] py-2 text-sm text-muted-foreground no-underline transition-colors duration-200 hover:text-foreground",
-                      "aria-[current=true]:rounded-none aria-[current=true]:text-foreground aria-[current=true]:shadow-[inset_0_-2px_0_var(--accent)]",
-                      "max-lg:border-b max-lg:border-line max-lg:px-0 max-lg:py-[0.85rem] max-lg:text-md max-lg:text-foreground",
-                      "max-lg:aria-[current=true]:text-brand max-lg:aria-[current=true]:shadow-none",
-                    )}
-                  >
-                    {item.label}
-                  </a>
-                </li>
-              );
-            })}
+          <ul className="flex items-center gap-1 max-md:flex-col max-md:items-stretch">
+            {nav.map((item) => (
+              <li key={item.id}>
+                <a
+                  href={`/#${item.id}`}
+                  aria-current={active === item.id ? "true" : undefined}
+                  className="block rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors duration-300 ease-in-out hover:text-foreground aria-[current=true]:text-foreground max-md:py-3 max-md:text-base"
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))}
           </ul>
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 max-md:ml-auto">
+          <CommandMenu compact />
           <ThemeToggle />
-          <button
-            id="menu-toggle"
-            type="button"
-            className={cn(iconButtonClass, "lg:hidden")}
-            aria-expanded={menuOpen}
-            aria-controls="site-nav"
-            aria-label={menuOpen ? ui.closeMenu : ui.menu}
-            onClick={() => setMenuOpen((open) => !open)}
-          >
-            <svg
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-              focusable="false"
-              className="size-5 fill-none stroke-current [stroke-width:1.7] [stroke-linecap:round]"
+          <Button asChild size="sm" className="btn-glow ml-2 max-sm:hidden">
+            <a
+              href={whatsappUrl(links.whatsapp, contact.whatsappMessage)}
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              <path
-                d="M4 8h16"
-                className={cn(
-                  "origin-center transition-transform duration-200",
-                  menuOpen && "translate-y-1 rotate-45",
-                )}
-              />
-              <path
-                d="M4 16h16"
-                className={cn(
-                  "origin-center transition-transform duration-200",
-                  menuOpen && "-translate-y-1 -rotate-45",
-                )}
-              />
-            </svg>
-          </button>
+              {ui.headerCta}
+            </a>
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+            aria-expanded={open}
+            aria-controls="site-nav"
+            aria-label={open ? ui.closeMenu : ui.openMenu}
+            onClick={() => setOpen((value) => !value)}
+          >
+            {open ? <XIcon aria-hidden="true" /> : <MenuIcon aria-hidden="true" />}
+          </Button>
         </div>
       </div>
     </header>

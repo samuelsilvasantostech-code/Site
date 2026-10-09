@@ -3,23 +3,24 @@
 import { MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 
+import { Button } from "@/components/ui/button";
 import { ui } from "@/content/data";
-
-import { iconButtonClass } from "./icon-button";
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
 
   return (
-    <button
+    <Button
       type="button"
-      className={iconButtonClass}
+      variant="ghost"
+      size="icon"
       aria-label={ui.toggleTheme}
+      title={ui.toggleTheme}
       onClick={() => setTheme(resolvedTheme === "light" ? "dark" : "light")}
     >
-      {/* Os dois ícones são renderizados; o CSS mostra o certo sem esperar a hidratação. */}
-      <SunIcon className="hidden size-5 dark:block" strokeWidth={1.7} aria-hidden="true" />
-      <MoonIcon className="size-5 dark:hidden" strokeWidth={1.7} aria-hidden="true" />
-    </button>
+      {/* Os dois ícones são renderizados; o CSS mostra o certo antes da hidratação. */}
+      <SunIcon className="hidden dark:block" aria-hidden="true" />
+      <MoonIcon className="dark:hidden" aria-hidden="true" />
+    </Button>
   );
 }

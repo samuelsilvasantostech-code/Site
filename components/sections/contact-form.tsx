@@ -24,8 +24,8 @@ import { cn } from "@/lib/utils";
 type Status = { tone: "ok" | "error"; text: string; withEmail?: boolean } | null;
 
 const fieldClass =
-  "h-auto rounded-md border-line-strong bg-card px-[0.95rem] py-[0.85rem] text-base shadow-none md:text-base dark:bg-card " +
-  "placeholder:text-muted-foreground focus-visible:border-brand focus-visible:ring-[3px] focus-visible:ring-brand-soft";
+  "h-11 rounded-md border-line-strong bg-background px-3 text-base shadow-none md:text-base dark:bg-background " +
+  "placeholder:text-muted-foreground focus-visible:border-link focus-visible:ring-[3px] focus-visible:ring-link-soft";
 
 export function ContactForm() {
   const f = contact.form;
@@ -72,7 +72,7 @@ export function ContactForm() {
           name="name"
           render={({ field }) => (
             <FormItem className="gap-[0.4rem]">
-              <FormLabel className="text-sm font-semibold">{f.name}</FormLabel>
+              <FormLabel className="text-sm font-medium">{f.name}</FormLabel>
               <FormControl>
                 <Input
                   autoComplete="name"
@@ -90,7 +90,7 @@ export function ContactForm() {
           name="email"
           render={({ field }) => (
             <FormItem className="gap-[0.4rem]">
-              <FormLabel className="text-sm font-semibold">{f.email}</FormLabel>
+              <FormLabel className="text-sm font-medium">{f.email}</FormLabel>
               <FormControl>
                 <Input
                   type="email"
@@ -110,14 +110,14 @@ export function ContactForm() {
           name="message"
           render={({ field }) => (
             <FormItem className="gap-[0.4rem]">
-              <FormLabel className="text-sm font-semibold">{f.message}</FormLabel>
+              <FormLabel className="text-sm font-medium">{f.message}</FormLabel>
               <FormControl>
                 <Textarea
                   placeholder={f.messagePlaceholder}
                   maxLength={CONTACT_LIMITS.messageMax}
                   className={cn(
                     fieldClass,
-                    "[field-sizing:fixed] min-h-[150px] resize-y leading-normal",
+                    "[field-sizing:fixed] h-auto min-h-[150px] resize-y py-2.5 leading-normal",
                   )}
                   {...field}
                 />
@@ -143,7 +143,7 @@ export function ContactForm() {
           type="submit"
           size="lg"
           disabled={pending}
-          className="h-12 justify-self-start px-[1.35rem] text-base font-semibold disabled:cursor-progress disabled:opacity-65"
+          className="btn-glow h-12 justify-self-start px-6 text-base disabled:cursor-progress disabled:opacity-65"
         >
           {pending ? f.sending : f.submit}
         </Button>
@@ -153,8 +153,8 @@ export function ContactForm() {
           aria-live="polite"
           className={cn(
             "min-h-[1.6em] text-sm",
-            status?.tone === "ok" && "text-brand",
-            status?.tone === "error" && "text-signal",
+            status?.tone === "ok" && "text-link",
+            status?.tone === "error" && "text-destructive",
           )}
         >
           {status?.text}

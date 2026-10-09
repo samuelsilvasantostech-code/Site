@@ -2,7 +2,11 @@
 
 Site pessoal one-page: integrações, automação e CRM omnichannel.
 
-**Conceito visual:** canvas de workflow. As seções são nós ligados por um trilho que acende conforme a rolagem, e o hero mostra o fluxo ERP → n8n → WhatsApp/CRM com dados em trânsito.
+**Visual:** corporate tech (referências: Zallpy, Luby, Vercel). Fundo zinc-950 com faixas brancas intercaladas, gradiente ciano → roxo só em elementos de tecnologia, Plus Jakarta Sans extrabold nos títulos.
+
+**Seções:** hero com painel do fluxo, faixa de plataformas e números, serviços, diferenciais (bento grid), como trabalho, cases, sobre, dúvidas (acordeão) e contato.
+
+**Funções:** menu de comandos (Ctrl/⌘ + K), copiar e-mail com aviso, WhatsApp com mensagem pronta, página própria para cada case e currículo imprimível em `/curriculo`.
 
 ## Stack
 
@@ -60,19 +64,21 @@ Na primeira vez, instale o navegador dos testes: `npx playwright install chromiu
 app/                    Rotas e arquivos especiais do Next.js
 ├── layout.tsx          Layout raiz: fontes, metadata, tema, Analytics, Speed Insights
 ├── page.tsx            Página inicial + JSON-LD (schema.org/Person)
+├── cases/[slug]/       Página de cada case (gerada no build a partir de content/data.ts)
+├── curriculo/          Currículo imprimível (Imprimir → Salvar como PDF)
 ├── not-found.tsx       Página 404
 ├── opengraph-image.tsx Imagem de preview gerada a partir do conteúdo
 ├── sitemap.ts, robots.ts, manifest.ts
 ├── actions/contact.ts  Server Action do formulário
-├── globals.css         Tokens de cor, tema claro/escuro, estilos do diagrama e do trilho
-├── fonts/              Familjen Grotesk e Martian Mono (woff2; og/ tem os .ttf da imagem OG)
+├── globals.css         Tokens de cor, tema claro/escuro e estilos de impressão
+├── fonts/              og/ guarda os .ttf da Plus Jakarta Sans usados na imagem OG (a fonte do site vem do next/font)
 └── icon.png, apple-icon.png, favicon.ico
 components/
 ├── ui/                 Primitives do shadcn — NÃO editar à mão (use `npx shadcn add`)
-├── sections/           Hero, About, Services, Integrations, Cases, Experience, Contact
-├── motion/             GSAP: registro de plugins, trilho, hooks de rolagem e movimento reduzido
-├── layout/             Cabeçalho, rodapé, tema
-└── shared/             Peças reutilizadas pelas seções (título, tags, mini fluxo, métricas)
+├── sections/           Hero, Integrations (plataformas e números), Services, Differentiators, Process, Cases, About + Experience, Faq, Contact
+├── motion/             GSAP: registro de plugins, fade-in no scroll, seção ativa e movimento reduzido
+├── layout/             Header com vidro, menu de comandos, copiar e-mail, links sociais, tema, rodapé
+└── shared/             Peças reutilizadas pelas seções (seção, tags, fluxo de dados, métricas)
 content/data.ts         TODO o conteúdo do site (textos, links, cases), tipado
 lib/                    utils, constantes e schemas zod
 tests/                  Testes Playwright e de acessibilidade (axe)
@@ -111,7 +117,8 @@ Copie um item de `cases.items` e ajuste. A ordem no arquivo é a ordem no site.
 
 - **Foto no "Sobre":** salve `public/samuel.webp` (600×600) e preencha `about.photo: "/samuel.webp"`.
 - **Logos nas integrações:** adicione `logo: "/logos/omie.svg"` ao item (arquivo em `public/logos/`). Use apenas logos que você tenha permissão de usar.
-- **Cores:** tokens no topo de `app/globals.css` (`:root` = claro, `.dark` = escuro).
+- **Cores:** tokens no topo de `app/globals.css`. Seções com `tone="invert"` usam o tema oposto (faixas brancas no tema escuro).
+- **Números de impacto:** `impact` em `content/data.ts`. Use só dados reais.
 - **Componentes do shadcn:** `npx shadcn@latest add <componente>`.
 
 ## Convenções

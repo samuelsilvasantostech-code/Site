@@ -1,15 +1,32 @@
 import type { Metric } from "@/content/data";
+import { cn } from "@/lib/utils";
 
-export function Metrics({ metrics }: { metrics: readonly Metric[] }) {
+/** Números de resultado. `size="lg"` é usado na página do case. */
+export function Metrics({
+  metrics,
+  size = "sm",
+  className,
+}: {
+  metrics: readonly Metric[];
+  size?: "sm" | "lg";
+  className?: string;
+}) {
   if (!metrics.length) return null;
   return (
-    <ul className="flex flex-wrap gap-x-6 gap-y-2">
+    <dl className={cn("flex flex-wrap gap-x-8 gap-y-3", className)}>
       {metrics.map((metric) => (
-        <li key={metric.label} className="flex items-baseline gap-[0.45rem]">
-          <b className="text-md font-bold text-foreground tabular-nums">{metric.value}</b>
-          <span className="text-sm text-muted-foreground">{metric.label}</span>
-        </li>
+        <div key={metric.label} className="flex flex-col-reverse">
+          <dt className="text-sm text-muted-foreground">{metric.label}</dt>
+          <dd
+            className={cn(
+              "font-semibold tracking-[-0.02em] text-foreground",
+              size === "lg" ? "text-2xl" : "text-lg",
+            )}
+          >
+            {metric.value}
+          </dd>
+        </div>
       ))}
-    </ul>
+    </dl>
   );
 }

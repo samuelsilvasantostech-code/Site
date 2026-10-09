@@ -1,30 +1,19 @@
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata, Viewport } from "next";
-import localFont from "next/font/local";
+import { Plus_Jakarta_Sans } from "next/font/google";
 
 import { ThemeProvider } from "@/components/layout/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 import { profile, seo, ui } from "@/content/data";
 import { SITE_URL, THEME_COLOR_DARK } from "@/lib/constants";
 
 import "./globals.css";
 
-/* Fontes auto-hospedadas (SIL Open Font License). */
-const familjen = localFont({
-  src: [
-    { path: "./fonts/familjen-grotesk-latin.woff2", weight: "400 700", style: "normal" },
-    { path: "./fonts/familjen-grotesk-latin-ext.woff2", weight: "400 700", style: "normal" },
-  ],
-  variable: "--font-familjen",
-  display: "swap",
-});
-
-const martian = localFont({
-  src: [
-    { path: "./fonts/martian-mono-latin.woff2", weight: "400 500", style: "normal" },
-    { path: "./fonts/martian-mono-latin-ext.woff2", weight: "400 500", style: "normal" },
-  ],
-  variable: "--font-martian",
+/* Fonte servida pelo próprio site (o Next baixa e hospeda no build). */
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-jakarta",
   display: "swap",
 });
 
@@ -61,19 +50,18 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="pt-BR"
-      className={`${familjen.variable} ${martian.variable}`}
-      suppressHydrationWarning
-    >
+    <html lang="pt-BR" className={jakarta.variable} suppressHydrationWarning>
       <body>
         <a
           href="#conteudo"
-          className="absolute -top-25 left-(--pad) z-100 rounded-sm bg-primary px-4 py-[0.7rem] font-semibold text-primary-foreground no-underline focus:top-3"
+          className="absolute -top-25 left-4 z-100 rounded-md bg-primary px-4 py-2.5 font-medium text-primary-foreground focus:top-4"
         >
           {ui.skip}
         </a>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          {children}
+          <Toaster position="bottom-center" />
+        </ThemeProvider>
         <Analytics />
         <SpeedInsights />
       </body>

@@ -8,14 +8,27 @@
 
 export type NavItem = { id: SectionId; label: string };
 
-export type SectionId = "sobre" | "servicos" | "integracoes" | "cases" | "experiencia" | "contato";
+export type SectionId =
+  "topo" | "servicos" | "diferenciais" | "como-trabalho" | "cases" | "sobre" | "faq" | "contato";
+
+/** Ícones disponíveis para serviços e diferenciais (nomes do lucide). */
+export type IconName =
+  | "plug"
+  | "workflow"
+  | "messages"
+  | "chart"
+  | "rocket"
+  | "headset"
+  | "shield"
+  | "gauge"
+  | "database";
 
 export type Metric = { value: string; label: string };
 
 export type CaseStudy = {
   slug: string;
   title: string;
-  /** Mini fluxo exibido no card (2 a 4 itens). */
+  /** Caminho dos dados, da origem ao destino (2 a 4 sistemas). */
   flow: string[];
   summary: string;
   problem: string;
@@ -55,6 +68,8 @@ export const profile = {
   givenName: "Samuel",
   familyName: "Silva Santos",
   role: "Analista de Tecnologia | Integrações, Automação e CRM Omnichannel",
+  /** Cargo curto para a lateral e o currículo. */
+  headline: "Analista de integrações e automação",
   city: "Montes Claros",
   region: "MG",
   country: "BR",
@@ -68,7 +83,7 @@ export const seo = {
     "Analista de Tecnologia em Montes Claros, MG. Integro ERP, CRM, meios de pagamento e WhatsApp com n8n, Make e APIs REST, e implanto atendimento omnichannel. Disponível para trabalho remoto.",
   shareDescription:
     "Integro ERP, CRM, meios de pagamento e WhatsApp para que cobranças, vendas e atendimentos rodem sozinhos.",
-  ogAlt: `${profile.name}, Analista de Tecnologia. Diagrama ligando ERP, n8n e WhatsApp.`,
+  ogAlt: `${profile.name}, analista de integrações e automação.`,
   personDescription:
     "Analista de Implantação especializado em integração entre sistemas (ERP, CRM, bancos e meios de pagamento), automação com n8n e Make, APIs REST e atendimento omnichannel.",
   knowsAbout: [
@@ -95,28 +110,44 @@ export const seo = {
 
 export const ui = {
   skip: "Pular para o conteúdo",
-  menu: "Abrir menu",
+  openMenu: "Abrir menu",
   closeMenu: "Fechar menu",
+  headerCta: "Agendar conversa",
+  home: "Página inicial",
+  readCaseShort: "Ver case",
+  allCasesLink: "Ver todos os cases",
   toggleTheme: "Alternar tema claro e escuro",
-  viewDetails: "Ver detalhes",
-  close: "Fechar",
+  mainNav: "Seções da página",
+  social: "Perfis e contato",
   problem: "Problema",
   solution: "Solução",
   howItWorks: "Como funciona",
   stack: "Tecnologias",
-  backToTop: "Voltar ao topo",
-  mainNav: "Principal",
-  diagramLabel:
-    "Diagrama animado: dados saem do ERP e do meio de pagamento, passam por um workflow no n8n e chegam ao WhatsApp e ao CRM.",
+  results: "Resultados",
+  allCases: "Todos os cases",
+  previousCase: "Case anterior",
+  nextCase: "Próximo case",
+  readCase: "Ler o case",
+  copyEmail: "Copiar e-mail",
+  emailCopied: "E-mail copiado",
+  emailCopyFailed: "Não foi possível copiar. O e-mail é",
+  resume: "Ver currículo",
+  printResume: "Imprimir ou salvar em PDF",
+  backHome: "Voltar ao início",
+  search: "Buscar",
+  commandTitle: "Menu de comandos",
+  commandDescription: "Navegue pelo site, abra um case ou entre em contato.",
+  commandPlaceholder: "Digite um comando ou procure um case…",
+  commandEmpty: "Nada encontrado com esse termo.",
+  commandGroups: { navigate: "Ir para", cases: "Cases", actions: "Ações", links: "Links" },
 };
 
 export const nav: NavItem[] = [
-  { id: "sobre", label: "Sobre" },
-  { id: "servicos", label: "O que eu faço" },
-  { id: "integracoes", label: "Integrações" },
+  { id: "servicos", label: "Serviços" },
+  { id: "como-trabalho", label: "Como trabalho" },
   { id: "cases", label: "Cases" },
-  { id: "experiencia", label: "Experiência" },
-  { id: "contato", label: "Contato" },
+  { id: "sobre", label: "Sobre" },
+  { id: "faq", label: "Dúvidas" },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -125,32 +156,140 @@ export const nav: NavItem[] = [
 
 export const hero = {
   name: profile.name,
-  role: profile.role,
+  headline: profile.headline,
+  badge: "Aceitando novos projetos remotos",
+  title: "Integrações que fazem a sua operação rodar sozinha",
   value:
-    "Conecto ERP, CRM, meios de pagamento e WhatsApp para que cobranças, vendas e atendimentos rodem sozinhos, sem planilha no meio e sem retrabalho.",
-  ctaPrimary: "Ver projetos",
-  ctaSecondary: "Falar comigo",
-  status: "Analista de Implantação na Kentro Sistemas. Disponível para trabalho remoto.",
-  diagram: {
-    sources: [
-      { title: "ERP", detail: "Conta Azul / Omie" },
-      { title: "Pagamentos", detail: "Cielo" },
-    ],
-    hub: { title: "n8n", detail: "workflow" },
-    targets: [
-      { title: "WhatsApp", detail: "cobrança enviada" },
-      { title: "CRM", detail: "venda criada" },
-    ],
-    log: [
-      { time: "07:00:01", text: "trigger agendado", status: "ok" },
-      { time: "07:00:02", text: "GET /cobrancas?pagina=1", status: "200" },
-      { time: "07:00:04", text: "lote 1/12, 50 itens", status: "ok" },
-      { time: "07:00:05", text: "rate limit: aguardando 1s", status: "wait", warn: true },
-      { time: "07:00:06", text: "POST /mensagens", status: "201" },
-      { time: "07:00:07", text: "webhook venda.fechada", status: "200" },
-      { time: "07:00:08", text: "POST /vendas", status: "201" },
+    "Conecto ERP, CRM, meios de pagamento e WhatsApp para que cobranças, vendas e atendimentos aconteçam sem planilha no meio e sem retrabalho.",
+  ctaPrimary: "Agendar uma conversa",
+  ctaSecondary: "Ver cases",
+  /** Painel ilustrativo do hero: um fluxo real, simplificado. */
+  panel: {
+    title: "Régua de cobrança",
+    caption: "Exemplo de arquitetura entregue: cinco workflows coordenados",
+    steps: [
+      { name: "Renovar token OAuth do ERP", tool: "n8n" },
+      { name: "Sincronizar cobranças alteradas", tool: "API REST" },
+      { name: "Classificar pagas, em aberto e vencidas", tool: "Supabase" },
+      { name: "Decidir quem recebe qual mensagem", tool: "Regras" },
+      { name: "Enviar e registrar o resultado", tool: "WhatsApp" },
     ],
   },
+};
+
+/** Faixa de plataformas (social proof). Só sistemas já integrados em projetos reais. */
+/**
+ * Números de impacto. Use só dados reais: os dois primeiros são calculados
+ * a partir das integrações e dos cases; os demais vêm dos cases.
+ */
+export const impact = [
+  { value: "450–600", label: "cobranças por mês enviadas sem intervenção manual" },
+  { value: "5", label: "workflows coordenados em uma única régua de cobrança" },
+];
+
+export const platforms = {
+  title: "Plataformas que já integrei em projetos reais",
+  items: [
+    "Conta Azul",
+    "Omie",
+    "Cielo",
+    "WhatsApp",
+    "n8n",
+    "Make",
+    "Supabase",
+    "BigQuery",
+    "Power BI",
+    "Facebook Lead Ads",
+    "Kentro",
+  ],
+};
+
+export const differentiators: {
+  title: string;
+  intro: string;
+  items: { title: string; text: string; icon: IconName; featured?: boolean; path?: string[] }[];
+} = {
+  title: "Integração que aguenta a segunda-feira às 8h",
+  intro:
+    "Fluxo bonito no diagrama não basta. O que importa é o que acontece quando a API cai, o token expira ou chegam mil registros de uma vez.",
+  items: [
+    {
+      title: "Quem conhece a operação por dentro",
+      text: "Dois anos na linha de frente do atendimento antes de ir para a tecnologia. Eu projeto pensando em quem vai usar o fluxo e no cliente que está esperando do outro lado.",
+      icon: "headset",
+      featured: true,
+      path: ["Operação de atendimento", "Implantação de sistemas", "Integrações e automação"],
+    },
+    {
+      title: "Falhas tratadas desde o início",
+      text: "Logs de cada execução e reprocessamento quando algo dá errado.",
+      icon: "shield",
+    },
+    {
+      title: "Limites de API respeitados",
+      text: "Paginação, lotes e pausas para não perder registros nem ser bloqueado.",
+      icon: "gauge",
+    },
+    {
+      title: "Estado guardado entre execuções",
+      text: "Nada de mensagem duplicada: cada execução sabe o que já foi feito.",
+      icon: "database",
+    },
+    {
+      title: "Do levantamento ao go-live",
+      text: "Mapeamento, configuração, treinamento da equipe e acompanhamento depois da entrada.",
+      icon: "rocket",
+    },
+  ],
+};
+
+export const howIWork = {
+  title: "Como trabalho",
+  intro: "Um caminho curto entre o problema e a automação rodando em produção.",
+  steps: [
+    {
+      title: "Diagnóstico",
+      text: "Entendo o processo atual, os sistemas envolvidos e onde está o retrabalho.",
+    },
+    {
+      title: "Desenho da solução",
+      text: "Defino o fluxo dos dados, as regras e o que acontece quando algo falha.",
+    },
+    {
+      title: "Implementação",
+      text: "Construo e testo as integrações com dados reais antes de ligar em produção.",
+    },
+    {
+      title: "Go-live e acompanhamento",
+      text: "Treino a equipe, acompanho as primeiras execuções e ajusto o que for preciso.",
+    },
+  ],
+};
+
+export const faq = {
+  title: "Dúvidas frequentes",
+  items: [
+    {
+      question: "Que tipo de sistema você consegue integrar?",
+      answer:
+        "Qualquer sistema que tenha API REST ou webhooks: ERPs, CRMs, meios de pagamento, plataformas de atendimento e ferramentas de dados. Já integrei Conta Azul, Omie, Cielo, WhatsApp, Facebook Lead Ads, Supabase e BigQuery, entre outros.",
+    },
+    {
+      question: "Você trabalha com n8n ou com Make?",
+      answer:
+        "Com os dois. A escolha depende do volume, do orçamento e de onde a automação vai rodar. Quando a ferramenta não resolve, escrevo o trecho em JavaScript, Python ou SQL.",
+    },
+    {
+      question: "E se a integração parar de funcionar?",
+      answer:
+        "Os fluxos registram cada execução e permitem reprocessar o que falhou. Assim fica claro o que aconteceu e nada se perde enquanto o problema é resolvido.",
+    },
+    {
+      question: "Como começamos?",
+      answer:
+        "Você me conta o cenário pelo formulário ou pelo WhatsApp. Eu respondo em até dois dias úteis com as perguntas que faltam e um caminho possível para a solução.",
+    },
+  ],
 };
 
 export const about = {
@@ -171,31 +310,36 @@ export const about = {
 };
 
 export const services = {
-  title: "O que eu faço",
+  title: "Serviços",
   intro:
     "Cinco frentes que se complementam: a integração só gera resultado quando o processo e as pessoas acompanham.",
   items: [
     {
+      icon: "plug" as IconName,
       title: "Integrações & APIs",
       text: "Conecto ERPs, CRMs, bancos e meios de pagamento por API REST e webhooks, com autenticação, paginação e tratamento de erro desde o primeiro dia.",
       tags: ["REST", "Webhooks", "OAuth 2.0"],
     },
     {
+      icon: "workflow" as IconName,
       title: "Automação",
       text: "Transformo tarefas repetitivas em workflows no n8n e no Make: cobranças, criação de vendas, sincronização de cadastros. Com logs e reprocessamento quando algo falha.",
       tags: ["n8n", "Make", "Agendamentos"],
     },
     {
+      icon: "messages" as IconName,
       title: "Omnichannel & CRM",
       text: "Organizo WhatsApp, chat e e-mail em uma só plataforma, com filas, departamentos e roteamento, integrada ao CRM para o atendente ver o histórico completo.",
       tags: ["WhatsApp", "Chat", "E-mail"],
     },
     {
+      icon: "chart" as IconName,
       title: "Dados & BI",
       text: "Levo dados de atendimento, CRM, leads e mídia para o BigQuery e entrego dashboards no Power BI que a gestão consegue usar para decidir.",
       tags: ["BigQuery", "SQL", "Power BI"],
     },
     {
+      icon: "rocket" as IconName,
       title: "Implantação",
       text: "Conduzo a implantação do levantamento ao go-live: mapeamento de processos, configuração, treinamento da equipe e acompanhamento depois da entrada.",
       tags: ["Processos", "Treinamento", "Go-live"],
@@ -434,9 +578,12 @@ export const experience = {
 };
 
 export const contact = {
-  title: "Vamos conversar",
+  title: "Vamos tirar a sua operação da planilha?",
   intro:
     "Precisa integrar sistemas, automatizar um processo ou estruturar o atendimento? Conte o cenário e eu respondo com um caminho possível.",
+  whatsappCta: "Conversar no WhatsApp",
+  /** Mensagem que já aparece digitada ao abrir o WhatsApp. */
+  whatsappMessage: "Olá, Samuel! Vi o seu portfólio e quero conversar sobre uma integração.",
   channels: [
     { key: "email", label: "E-mail" },
     { key: "linkedin", label: "LinkedIn" },
@@ -457,7 +604,21 @@ export const contact = {
 };
 
 export const footer = {
-  note: "Montes Claros, MG. Feito com Next.js, Tailwind CSS e GSAP.",
+  note: "Feito com Next.js e Tailwind CSS. Hospedado na Vercel.",
+};
+
+/** Página /curriculo: reaproveita o resto do conteúdo e acrescenta só o que é próprio dela. */
+export const resume = {
+  title: "Currículo",
+  summary:
+    "Analista de Implantação com base em atendimento ao cliente. Integro ERPs, CRMs, meios de pagamento e WhatsApp por APIs REST, webhooks, n8n e Make, e implanto atendimento omnichannel do levantamento ao go-live.",
+  sections: {
+    experience: "Experiência",
+    cases: "Projetos selecionados",
+    skills: "Competências",
+    education: "Formação",
+    contact: "Contato",
+  },
 };
 
 export const notFound = {

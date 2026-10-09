@@ -1,39 +1,50 @@
+import { FileTextIcon } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 import { Section } from "@/components/shared/section";
-import { about } from "@/content/data";
+import { Button } from "@/components/ui/button";
+import { about, ui } from "@/content/data";
+
+import { Experience } from "./experience";
 
 export function About() {
   return (
-    <Section id="sobre" title={about.title}>
-      <div className="grid gap-10 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] lg:gap-16">
-        <div className="space-y-[1.1rem]">
-          {about.paragraphs.map((paragraph, i) => (
-            <p key={i} className="max-w-[38rem] text-pretty first:text-md">
-              {paragraph}
-            </p>
-          ))}
-        </div>
-
-        <aside className="grid content-start gap-6">
+    <Section id="sobre" tone="invert" title={about.title}>
+      <div className="grid gap-14 lg:grid-cols-[1.4fr_1fr] lg:gap-20">
+        <div data-animate>
           {about.photo && (
             <Image
               src={about.photo}
               alt={about.photoAlt}
               width={600}
               height={600}
-              className="aspect-square w-full max-w-[280px] rounded-lg border border-line object-cover"
+              className="mb-8 size-24 rounded-full object-cover"
             />
           )}
-          <dl className="border-t border-line">
-            {about.facts.map((fact) => (
-              <div key={fact.term} className="border-b border-line py-[0.9rem]">
-                <dt className="font-mono text-xs text-muted-foreground">{fact.term}</dt>
-                <dd className="mt-[0.2rem]">{fact.value}</dd>
-              </div>
+          <div className="max-w-[62ch] space-y-5 text-pretty">
+            {about.paragraphs.map((paragraph, i) => (
+              <p
+                key={i}
+                className={
+                  i === 0 ? "text-xl leading-relaxed" : "leading-relaxed text-muted-foreground"
+                }
+              >
+                {paragraph}
+              </p>
             ))}
-          </dl>
-        </aside>
+          </div>
+          <Button asChild variant="outline" className="mt-8 bg-transparent dark:bg-transparent">
+            <Link href="/curriculo">
+              <FileTextIcon aria-hidden="true" />
+              {ui.resume}
+            </Link>
+          </Button>
+        </div>
+
+        <div data-animate className="rounded-lg border border-line bg-surface p-7">
+          <Experience />
+        </div>
       </div>
     </Section>
   );

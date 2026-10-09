@@ -1,19 +1,21 @@
 import { expect, test } from "@playwright/test";
+
 import { gotoReady } from "./utils";
 
 test.describe("página inicial", () => {
-  test("renderiza todas as seções no servidor", async ({ page }) => {
+  test("renderiza a identidade e todas as seções", async ({ page }) => {
     await gotoReady(page, "/");
     await expect(
-      page.getByRole("heading", { level: 1, name: "Samuel Silva Santos" }),
+      page.getByRole("heading", { level: 1, name: /Integrações que fazem/ }),
     ).toBeVisible();
     for (const title of [
-      "Do atendimento para a tecnologia",
-      "O que eu faço",
-      "Integrações já realizadas",
+      "Serviços",
+      "Integração que aguenta a segunda-feira às 8h",
+      "Como trabalho",
       "Cases",
-      "Experiência",
-      "Vamos conversar",
+      "Do atendimento para a tecnologia",
+      "Dúvidas frequentes",
+      "Vamos tirar a sua operação da planilha?",
     ]) {
       await expect(page.getByRole("heading", { level: 2, name: title })).toBeAttached();
     }
@@ -27,15 +29,35 @@ test.describe("página inicial", () => {
     await expect(html).toHaveClass(/light/);
   });
 
-  test("modal de case abre, fecha com Esc e devolve o foco", async ({ page }) => {
+  test("copiar e-mail confirma com um aviso", async ({ page, context }) => {
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
     await gotoReady(page, "/");
-    const trigger = page.getByRole("button", { name: /Ver detalhes Régua de cobrança/ });
-    await trigger.click();
-    const dialog = page.getByRole("dialog", { name: "Régua de cobrança inteligente" });
+    await page.getByRole("button", { name: "Copiar e-mail" }).first().click();
+    await expect(page.getByText("E-mail copiado")).toBeVisible();
+    expect(await page.evaluate(() => navigator.clipboard.readText())).toContain("@");
+  });
+
+  test("case abre em página própria e volta para a lista", async ({ page }) => {
+    await gotoReady(page, "/");
+    await page.getByRole("link", { name: /Régua de cobrança inteligente/ }).click();
+    await expect(page).toHaveURL(/\/cases\/regua-cobranca$/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      "Régua de cobrança inteligente",
+    );
+    await page.getByRole("link", { name: /Próximo case/ }).click();
+    await expect(page).toHaveURL(/\/cases\/vendas-automaticas$/);
+    await page.getByRole("link", { name: "Todos os cases" }).click();
+    await expect(page).toHaveURL(/\/#cases$/);
+  });
+
+  test("menu de comandos abre com Ctrl+K e leva a um case", async ({ page }) => {
+    await gotoReady(page, "/");
+    await page.keyboard.press("Control+k");
+    const dialog = page.getByRole("dialog", { name: "Menu de comandos" });
     await expect(dialog).toBeVisible();
-    await page.keyboard.press("Escape");
-    await expect(dialog).toBeHidden();
-    await expect(trigger).toBeFocused();
+    await dialog.getByPlaceholder(/Digite um comando/).fill("Cielo");
+    await page.keyboard.press("Enter");
+    await expect(page).toHaveURL(/\/cases\/integracao-cielo$/);
   });
 
   test("formulário valida os campos em português", async ({ page }) => {
@@ -53,15 +75,32 @@ test.describe("página inicial", () => {
   });
 });
 
-test("menu móvel abre e fecha", async ({ page, isMobile }) => {
-  test.skip(!isMobile, "menu hambúrguer só existe no celular");
+test("dúvidas frequentes abrem e fecham", async ({ page }) => {
+  await gotoReady(page, "/#faq");
+  const question = page.getByRole("button", { name: "Como começamos?" });
+  await expect(question).toHaveAttribute("aria-expanded", "false");
+  await question.click();
+  await expect(question).toHaveAttribute("aria-expanded", "true");
+  await expect(page.getByText(/Eu respondo em até dois dias úteis/)).toBeVisible();
+});
+
+test("menu do celular abre e leva à seção", async ({ page, isMobile }) => {
+  test.skip(!isMobile, "o menu sanduíche só existe no celular");
   await gotoReady(page, "/");
-  const toggle = page.locator("#menu-toggle");
-  await toggle.click();
-  await expect(toggle).toHaveAttribute("aria-expanded", "true");
+  await page.getByRole("button", { name: "Abrir menu" }).click();
   await page
-    .getByRole("navigation", { name: "Principal" })
+    .getByRole("navigation", { name: "Seções da página" })
     .getByRole("link", { name: "Cases" })
     .click();
-  await expect(toggle).toHaveAttribute("aria-expanded", "false");
+  await expect(page).toHaveURL(/#cases$/);
+  await expect(page.getByRole("button", { name: "Abrir menu" })).toHaveAttribute(
+    "aria-expanded",
+    "false",
+  );
+});
+
+test("currículo tem o botão de imprimir", async ({ page }) => {
+  await gotoReady(page, "/curriculo");
+  await expect(page.getByRole("heading", { level: 1, name: "Samuel Silva Santos" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Imprimir ou salvar em PDF" })).toBeVisible();
 });

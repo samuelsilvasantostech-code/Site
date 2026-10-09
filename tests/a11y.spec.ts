@@ -31,11 +31,26 @@ test.describe("acessibilidade (axe)", () => {
     });
   }
 
-  test("modal de case aberto", async ({ page }) => {
+  test("menu de comandos aberto", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await gotoReady(page, "/");
-    await page.getByRole("button", { name: /Ver detalhes Disparo automatizado/ }).click();
-    await expect(page.getByRole("dialog")).toBeVisible();
+    await page.keyboard.press("Control+k");
+    await expect(page.getByRole("dialog", { name: "Menu de comandos" })).toBeVisible();
+    await expectNoViolations(page);
+  });
+
+  for (const theme of ["dark", "light"] as const) {
+    test(`página de case no tema ${theme === "dark" ? "escuro" : "claro"}`, async ({ page }) => {
+      await setTheme(page, theme);
+      await gotoReady(page, "/cases/regua-cobranca");
+      await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+      await expectNoViolations(page);
+    });
+  }
+
+  test("currículo", async ({ page }) => {
+    await gotoReady(page, "/curriculo");
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await expectNoViolations(page);
   });
 
