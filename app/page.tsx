@@ -10,10 +10,10 @@ import { Hero } from "@/components/sections/hero";
 import { Integrations } from "@/components/sections/integrations";
 import { Process } from "@/components/sections/process";
 import { Services } from "@/components/sections/services";
-import { faq, links, profile, seo } from "@/content/data";
+import { brand, faq, links, profile, seo } from "@/content/data";
 import { SITE_URL } from "@/lib/constants";
 
-/** Dados estruturados para mecanismos de busca: a pessoa e as perguntas frequentes. */
+/** Dados estruturados para mecanismos de busca: a pessoa, a marca e as perguntas frequentes. */
 const jsonLd = [
   {
     "@context": "https://schema.org",
@@ -34,6 +34,23 @@ const jsonLd = [
     alumniOf: { "@type": "CollegeOrUniversity", name: profile.alumniOf },
     knowsAbout: seo.knowsAbout,
     sameAs: [links.linkedin, links.github],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    name: brand.name,
+    description: seo.description,
+    url: `${SITE_URL}/`,
+    image: `${SITE_URL}/opengraph-image`,
+    email: `mailto:${links.email}`,
+    areaServed: "BR",
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: profile.city,
+      addressRegion: profile.region,
+      addressCountry: profile.country,
+    },
+    founder: { "@type": "Person", name: profile.name },
   },
   {
     "@context": "https://schema.org",

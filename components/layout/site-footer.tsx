@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { contact, footer, hero, links, nav, profile, ui } from "@/content/data";
+import { brand, contact, footer, hero, links, nav, profile, ui } from "@/content/data";
 import { prettyUrl, whatsappUrl } from "@/lib/format";
 
 import { Brand } from "./brand";
@@ -78,7 +78,7 @@ export function SiteFooter() {
 
       <div className="border-t border-line">
         <p className="mx-auto max-w-6xl px-6 py-6 text-sm text-muted-foreground">
-          © <CurrentYear /> {profile.name}. {footer.note}
+          © <CurrentYear /> {brand.name}. {footer.note}
         </p>
       </div>
     </footer>

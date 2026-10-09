@@ -5,7 +5,7 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 
 import { ThemeProvider } from "@/components/layout/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
-import { profile, seo, ui } from "@/content/data";
+import { brand, profile, seo, ui } from "@/content/data";
 import { SITE_URL, THEME_COLOR_DARK } from "@/lib/constants";
 
 import "./globals.css";
@@ -19,9 +19,9 @@ const jakarta = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: { default: seo.title, template: `%s | ${profile.name}` },
+  title: { default: seo.title, template: `%s | ${brand.name}` },
   description: seo.description,
-  applicationName: profile.name,
+  applicationName: brand.name,
   authors: [{ name: profile.name, url: SITE_URL }],
   creator: profile.name,
   alternates: { canonical: "/" },
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     type: "profile",
     locale: "pt_BR",
     url: "/",
-    siteName: profile.name,
+    siteName: brand.name,
     title: seo.title,
     description: seo.shareDescription,
     firstName: profile.givenName,

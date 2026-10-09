@@ -1,12 +1,12 @@
 import type { MetadataRoute } from "next";
 
-import { profile } from "@/content/data";
+import { brand } from "@/content/data";
 import { THEME_COLOR_DARK } from "@/lib/constants";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: profile.name,
-    short_name: profile.shortName,
+    name: brand.name,
+    short_name: brand.name,
     lang: "pt-BR",
     start_url: "/",
     display: "browser",

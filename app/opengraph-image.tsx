@@ -3,7 +3,7 @@ import { join } from "node:path";
 
 import { ImageResponse } from "next/og";
 
-import { hero, profile, seo } from "@/content/data";
+import { brand, hero, profile, seo } from "@/content/data";
 
 /* Imagem de preview (LinkedIn, WhatsApp, X), gerada a partir do conteúdo. */
 
@@ -58,11 +58,9 @@ export default async function OpengraphImage() {
             color: "#fff",
           }}
         >
-          SS
+          {brand.initials}
         </div>
-        <div style={{ fontSize: 30, fontWeight: 800, letterSpacing: -0.5 }}>
-          {profile.shortName}
-        </div>
+        <div style={{ fontSize: 30, fontWeight: 800, letterSpacing: -0.5 }}>{brand.name}</div>
       </div>
 
       <div style={{ display: "flex", flexDirection: "column" }}>

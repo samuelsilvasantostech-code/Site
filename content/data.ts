@@ -62,6 +62,13 @@ export const links = {
 /* Identidade e SEO                                                    */
 /* ------------------------------------------------------------------ */
 
+/** Marca do site. O nome pessoal (`profile.name`) continua onde o assunto é você. */
+export const brand = {
+  name: "Samuel Solutions",
+  /** Monograma do logotipo. */
+  initials: "SS",
+};
+
 export const profile = {
   name: "Samuel Silva Santos",
   shortName: "Samuel Santos",
@@ -78,12 +85,12 @@ export const profile = {
 };
 
 export const seo = {
-  title: `${profile.name} | Integrações, Automação e CRM Omnichannel`,
+  title: `${brand.name} | Integrações, Automação e CRM Omnichannel`,
   description:
     "Analista de Tecnologia em Montes Claros, MG. Integro ERP, CRM, meios de pagamento e WhatsApp com n8n, Make e APIs REST, e implanto atendimento omnichannel. Disponível para trabalho remoto.",
   shareDescription:
     "Integro ERP, CRM, meios de pagamento e WhatsApp para que cobranças, vendas e atendimentos rodem sozinhos.",
-  ogAlt: `${profile.name}, analista de integrações e automação.`,
+  ogAlt: `${brand.name}: integrações, automação e CRM omnichannel, por ${profile.name}.`,
   personDescription:
     "Analista de Implantação especializado em integração entre sistemas (ERP, CRM, bancos e meios de pagamento), automação com n8n e Make, APIs REST e atendimento omnichannel.",
   knowsAbout: [
