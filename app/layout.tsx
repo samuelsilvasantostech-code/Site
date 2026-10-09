@@ -27,19 +27,17 @@ export const metadata: Metadata = {
   creator: profile.name,
   alternates: { canonical: "/" },
   openGraph: {
-    type: "profile",
+    type: "website",
     locale: "pt_BR",
     url: "/",
-    siteName: brand.name,
+    siteName: `${brand.name} ${brand.descriptor}`,
     title: seo.title,
-    description: seo.shareDescription,
-    firstName: profile.givenName,
-    lastName: profile.familyName,
+    description: seo.description,
   },
   twitter: {
     card: "summary_large_image",
     title: seo.title,
-    description: seo.shareDescription,
+    description: seo.description,
   },
   robots: { index: true, follow: true },
 };

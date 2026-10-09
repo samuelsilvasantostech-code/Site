@@ -5,15 +5,20 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { faq } from "@/content/data";
 
-export function Faq() {
+type FaqProps = {
+  title: string;
+  items: readonly { question: string; answer: string }[];
+  tone?: "base" | "invert";
+};
+
+export function Faq({ title, items, tone = "base" }: FaqProps) {
   return (
-    <Section id="faq" title={faq.title} align="center">
+    <Section id="duvidas" title={title} tone={tone} align="center">
       <Accordion type="single" collapsible data-animate className="mx-auto max-w-3xl">
-        {faq.items.map((item, i) => (
+        {items.map((item, i) => (
           <AccordionItem key={item.question} value={`item-${i}`} className="border-line">
-            <AccordionTrigger className="py-6 text-left text-lg font-semibold hover:no-underline">
+            <AccordionTrigger className="py-6 text-left font-display text-lg font-semibold hover:no-underline">
               {item.question}
             </AccordionTrigger>
             <AccordionContent className="pb-6 text-base leading-relaxed text-muted-foreground">

@@ -1,22 +1,30 @@
 import type { MetadataRoute } from "next";
 
-import { cases } from "@/content/data";
+import { projects } from "@/content/data";
 import { CONTENT_UPDATED_AT, SITE_URL } from "@/lib/constants";
+
+const pages: { path: string; priority: number }[] = [
+  { path: "/", priority: 1 },
+  { path: "/servicos", priority: 0.9 },
+  { path: "/projetos", priority: 0.8 },
+  { path: "/sobre", priority: 0.7 },
+  { path: "/contato", priority: 0.8 },
+  { path: "/privacidade", priority: 0.3 },
+];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
-    {
-      url: `${SITE_URL}/`,
+    ...pages.map(({ path, priority }) => ({
+      url: `${SITE_URL}${path === "/" ? "/" : path}`,
       lastModified: CONTENT_UPDATED_AT,
-      changeFrequency: "monthly",
-      priority: 1,
-    },
-    ...cases.items.map((item) => ({
-      url: `${SITE_URL}/cases/${item.slug}`,
+      changeFrequency: "monthly" as const,
+      priority,
+    })),
+    ...projects.items.map((item) => ({
+      url: `${SITE_URL}/projetos/${item.slug}`,
       lastModified: CONTENT_UPDATED_AT,
       changeFrequency: "yearly" as const,
-      priority: 0.7,
+      priority: 0.6,
     })),
-    { url: `${SITE_URL}/curriculo`, lastModified: CONTENT_UPDATED_AT, priority: 0.5 },
   ];
 }

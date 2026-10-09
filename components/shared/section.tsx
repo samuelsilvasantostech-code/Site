@@ -1,10 +1,9 @@
 import type { ReactNode } from "react";
 
-import type { SectionId } from "@/content/data";
 import { cn } from "@/lib/utils";
 
 type SectionProps = {
-  id: SectionId;
+  id: string;
   title: string;
   intro?: string;
   /** `invert` usa o tema oposto ao da página (faixa branca no tema escuro). */
@@ -28,7 +27,7 @@ export function Section({
       id={id}
       aria-labelledby={`${id}-title`}
       className={cn(
-        "bg-background py-24 text-foreground md:py-32",
+        "scroll-mt-16 bg-background py-20 text-foreground md:py-28",
         tone === "invert" && "tone-invert",
         className,
       )}

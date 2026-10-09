@@ -1,23 +1,22 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
-import { PageHeader } from "@/components/layout/page-header";
 import { PrintButton } from "@/components/layout/print-button";
 import {
-  cases,
   experience,
   integrations,
   links,
   profile,
+  projects,
   resume,
   services,
-  ui,
 } from "@/content/data";
 import { prettyUrl } from "@/lib/format";
 
 export const metadata: Metadata = {
   title: resume.title,
   description: resume.summary,
+  robots: { index: false },
   alternates: { canonical: "/curriculo" },
 };
 
@@ -55,15 +54,11 @@ export default function ResumePage() {
   ];
 
   return (
-    <div className="mx-auto max-w-3xl px-6 print:max-w-none print:px-0">
-      <PageHeader backHref="/" backLabel={ui.backHome} className="print:hidden" />
-
-      <main id="conteudo" tabIndex={-1} className="pt-6 pb-20 print:p-0">
+    <div className="mx-auto max-w-3xl px-6 pt-[calc(var(--header-h)+3rem)] pb-20 print:max-w-none print:p-0">
+      <div>
         <header className="flex flex-wrap items-end justify-between gap-6">
           <div>
-            <h1 className="text-4xl font-extrabold tracking-tight print:text-[26pt]">
-              {profile.name}
-            </h1>
+            <h1 className="text-4xl font-bold tracking-tight print:text-[26pt]">{profile.name}</h1>
             <p className="mt-2 text-lg font-medium">{profile.headline}</p>
             <p className="text-muted-foreground">
               {profile.city}, {profile.region}. Trabalho remoto.
@@ -100,9 +95,9 @@ export default function ResumePage() {
           </div>
         </Block>
 
-        <Block title={resume.sections.cases}>
+        <Block title={resume.sections.projects}>
           <ul className="grid gap-3">
-            {cases.items.map((item) => (
+            {projects.items.map((item) => (
               <li key={item.slug} className="break-inside-avoid">
                 <span className="font-medium">{item.title}.</span>{" "}
                 <span className="text-muted-foreground">{item.summary}</span>
@@ -114,7 +109,7 @@ export default function ResumePage() {
         <Block title={resume.sections.skills}>
           <div className="grid gap-4">
             <Row aside="Áreas">
-              <p>{services.items.map((service) => service.title).join(", ")}.</p>
+              <p>{services.items.map((service) => service.name).join(", ")}.</p>
             </Row>
             <Row aside="Ferramentas">
               <p>{tools.join(", ")}.</p>
@@ -130,7 +125,7 @@ export default function ResumePage() {
             </Row>
           ))}
         </Block>
-      </main>
+      </div>
     </div>
   );
 }

@@ -22,14 +22,33 @@ async function setTheme(page: Page, theme: "dark" | "light") {
 
 test.describe("acessibilidade (axe)", () => {
   for (const theme of ["dark", "light"] as const) {
-    test(`página inicial no tema ${theme === "dark" ? "escuro" : "claro"}`, async ({ page }) => {
+    const label = theme === "dark" ? "escuro" : "claro";
+
+    test(`página inicial no tema ${label}`, async ({ page }) => {
       await setTheme(page, theme);
       await page.emulateMedia({ reducedMotion: "reduce" });
       await gotoReady(page, "/");
       await expect(page.locator("html")).toHaveClass(new RegExp(theme));
       await expectNoViolations(page);
     });
+
+    for (const path of ["/servicos", "/projetos", "/projetos/regua-cobranca", "/sobre"]) {
+      test(`${path} no tema ${label}`, async ({ page }) => {
+        await setTheme(page, theme);
+        await page.emulateMedia({ reducedMotion: "reduce" });
+        await gotoReady(page, path);
+        await expectNoViolations(page);
+      });
+    }
   }
+
+  test("contato com erros de validação", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await gotoReady(page, "/contato");
+    await page.getByRole("button", { name: "Enviar solicitação" }).click();
+    await expect(page.getByText("Informe o seu nome.")).toBeVisible();
+    await expectNoViolations(page);
+  });
 
   test("menu de comandos aberto", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
@@ -39,28 +58,13 @@ test.describe("acessibilidade (axe)", () => {
     await expectNoViolations(page);
   });
 
-  for (const theme of ["dark", "light"] as const) {
-    test(`página de case no tema ${theme === "dark" ? "escuro" : "claro"}`, async ({ page }) => {
-      await setTheme(page, theme);
-      await gotoReady(page, "/cases/regua-cobranca");
+  for (const path of ["/privacidade", "/curriculo"]) {
+    test(path, async ({ page }) => {
+      await gotoReady(page, path);
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
       await expectNoViolations(page);
     });
   }
-
-  test("currículo", async ({ page }) => {
-    await gotoReady(page, "/curriculo");
-    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-    await expectNoViolations(page);
-  });
-
-  test("formulário com erros de validação", async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
-    await gotoReady(page, "/#contato");
-    await page.getByRole("button", { name: "Enviar mensagem" }).click();
-    await expect(page.getByText("Informe o seu nome.")).toBeVisible();
-    await expectNoViolations(page);
-  });
 
   test("página 404", async ({ page }) => {
     await gotoReady(page, "/pagina-que-nao-existe");

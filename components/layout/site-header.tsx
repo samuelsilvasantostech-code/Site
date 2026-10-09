@@ -1,25 +1,23 @@
 "use client";
 
 import { MenuIcon, XIcon } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { useActiveSection } from "@/components/motion/use-active-section";
 import { Button } from "@/components/ui/button";
-import { contact, links, nav, ui } from "@/content/data";
-import { whatsappUrl } from "@/lib/format";
+import { nav, primaryCta, ui } from "@/content/data";
 import { cn } from "@/lib/utils";
 
 import { Brand } from "./brand";
 import { CommandMenu } from "./command-menu";
 import { ThemeToggle } from "./theme-toggle";
 
-const SECTION_IDS = nav.map((item) => item.id);
-
-/** Header fixo com efeito de vidro. Ganha borda quando a página rola. */
+/** Header fixo com efeito de vidro. Ganha fundo quando a página rola. */
 export function SiteHeader() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const active = useActiveSection(SECTION_IDS);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -37,12 +35,14 @@ export function SiteHeader() {
     return () => document.removeEventListener("keydown", onKey);
   }, [open]);
 
+  const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+
   return (
     <header
       className={cn(
         "fixed inset-x-0 top-0 z-50 border-b transition-colors duration-300 ease-in-out",
         scrolled || open
-          ? "border-line bg-background/70 backdrop-blur-xl"
+          ? "border-line bg-background/75 backdrop-blur-xl"
           : "border-transparent bg-transparent",
       )}
     >
@@ -62,16 +62,21 @@ export function SiteHeader() {
         >
           <ul className="flex items-center gap-1 max-md:flex-col max-md:items-stretch">
             {nav.map((item) => (
-              <li key={item.id}>
-                <a
-                  href={`/#${item.id}`}
-                  aria-current={active === item.id ? "true" : undefined}
-                  className="block rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors duration-300 ease-in-out hover:text-foreground aria-[current=true]:text-foreground max-md:py-3 max-md:text-base"
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  aria-current={isActive(item.href) ? "page" : undefined}
+                  className="block rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors duration-300 ease-in-out hover:text-foreground aria-[current=page]:text-foreground max-md:py-3 max-md:text-base"
                 >
                   {item.label}
-                </a>
+                </Link>
               </li>
             ))}
+            <li className="sm:hidden">
+              <Button asChild className="mt-3 w-full">
+                <Link href={primaryCta.href}>{primaryCta.label}</Link>
+              </Button>
+            </li>
           </ul>
         </nav>
 
@@ -79,13 +84,7 @@ export function SiteHeader() {
           <CommandMenu compact />
           <ThemeToggle />
           <Button asChild size="sm" className="btn-glow ml-2 max-sm:hidden">
-            <a
-              href={whatsappUrl(links.whatsapp, contact.whatsappMessage)}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {ui.headerCta}
-            </a>
+            <Link href={primaryCta.href}>{primaryCta.label}</Link>
           </Button>
           <Button
             type="button"

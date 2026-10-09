@@ -2,8 +2,9 @@
 @import "tw-animate-css";
 
 /*
- * Identidade SSNEX: grafite #0B0F14 com seções brancas intercaladas, azul
- * principal #2563EB, ciano #06B6D4 e cinza #E5E7EB. O gradiente azul → ciano
+ * Identidade SSNEX: grafite #0B0F14 e navy #111827 com seções claras
+ * (#F8FAFC) intercaladas, azul principal #2563EB, azul elétrico #168BFF
+ * (links e foco) e ciano #06B6D4. Bordas #263244. O gradiente azul → ciano
  * fica reservado a elementos de tecnologia (símbolo, números, brilhos).
  * Montserrat nos títulos, Inter no texto.
  *
@@ -17,35 +18,35 @@
 /* ---------- Tema claro (e seções invertidas no tema escuro) ---------- */
 :root,
 .dark .tone-invert {
-  --bg: #ffffff;
-  --surface: #f3f4f6;
-  --surface-2: #e5e7eb;
-  --line: #e5e7eb;
-  --line-strong: #d1d5db;
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --surface-2: #eef2f7;
+  --line: #e2e8f0;
+  --line-strong: #cbd5e1;
   --text: #0b0f14;
-  --muted: #4b5563;
+  --muted: #475569;
   --accent: #2563eb;
   --cta: #2563eb;
   --cta-ink: #ffffff;
   --danger: #b42318;
-  --glow-opacity: 0.18;
+  --glow-opacity: 0.12;
 }
 
 /* ---------- Tema escuro (e seções invertidas no tema claro) ---------- */
 .dark,
 :root:not(.dark) .tone-invert {
   --bg: #0b0f14;
-  --surface: #121821;
-  --surface-2: #1b2330;
-  --line: #1f2733;
+  --surface: #111827;
+  --surface-2: #1a2333;
+  --line: #263244;
   --line-strong: #334155;
   --text: #f8fafc;
-  --muted: #9ca3af;
-  --accent: #06b6d4;
+  --muted: #94a3b8;
+  --accent: #168bff;
   --cta: #2563eb;
   --cta-ink: #ffffff;
   --danger: #f87171;
-  --glow-opacity: 0.32;
+  --glow-opacity: 0.22;
 }
 
 :root {
@@ -122,6 +123,13 @@
   --animate-marquee: marquee 40s linear infinite;
 }
 
+/* Fluxo de dados nas linhas do diagrama do hero. */
+@keyframes flow {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
 @keyframes marquee {
   to {
     transform: translateX(-50%);
@@ -184,7 +192,7 @@
   .btn-glow {
     box-shadow:
       inset 0 1px 0 rgb(255 255 255 / 0.18),
-      0 10px 30px -14px color-mix(in srgb, var(--grad-from) 80%, transparent);
+      0 8px 24px -14px color-mix(in srgb, var(--grad-from) 70%, transparent);
     transition:
       box-shadow 300ms var(--ease),
       transform 300ms var(--ease),
@@ -194,8 +202,7 @@
     transform: translateY(-1px);
     box-shadow:
       inset 0 1px 0 rgb(255 255 255 / 0.25),
-      0 14px 40px -10px color-mix(in srgb, var(--grad-from) 85%, transparent),
-      0 0 32px -8px color-mix(in srgb, var(--grad-to) 70%, transparent);
+      0 10px 28px -12px color-mix(in srgb, var(--grad-from) 75%, transparent);
   }
 
   /* Fundo do hero: brilho azul + faixas diagonais de luz, como o banner da marca. */

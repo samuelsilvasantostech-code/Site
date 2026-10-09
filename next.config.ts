@@ -31,6 +31,10 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
+  async redirects() {
+    // Endereços antigos dos cases, que podem já ter sido compartilhados.
+    return [{ source: "/cases/:slug", destination: "/projetos/:slug", permanent: true }];
+  },
 };
 
 export default nextConfig;

@@ -1,145 +1,124 @@
-# SSNEX Technology Consulting
+# SSNEX — Technology & Business Solutions
 
-Site pessoal one-page: integrações, automação e CRM omnichannel.
+Site corporativo da SSNEX, consultoria de tecnologia para pequenas e médias empresas: automação de processos, integração de sistemas e APIs, soluções com inteligência artificial e suporte tecnológico.
 
-**Identidade visual:** SSNEX ("Your systems. More possibilities."). Grafite #0B0F14 com faixas brancas, azul #2563EB, ciano #06B6D4 e cinza #E5E7EB; Montserrat nos títulos e Inter no texto. O símbolo é um SVG em `components/layout/logo.tsx`, reaproveitado nos ícones e na imagem de preview.
+> _Your systems. More possibilities._
 
-**Seções:** hero com painel do fluxo, faixa de plataformas e números, serviços, diferenciais (bento grid), como trabalho, cases, sobre, dúvidas (acordeão) e contato.
+**Produção:** https://site-samuel-rosy.vercel.app (deploy automático a cada push na `main`).
 
-**Funções:** menu de comandos (Ctrl/⌘ + K), copiar e-mail com aviso, WhatsApp com mensagem pronta, página própria para cada case e currículo imprimível em `/curriculo`.
+## Páginas
+
+| Rota               | Conteúdo                                                                                          |
+| ------------------ | ------------------------------------------------------------------------------------------------- |
+| `/`                | Proposta de valor, problemas, serviços, como funciona, projetos, princípios e CTA                 |
+| `/servicos`        | Cada serviço: problemas, entregas, o que está incluído e o que é à parte, mais dúvidas frequentes |
+| `/projetos`        | Lista de projetos, com a origem identificada (cliente, fundador ou demonstração)                  |
+| `/projetos/[slug]` | Objetivo, problema, abordagem, implementação, tecnologias e resultados verificáveis               |
+| `/sobre`           | Abordagem da SSNEX, fundador, trajetória, princípios e plataformas                                |
+| `/contato`         | Formulário de diagnóstico e canais diretos                                                        |
+| `/privacidade`     | Política de Privacidade (LGPD), alinhada ao que o site realmente coleta                           |
+| `/curriculo`       | Currículo do fundador, imprimível em PDF (fora do índice de busca)                                |
+
+Endereços antigos `/cases/*` redirecionam para `/projetos/*`.
 
 ## Stack
 
-| Área       | Ferramenta                                                             |
-| ---------- | ---------------------------------------------------------------------- |
-| Framework  | Next.js 16 (App Router, Cache Components), React 19, TypeScript strict |
-| Estilo     | Tailwind CSS 4, shadcn/ui (Radix), next-themes (escuro por padrão)     |
-| Animação   | GSAP (ScrollTrigger, MotionPath) com `@gsap/react`                     |
-| Formulário | react-hook-form + zod + Server Action → Formspree                      |
-| Métricas   | Vercel Analytics e Speed Insights                                      |
-| Qualidade  | ESLint, Prettier (+ plugin Tailwind), Husky, lint-staged, commitlint   |
-| Testes     | Playwright + axe-core (WCAG 2.2 AA)                                    |
-| CI         | GitHub Actions (`.github/workflows/ci.yml`)                            |
+Next.js 16 (App Router, Cache Components) · React 19 · TypeScript strict · Tailwind CSS 4 · shadcn/ui · GSAP · react-hook-form + zod · Lucide · Vercel Analytics e Speed Insights · Playwright + axe-core · ESLint, Prettier, Husky, lint-staged, commitlint.
 
-## Começando
+## Rodar localmente
 
-Requisitos: Node.js 20.9+ (recomendado 22, ver `.nvmrc`) e npm.
+Requisitos: Node.js 20.9+ (recomendado 22, ver `.nvmrc`).
 
 ```bash
-npm install            # instala dependências e ativa os git hooks
+npm install                  # dependências + git hooks
 cp .env.example .env.local   # preencha as variáveis
-npm run dev            # http://localhost:3000
+npm run dev                  # http://localhost:3000
 ```
 
-### Variáveis de ambiente
-
-Documentadas em [`.env.example`](.env.example):
-
-| Variável               | Onde é usada                                    | Obrigatória              |
-| ---------------------- | ----------------------------------------------- | ------------------------ |
-| `NEXT_PUBLIC_SITE_URL` | canonical, Open Graph, sitemap, robots, JSON-LD | Em produção              |
-| `FORMSPREE_ENDPOINT`   | Server Action do contato (só no servidor)       | Para o formulário enviar |
-
-Sem `FORMSPREE_ENDPOINT`, o formulário avisa que não está configurado e oferece o e-mail.
-
-## Scripts
-
-| Comando               | O que faz                                              |
-| --------------------- | ------------------------------------------------------ |
-| `npm run dev`         | Servidor de desenvolvimento                            |
-| `npm run build`       | Build de produção                                      |
-| `npm run start`       | Serve o build                                          |
-| `npm run lint`        | ESLint (`lint:fix` corrige o que der)                  |
-| `npm run format`      | Prettier em todo o projeto (`format:check` só confere) |
-| `npm run typecheck`   | TypeScript sem emitir arquivos                         |
-| `npm run check`       | typecheck + lint + format:check                        |
-| `npm run test:e2e`    | Playwright + axe (sobe o servidor sozinho)             |
-| `npm run test:e2e:ui` | Playwright em modo interativo                          |
+| Comando            | O que faz                                   |
+| ------------------ | ------------------------------------------- |
+| `npm run dev`      | Servidor de desenvolvimento                 |
+| `npm run build`    | Build de produção                           |
+| `npm run start`    | Serve o build                               |
+| `npm run check`    | Tipos + lint + formatação                   |
+| `npm run format`   | Formata o projeto com Prettier              |
+| `npm run test:e2e` | Testes Playwright e de acessibilidade (axe) |
 
 Na primeira vez, instale o navegador dos testes: `npx playwright install chromium`.
+
+## Configuração
+
+### Variáveis de ambiente (`.env.example`)
+
+| Variável               | Para quê                                                    | Obrigatória              |
+| ---------------------- | ----------------------------------------------------------- | ------------------------ |
+| `NEXT_PUBLIC_SITE_URL` | canonical, Open Graph, sitemap, robots e dados estruturados | Em produção              |
+| `FORMSPREE_ENDPOINT`   | Entrega do formulário por e-mail (só no servidor)           | Para o formulário enviar |
+
+Sem `FORMSPREE_ENDPOINT`, o formulário **não finge que enviou**: avisa que o envio não está ativo e mostra o e-mail.
+
+### Ativar o formulário
+
+1. Crie uma conta em https://formspree.io e um formulário (**New Form**) com o e-mail que vai receber as solicitações.
+2. Copie o endpoint (`https://formspree.io/f/xxxx`).
+3. Na Vercel: **Project → Settings → Environment Variables** → `FORMSPREE_ENDPOINT` = endpoint → **Redeploy**.
+4. Envie uma solicitação de teste. No primeiro envio, o Formspree pede para confirmar o e-mail.
+
+Proteções do formulário: validação no navegador e no servidor (mesmo schema zod), aceite LGPD obrigatório, campo honeypot e descarte de envios feitos em menos de 3 segundos. Nenhum dado é armazenado pelo site.
+
+### Métricas
+
+Ative **Analytics** e **Speed Insights** no painel da Vercel. O site registra os eventos `contact_form_start`, `contact_form_submit`, `whatsapp_click` e `service_cta_click` (`lib/analytics.ts`); eventos personalizados aparecem no painel em planos que os suportam. Não há cookies de rastreamento.
+
+## Editar o conteúdo
+
+Todo o texto fica em [`content/data.ts`](content/data.ts), organizado por página. Os tipos acusam campo faltando no editor e no build.
+
+- **Contatos:** objeto `links` (e-mail, telefone, WhatsApp, LinkedIn, Instagram). `whatsapp: ""` oculta todos os botões de WhatsApp.
+- **Serviços:** `services.items`, com problemas, entregas, incluído e à parte.
+- **Projetos:** `projects.items`. Cada projeto tem `kind`:
+  - `cliente`: projeto da SSNEX, **só com autorização do cliente**;
+  - `fundador`: experiência profissional anterior do fundador, cliente não identificado;
+  - `demonstracao`: protótipo com dados fictícios.
+  - Em `metrics`, use **apenas números verificáveis**.
+- **Fundador:** `about.founderParagraphs`, `experience` e `profile`. Foto opcional em `about.photo`.
+- **Privacidade:** `privacy.sections`. Atualize sempre que mudar a forma de coletar dados.
+
+**Regras de conteúdo:** tudo em português do Brasil; a marca SSNEX e a assinatura em inglês não são traduzidas; sem clientes, depoimentos, números, certificações ou endereço inventados.
 
 ## Estrutura
 
 ```
-app/                    Rotas e arquivos especiais do Next.js
-├── layout.tsx          Layout raiz: fontes, metadata, tema, Analytics, Speed Insights
-├── page.tsx            Página inicial + JSON-LD (schema.org/Person)
-├── cases/[slug]/       Página de cada case (gerada no build a partir de content/data.ts)
-├── curriculo/          Currículo imprimível (Imprimir → Salvar como PDF)
-├── not-found.tsx       Página 404
-├── opengraph-image.tsx Imagem de preview gerada a partir do conteúdo
-├── sitemap.ts, robots.ts, manifest.ts
-├── actions/contact.ts  Server Action do formulário
-├── globals.css         Tokens de cor, tema claro/escuro e estilos de impressão
-├── fonts/              og/ guarda os .ttf da Plus Jakarta Sans usados na imagem OG (a fonte do site vem do next/font)
-└── icon.png, apple-icon.png, favicon.ico
+app/
+├── (site)/              Páginas com header e rodapé compartilhados
+│   ├── page.tsx         Home
+│   ├── servicos/ projetos/ sobre/ contato/ privacidade/ curriculo/
+│   └── layout.tsx
+├── actions/contact.ts   Server Action do formulário
+├── layout.tsx           Fontes (Montserrat e Inter), metadata, tema, métricas
+├── globals.css          Tokens da marca, temas e utilitários
+├── opengraph-image.tsx  Imagem de preview gerada a partir da marca
+└── sitemap.ts robots.ts manifest.ts not-found.tsx
 components/
-├── ui/                 Primitives do shadcn — NÃO editar à mão (use `npx shadcn add`)
-├── sections/           Hero, Integrations (plataformas e números), Services, Differentiators, Process, Cases, About + Experience, Faq, Contact
-├── motion/             GSAP: registro de plugins, fade-in no scroll, seção ativa e movimento reduzido
-├── layout/             Header com vidro, menu de comandos, copiar e-mail, links sociais, tema, rodapé
-└── shared/             Peças reutilizadas pelas seções (seção, tags, fluxo de dados, métricas)
-content/data.ts         TODO o conteúdo do site (textos, links, cases), tipado
-lib/                    utils, constantes e schemas zod
-tests/                  Testes Playwright e de acessibilidade (axe)
+├── ui/                  Primitives do shadcn (não editar à mão)
+├── sections/            Seções das páginas
+├── shared/              Cards de serviço e projeto, CTAs, seção, links rastreados
+├── layout/              Header, rodapé, logo, menu de comandos, tema
+└── motion/              GSAP (fade-in no scroll, movimento reduzido)
+content/data.ts          Todo o conteúdo
+lib/                     Constantes, schema zod, analytics, utilitários
+tests/                   Playwright + axe
 ```
 
-## Editar o conteúdo
+## Deploy
 
-Tudo fica em [`content/data.ts`](content/data.ts). Os tipos avisam no editor (e no build) se faltar algum campo.
+O projeto `site-samuel` na Vercel está ligado ao repositório: cada push na `main` publica em produção, e pull requests ganham um link de prévia. Cabeçalhos de segurança e redirecionamentos ficam em `next.config.ts`.
 
-**Antes de publicar, troque os dados de exemplo** (procure por `TODO`):
-
-- `links` → e-mail, telefone, WhatsApp, LinkedIn, Instagram
-- `experience.jobs[0].period` → período na AeC
-- Revise o texto de **Problema** de cada case
-
-### Adicionar um case
-
-Copie um item de `cases.items` e ajuste. A ordem no arquivo é a ordem no site.
-
-```ts
-{
-  slug: "nome-curto-sem-espacos",
-  title: "Título do projeto",
-  flow: ["Origem", "n8n", "Destino"],     // mini fluxo do card (2 a 4 itens)
-  summary: "Uma frase sobre o resultado.",
-  problem: "Qual era a dor do cliente.",
-  solution: "O que foi construído.",
-  stepsOrdered: false,                     // true numera os passos
-  steps: ["Passo 1", "Passo 2"],
-  metrics: [{ value: "300", label: "leads por mês" }], // pode ser []
-  stack: ["n8n", "API REST"],
-},
-```
-
-### Outras edições comuns
-
-- **Foto no "Sobre":** salve `public/samuel.webp` (600×600) e preencha `about.photo: "/samuel.webp"`.
-- **Logos nas integrações:** adicione `logo: "/logos/omie.svg"` ao item (arquivo em `public/logos/`). Use apenas logos que você tenha permissão de usar.
-- **Cores:** tokens no topo de `app/globals.css`. Seções com `tone="invert"` usam o tema oposto (faixas brancas no tema escuro).
-- **Números de impacto:** `impact` em `content/data.ts`. Use só dados reais.
-- **Componentes do shadcn:** `npx shadcn@latest add <componente>`.
+**Domínio próprio:** em **Project → Settings → Domains**, adicione o domínio e siga os registros DNS indicados. Depois, atualize `NEXT_PUBLIC_SITE_URL`.
 
 ## Convenções
 
-- **Commits:** [Conventional Commits](https://www.conventionalcommits.org/pt-br/), validados pelo commitlint no hook `commit-msg`.
-  Ex.: `feat: adiciona case de BI`, `fix(contato): corrige validação do e-mail`, `docs: atualiza README`.
-- **Pre-commit:** lint-staged roda ESLint e Prettier só nos arquivos alterados.
-- **Imports:** sempre com o alias `@/` a partir da raiz.
-- **Movimento:** toda animação respeita `prefers-reduced-motion` (via `gsap.matchMedia`).
-- **Acessibilidade:** HTML semântico, foco visível, alvos de toque de 44px, contraste AA nos dois temas. O CI falha se o axe encontrar violações.
-
-## Deploy (Vercel)
-
-1. Suba o repositório para o GitHub.
-2. Na Vercel: **Add New → Project** → importe o repositório (o preset Next.js é detectado sozinho).
-3. Em **Settings → Environment Variables**, defina `NEXT_PUBLIC_SITE_URL` e `FORMSPREE_ENDPOINT`.
-4. Em **Analytics** e **Speed Insights**, ative os dois (os componentes já estão no layout).
-5. A cada push na `main`, a Vercel publica de novo. Cabeçalhos de segurança ficam em `next.config.ts`.
-
-Para o LinkedIn atualizar o preview de um link já compartilhado: https://www.linkedin.com/post-inspector/.
-
-### Domínio próprio
-
-Em **Project → Settings → Domains**, adicione o domínio e o `www`. A Vercel mostra os registros DNS exatos (normalmente `A @ 76.76.21.21` e `CNAME www cname.vercel-dns.com`). No Registro.br, crie-os em **DNS → Editar zona**. Depois, atualize `NEXT_PUBLIC_SITE_URL`.
+- Commits em [Conventional Commits](https://www.conventionalcommits.org/pt-br/), validados pelo commitlint.
+- O pre-commit roda ESLint e Prettier nos arquivos alterados.
+- Imports com o alias `@/`.
+- Toda animação respeita `prefers-reduced-motion`; o CI falha se o axe encontrar violações de acessibilidade.

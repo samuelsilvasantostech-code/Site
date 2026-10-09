@@ -3,14 +3,15 @@
 import {
   CopyIcon,
   FileTextIcon,
-  HashIcon,
+  FileIcon,
+  SendIcon,
   MessageCircleIcon,
   MoonIcon,
   SearchIcon,
   SquareArrowOutUpRightIcon,
 } from "lucide-react";
 import { useTheme } from "next-themes";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -22,7 +23,8 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { cases, contact, links, nav, ui } from "@/content/data";
+import { finalCta, links, nav, primaryCta, projects, ui } from "@/content/data";
+import { track } from "@/lib/analytics";
 import { whatsappUrl } from "@/lib/format";
 
 import { InstagramIcon, LinkedinIcon } from "./brand-icons";
@@ -40,13 +42,12 @@ function useModifierKey() {
 }
 
 /**
- * Menu de comandos (Ctrl+K / ⌘K): navegar pelas seções, abrir um case,
+ * Menu de comandos (Ctrl+K / ⌘K): navegar pelas páginas, abrir um projeto,
  * copiar o e-mail, trocar o tema e abrir os perfis.
  */
 export function CommandMenu({ compact = false }: { compact?: boolean }) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
-  const pathname = usePathname();
   const { resolvedTheme, setTheme } = useTheme();
   const modifier = useModifierKey();
 
@@ -65,15 +66,6 @@ export function CommandMenu({ compact = false }: { compact?: boolean }) {
     setOpen(false);
     action();
   }, []);
-
-  const goToSection = (id: string) => {
-    if (pathname === "/") {
-      document.getElementById(id)?.scrollIntoView();
-      history.replaceState(null, "", `#${id}`);
-    } else {
-      router.push(`/#${id}`);
-    }
-  };
 
   const openExternal = (href: string) => window.open(href, "_blank", "noopener,noreferrer");
 
@@ -115,21 +107,25 @@ export function CommandMenu({ compact = false }: { compact?: boolean }) {
         <CommandList>
           <CommandEmpty>{ui.commandEmpty}</CommandEmpty>
 
-          <CommandGroup heading={ui.commandGroups.navigate}>
-            {nav.map((item) => (
-              <CommandItem key={item.id} onSelect={() => run(() => goToSection(item.id))}>
-                <HashIcon aria-hidden="true" />
+          <CommandGroup heading={ui.commandGroups.pages}>
+            {[
+              { href: "/", label: "Início" },
+              ...nav,
+              { href: "/privacidade", label: "Política de Privacidade" },
+            ].map((item) => (
+              <CommandItem key={item.href} onSelect={() => run(() => router.push(item.href))}>
+                <FileIcon aria-hidden="true" />
                 {item.label}
               </CommandItem>
             ))}
           </CommandGroup>
 
-          <CommandGroup heading={ui.commandGroups.cases}>
-            {cases.items.map((item) => (
+          <CommandGroup heading={ui.commandGroups.projects}>
+            {projects.items.map((item) => (
               <CommandItem
                 key={item.slug}
                 value={`${item.title} ${item.stack.join(" ")}`}
-                onSelect={() => run(() => router.push(`/cases/${item.slug}`))}
+                onSelect={() => run(() => router.push(`/projetos/${item.slug}`))}
               >
                 <FileTextIcon aria-hidden="true" />
                 {item.title}
@@ -138,6 +134,10 @@ export function CommandMenu({ compact = false }: { compact?: boolean }) {
           </CommandGroup>
 
           <CommandGroup heading={ui.commandGroups.actions}>
+            <CommandItem onSelect={() => run(() => router.push(primaryCta.href))}>
+              <SendIcon aria-hidden="true" />
+              {primaryCta.label}
+            </CommandItem>
             <CommandItem onSelect={() => run(() => void copyEmail())}>
               <CopyIcon aria-hidden="true" />
               {ui.copyEmail}
@@ -146,14 +146,19 @@ export function CommandMenu({ compact = false }: { compact?: boolean }) {
               <FileTextIcon aria-hidden="true" />
               {ui.resume}
             </CommandItem>
-            <CommandItem
-              onSelect={() =>
-                run(() => openExternal(whatsappUrl(links.whatsapp, contact.whatsappMessage)))
-              }
-            >
-              <MessageCircleIcon aria-hidden="true" />
-              {contact.whatsappCta}
-            </CommandItem>
+            {links.whatsapp && (
+              <CommandItem
+                onSelect={() =>
+                  run(() => {
+                    track("whatsapp_click", { source: "command-menu" });
+                    openExternal(whatsappUrl(links.whatsapp, finalCta.whatsappMessage));
+                  })
+                }
+              >
+                <MessageCircleIcon aria-hidden="true" />
+                {ui.whatsapp}
+              </CommandItem>
+            )}
             <CommandItem
               onSelect={() => run(() => setTheme(resolvedTheme === "light" ? "dark" : "light"))}
             >
