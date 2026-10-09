@@ -1,0 +1,21 @@
+/** URL pública do site, sem barra final. Usada em metadata, sitemap, robots e JSON-LD. */
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(
+  /\/$/,
+  "",
+);
+
+/** Cor de fundo do tema escuro (padrão). Usada em `theme-color` e no manifest. */
+export const THEME_COLOR_DARK = "#0E1B24";
+export const THEME_COLOR_LIGHT = "#F1F5F6";
+
+/** Data da última atualização relevante do conteúdo, para o sitemap. */
+export const CONTENT_UPDATED_AT = "2026-10-08";
+
+/** Limites do formulário de contato (compartilhados pelo schema e pelos campos). */
+export const CONTACT_LIMITS = {
+  nameMin: 2,
+  nameMax: 80,
+  emailMax: 120,
+  messageMin: 10,
+  messageMax: 2000,
+} as const;
