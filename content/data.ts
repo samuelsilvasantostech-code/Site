@@ -64,9 +64,11 @@ export const links = {
 
 /** Marca do site. O nome pessoal (`profile.name`) continua onde o assunto é você. */
 export const brand = {
-  name: "Samuel Solutions",
-  /** Monograma do logotipo. */
-  initials: "SS",
+  name: "SSNEX",
+  descriptor: "Technology Consulting",
+  /** Assinatura da marca: a segunda parte aparece em azul. */
+  tagline: { lead: "Your systems.", highlight: "More possibilities." },
+  slogan: "Soluções tecnológicas para um futuro mais conectado.",
 };
 
 export const profile = {
@@ -76,7 +78,7 @@ export const profile = {
   familyName: "Silva Santos",
   role: "Analista de Tecnologia | Integrações, Automação e CRM Omnichannel",
   /** Cargo curto para a lateral e o currículo. */
-  headline: "Analista de integrações e automação",
+  headline: "Fundador e consultor de tecnologia da SSNEX",
   city: "Montes Claros",
   region: "MG",
   country: "BR",
@@ -85,7 +87,7 @@ export const profile = {
 };
 
 export const seo = {
-  title: `${brand.name} | Integrações, Automação e CRM Omnichannel`,
+  title: `${brand.name} Technology Consulting | Integrações, automação e CRM`,
   description:
     "Analista de Tecnologia em Montes Claros, MG. Integro ERP, CRM, meios de pagamento e WhatsApp com n8n, Make e APIs REST, e implanto atendimento omnichannel. Disponível para trabalho remoto.",
   shareDescription:

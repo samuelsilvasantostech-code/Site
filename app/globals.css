@@ -2,9 +2,10 @@
 @import "tw-animate-css";
 
 /*
- * Premium corporate tech: grafite profundo (zinc-950) com seções brancas
- * intercaladas, bordas finas e um gradiente ciano → roxo reservado a
- * elementos de tecnologia (brilhos, destaques, botões principais).
+ * Identidade SSNEX: grafite #0B0F14 com seções brancas intercaladas, azul
+ * principal #2563EB, ciano #06B6D4 e cinza #E5E7EB. O gradiente azul → ciano
+ * fica reservado a elementos de tecnologia (símbolo, números, brilhos).
+ * Montserrat nos títulos, Inter no texto.
  *
  * `.dark` é o padrão (next-themes). Uma seção com `.tone-invert` usa o tema
  * oposto ao da página: é assim que as faixas brancas aparecem no tema escuro
@@ -17,14 +18,14 @@
 :root,
 .dark .tone-invert {
   --bg: #ffffff;
-  --surface: #f4f4f5;
-  --surface-2: #e4e4e7;
-  --line: #e4e4e7;
-  --line-strong: #d4d4d8;
-  --text: #09090b;
-  --muted: #52525b;
-  --accent: #0e7490;
-  --cta: #09090b;
+  --surface: #f3f4f6;
+  --surface-2: #e5e7eb;
+  --line: #e5e7eb;
+  --line-strong: #d1d5db;
+  --text: #0b0f14;
+  --muted: #4b5563;
+  --accent: #2563eb;
+  --cta: #2563eb;
   --cta-ink: #ffffff;
   --danger: #b42318;
   --glow-opacity: 0.18;
@@ -33,23 +34,23 @@
 /* ---------- Tema escuro (e seções invertidas no tema claro) ---------- */
 .dark,
 :root:not(.dark) .tone-invert {
-  --bg: #09090b;
-  --surface: #18181b;
-  --surface-2: #27272a;
-  --line: #27272a;
-  --line-strong: #3f3f46;
-  --text: #fafafa;
-  --muted: #a1a1aa;
-  --accent: #22d3ee;
-  --cta: #fafafa;
-  --cta-ink: #09090b;
+  --bg: #0b0f14;
+  --surface: #121821;
+  --surface-2: #1b2330;
+  --line: #1f2733;
+  --line-strong: #334155;
+  --text: #f8fafc;
+  --muted: #9ca3af;
+  --accent: #06b6d4;
+  --cta: #2563eb;
+  --cta-ink: #ffffff;
   --danger: #f87171;
   --glow-opacity: 0.32;
 }
 
 :root {
-  --grad-from: #22d3ee;
-  --grad-to: #7c3aed;
+  --grad-from: #2563eb;
+  --grad-to: #06b6d4;
   --radius: 10px;
   --header-h: 4rem;
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
@@ -81,7 +82,8 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-display: var(--font-montserrat), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -148,7 +150,14 @@
 
   ::selection {
     background: var(--grad-from);
-    color: #09090b;
+    color: #ffffff;
+  }
+
+  /* Títulos em Montserrat, como no manual da marca. */
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
   }
 
   :focus-visible {
@@ -189,35 +198,44 @@
       0 0 32px -8px color-mix(in srgb, var(--grad-to) 70%, transparent);
   }
 
-  /* Fundo do hero: grade fina + brilho difuso ciano → roxo. */
+  /* Fundo do hero: brilho azul + faixas diagonais de luz, como o banner da marca. */
   .hero-backdrop {
     background-image:
-      radial-gradient(
-        60% 50% at 50% 0%,
-        color-mix(in srgb, var(--grad-from) calc(var(--glow-opacity) * 100%), transparent),
+      linear-gradient(
+        115deg,
+        transparent 62%,
+        color-mix(in srgb, var(--grad-from) calc(var(--glow-opacity) * 70%), transparent) 62.3%,
         transparent 70%
       ),
+      linear-gradient(
+        115deg,
+        transparent 72%,
+        color-mix(in srgb, var(--grad-from) calc(var(--glow-opacity) * 110%), transparent) 72.2%,
+        color-mix(in srgb, var(--grad-to) calc(var(--glow-opacity) * 40%), transparent) 80%,
+        transparent 80.4%
+      ),
       radial-gradient(
-        40% 40% at 80% 20%,
-        color-mix(in srgb, var(--grad-to) calc(var(--glow-opacity) * 100%), transparent),
+        60% 55% at 50% 0%,
+        color-mix(in srgb, var(--grad-from) calc(var(--glow-opacity) * 100%), transparent),
         transparent 70%
       ),
       linear-gradient(
         to right,
-        color-mix(in srgb, var(--line) 55%, transparent) 1px,
+        color-mix(in srgb, var(--line) 45%, transparent) 1px,
         transparent 1px
       ),
       linear-gradient(
         to bottom,
-        color-mix(in srgb, var(--line) 55%, transparent) 1px,
+        color-mix(in srgb, var(--line) 45%, transparent) 1px,
         transparent 1px
       );
     background-size:
       100% 100%,
       100% 100%,
+      100% 100%,
       64px 64px,
       64px 64px;
-    mask-image: linear-gradient(to bottom, #000 40%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 45%, transparent 100%);
   }
 
   /* Bordas laterais esmaecidas na faixa de logos. */
@@ -235,6 +253,7 @@
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+    animation-delay: 0s !important;
     transition-duration: 0.01ms !important;
     transition-delay: 0s !important;
   }

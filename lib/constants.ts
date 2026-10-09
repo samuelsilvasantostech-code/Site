@@ -5,7 +5,7 @@ export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3
 );
 
 /** Cor de fundo do tema escuro (padrão). Usada em `theme-color` e no manifest. */
-export const THEME_COLOR_DARK = "#09090B";
+export const THEME_COLOR_DARK = "#0B0F14";
 export const THEME_COLOR_LIGHT = "#FFFFFF";
 
 /** Data da última atualização relevante do conteúdo, para o sitemap. */

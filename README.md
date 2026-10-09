@@ -1,8 +1,8 @@
-# Portfólio — Samuel Silva Santos
+# SSNEX Technology Consulting
 
 Site pessoal one-page: integrações, automação e CRM omnichannel.
 
-**Visual:** corporate tech (referências: Zallpy, Luby, Vercel). Fundo zinc-950 com faixas brancas intercaladas, gradiente ciano → roxo só em elementos de tecnologia, Plus Jakarta Sans extrabold nos títulos.
+**Identidade visual:** SSNEX ("Your systems. More possibilities."). Grafite #0B0F14 com faixas brancas, azul #2563EB, ciano #06B6D4 e cinza #E5E7EB; Montserrat nos títulos e Inter no texto. O símbolo é um SVG em `components/layout/logo.tsx`, reaproveitado nos ícones e na imagem de preview.
 
 **Seções:** hero com painel do fluxo, faixa de plataformas e números, serviços, diferenciais (bento grid), como trabalho, cases, sobre, dúvidas (acordeão) e contato.
 

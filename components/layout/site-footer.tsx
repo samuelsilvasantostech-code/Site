@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { brand, contact, footer, hero, links, nav, profile, ui } from "@/content/data";
+import { brand, contact, footer, links, nav, profile, ui } from "@/content/data";
 import { prettyUrl, whatsappUrl } from "@/lib/format";
 
 import { Brand } from "./brand";
@@ -16,9 +16,12 @@ export function SiteFooter() {
     <footer className="border-t border-line">
       <div className="mx-auto grid max-w-6xl gap-12 px-6 py-16 md:grid-cols-[2fr_1fr_1fr]">
         <div>
-          <Brand />
-          <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
-            {hero.value}
+          <Brand withDescriptor />
+          <p className="mt-6 font-display text-lg font-semibold tracking-tight">
+            {brand.tagline.lead} <span className="text-link">{brand.tagline.highlight}</span>
+          </p>
+          <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted-foreground">
+            {brand.slogan}
           </p>
           <SocialLinks className="mt-6 -ml-2.5" />
         </div>

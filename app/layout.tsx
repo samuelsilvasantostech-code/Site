@@ -1,7 +1,7 @@
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata, Viewport } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 
 import { ThemeProvider } from "@/components/layout/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
@@ -10,10 +10,11 @@ import { SITE_URL, THEME_COLOR_DARK } from "@/lib/constants";
 
 import "./globals.css";
 
-/* Fonte servida pelo próprio site (o Next baixa e hospeda no build). */
-const jakarta = Plus_Jakarta_Sans({
+/* Fontes da marca, servidas pelo próprio site (o Next baixa e hospeda no build). */
+const inter = Inter({ subsets: ["latin", "latin-ext"], variable: "--font-inter", display: "swap" });
+const montserrat = Montserrat({
   subsets: ["latin", "latin-ext"],
-  variable: "--font-jakarta",
+  variable: "--font-montserrat",
   display: "swap",
 });
 
@@ -50,7 +51,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="pt-BR" className={jakarta.variable} suppressHydrationWarning>
+    <html
+      lang="pt-BR"
+      className={`${inter.variable} ${montserrat.variable}`}
+      suppressHydrationWarning
+    >
       <body>
         <a
           href="#conteudo"
