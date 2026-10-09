@@ -4,11 +4,11 @@ import { contact, links, ui } from "@/content/data";
 import { whatsappUrl } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
-import { GithubIcon, LinkedinIcon } from "./brand-icons";
+import { InstagramIcon, LinkedinIcon } from "./brand-icons";
 
 const items = [
-  { label: "GitHub", href: links.github, Icon: GithubIcon, external: true },
   { label: "LinkedIn", href: links.linkedin, Icon: LinkedinIcon, external: true },
+  { label: "Instagram", href: links.instagram, Icon: InstagramIcon, external: true },
   {
     label: "WhatsApp",
     href: whatsappUrl(links.whatsapp, contact.whatsappMessage),

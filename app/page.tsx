@@ -33,7 +33,8 @@ const jsonLd = [
     worksFor: { "@type": "Organization", name: profile.worksFor },
     alumniOf: { "@type": "CollegeOrUniversity", name: profile.alumniOf },
     knowsAbout: seo.knowsAbout,
-    sameAs: [links.linkedin, links.github],
+    telephone: "+55-38-99747-2560",
+    sameAs: [links.linkedin, links.instagram],
   },
   {
     "@context": "https://schema.org",
@@ -43,7 +44,9 @@ const jsonLd = [
     url: `${SITE_URL}/`,
     image: `${SITE_URL}/opengraph-image`,
     email: `mailto:${links.email}`,
+    telephone: "+55-38-99747-2560",
     areaServed: "BR",
+    sameAs: [links.linkedin, links.instagram],
     address: {
       "@type": "PostalAddress",
       addressLocality: profile.city,

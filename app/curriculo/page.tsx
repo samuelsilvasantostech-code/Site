@@ -50,7 +50,7 @@ export default function ResumePage() {
   const contactLines = [
     { label: "E-mail", value: links.email, href: `mailto:${links.email}` },
     { label: "LinkedIn", value: prettyUrl(links.linkedin), href: links.linkedin },
-    { label: "GitHub", value: prettyUrl(links.github), href: links.github },
+    { label: "Telefone", value: links.phone, href: links.phoneHref },
     { label: "WhatsApp", value: prettyUrl(links.whatsapp), href: links.whatsapp },
   ];
 

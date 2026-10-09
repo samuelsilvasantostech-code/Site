@@ -45,17 +45,19 @@ export type IntegrationItem = { name: string; note: string; logo?: string };
 export type IntegrationGroup =
   { name: string; items: IntegrationItem[] } | { name: string; chips: string[] };
 
-export type ContactChannel = { key: keyof typeof links; label: string };
-
 /* ------------------------------------------------------------------ */
 /* Links e contatos                                                    */
 /* ------------------------------------------------------------------ */
 
 export const links = {
-  email: "seu@email.com", // TODO: seu e-mail
-  linkedin: "https://www.linkedin.com/in/seu-perfil", // TODO: URL do LinkedIn
-  github: "https://github.com/seu-usuario", // TODO: URL do GitHub
-  whatsapp: "https://wa.me/5538999999999", // TODO: wa.me/55 + DDD + número
+  email: "samuelsilvasantos.tech@gmail.com",
+  /** Telefone para exibição e para o link "tel:". */
+  phone: "(38) 99747-2560",
+  phoneHref: "tel:+5538997472560",
+  /** wa.me/ + 55 + DDD + número, só dígitos. */
+  whatsapp: "https://wa.me/5538997472560",
+  linkedin: "https://www.linkedin.com/in/samuel-silva-santos-a73041191/",
+  instagram: "https://www.instagram.com/samuelsilvasantoss/",
 } as const;
 
 /* ------------------------------------------------------------------ */
@@ -593,12 +595,6 @@ export const contact = {
   whatsappCta: "Conversar no WhatsApp",
   /** Mensagem que já aparece digitada ao abrir o WhatsApp. */
   whatsappMessage: "Olá, Samuel! Vi o seu portfólio e quero conversar sobre uma integração.",
-  channels: [
-    { key: "email", label: "E-mail" },
-    { key: "linkedin", label: "LinkedIn" },
-    { key: "github", label: "GitHub" },
-    { key: "whatsapp", label: "WhatsApp" },
-  ] satisfies ContactChannel[],
   form: {
     name: "Nome",
     email: "E-mail",

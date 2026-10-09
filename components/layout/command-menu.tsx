@@ -25,7 +25,7 @@ import {
 import { cases, contact, links, nav, ui } from "@/content/data";
 import { whatsappUrl } from "@/lib/format";
 
-import { GithubIcon, LinkedinIcon } from "./brand-icons";
+import { InstagramIcon, LinkedinIcon } from "./brand-icons";
 import { copyEmail } from "./copy-email-button";
 
 const subscribeNoop = () => () => {};
@@ -168,9 +168,9 @@ export function CommandMenu({ compact = false }: { compact?: boolean }) {
               LinkedIn
               <SquareArrowOutUpRightIcon className="ml-auto" aria-hidden="true" />
             </CommandItem>
-            <CommandItem onSelect={() => run(() => openExternal(links.github))}>
-              <GithubIcon />
-              GitHub
+            <CommandItem onSelect={() => run(() => openExternal(links.instagram))}>
+              <InstagramIcon />
+              Instagram
               <SquareArrowOutUpRightIcon className="ml-auto" aria-hidden="true" />
             </CommandItem>
           </CommandGroup>

@@ -90,7 +90,7 @@ Tudo fica em [`content/data.ts`](content/data.ts). Os tipos avisam no editor (e 
 
 **Antes de publicar, troque os dados de exemplo** (procure por `TODO`):
 
-- `links` → e-mail, LinkedIn, GitHub, WhatsApp
+- `links` → e-mail, telefone, WhatsApp, LinkedIn, Instagram
 - `experience.jobs[0].period` → período na AeC
 - Revise o texto de **Problema** de cada case
 

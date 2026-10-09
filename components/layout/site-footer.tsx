@@ -53,6 +53,11 @@ export function SiteFooter() {
               </a>
             </li>
             <li>
+              <a href={links.phoneHref} className={columnLink}>
+                {links.phone}
+              </a>
+            </li>
+            <li>
               <a
                 href={whatsappUrl(links.whatsapp, contact.whatsappMessage)}
                 target="_blank"
