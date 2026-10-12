@@ -16,6 +16,7 @@ export function FinalCta({ source = "final-cta" }: { source?: string }) {
           />
           <h2
             id="cta-final-title"
+            data-split
             className="mx-auto max-w-3xl text-3xl leading-[1.1] font-bold tracking-tight text-balance md:text-5xl"
           >
             {finalCta.headline}

@@ -1,6 +1,14 @@
 "use client";
 
-import { Environment, Float, Html, Lightformer, Line, RoundedBox } from "@react-three/drei";
+import {
+  Environment,
+  Float,
+  Html,
+  Lightformer,
+  Line,
+  PerformanceMonitor,
+  RoundedBox,
+} from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
@@ -301,6 +309,9 @@ export default function HeroScene({ animate, quality = "high", onReady }: HeroSc
   const low = quality === "low";
   const container = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(true);
+  // Resolução adaptativa: cai se a máquina não sustentar a taxa de quadros.
+  const maxDpr = low ? 1.25 : 1.75;
+  const [dpr, setDpr] = useState(maxDpr);
 
   // Pausa a renderização quando o hero sai da tela (economiza bateria e CPU).
   useEffect(() => {
@@ -319,11 +330,17 @@ export default function HeroScene({ animate, quality = "high", onReady }: HeroSc
     <div ref={container} className="absolute inset-0">
       <Canvas
         frameloop={frameloop}
-        dpr={low ? [1, 1.25] : [1, 1.75]}
+        dpr={dpr}
         camera={{ position: [0, 0, 8.2], fov: 38 }}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
         onCreated={() => onReady?.()}
       >
+        <PerformanceMonitor
+          onDecline={() => setDpr(1)}
+          onIncline={() => setDpr(maxDpr)}
+          flipflops={3}
+          onFallback={() => setDpr(1)}
+        />
         <ambientLight intensity={0.35} />
         <directionalLight position={[3, 4, 5]} intensity={1.4} color="#ffffff" />
         <pointLight position={[-4, -2, 3]} intensity={18} color="#06B6D4" distance={12} />

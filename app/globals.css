@@ -167,6 +167,20 @@
   }
 }
 
+/* Transição entre páginas: a antiga esmaece e sobe; a nova entra de baixo. */
+@keyframes page-out {
+  to {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+}
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+}
+
 @keyframes marquee {
   to {
     transform: translateX(-50%);
@@ -342,10 +356,24 @@
     opacity: 1;
   }
 
+  /* Linhas dos títulos revelados por SplitText (a máscara não corta descendentes). */
+  .split-line {
+    padding-bottom: 0.1em;
+    margin-bottom: -0.1em;
+  }
+
   /* Bordas laterais esmaecidas na faixa de logos. */
   .marquee-mask {
     mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
   }
+}
+
+/* Transições entre páginas (<ViewTransition> no template do site). */
+::view-transition-old(.page-exit) {
+  animation: page-out 300ms cubic-bezier(0.7, 0, 0.84, 0) both;
+}
+::view-transition-new(.page-enter) {
+  animation: page-in 600ms cubic-bezier(0.16, 1, 0.3, 1) 80ms both;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -360,6 +388,11 @@
     animation-delay: 0s !important;
     transition-duration: 0.01ms !important;
     transition-delay: 0s !important;
+  }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }
 

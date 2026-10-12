@@ -23,6 +23,16 @@ function subscribeWide(onChange: () => void) {
 /* Verificado uma vez só: cada teste cria um contexto WebGL, e o navegador limita quantos existem. */
 let capableCache: boolean | undefined;
 
+/**
+ * WebGL emulado na CPU (SwiftShader, llvmpipe…): a cena travaria a página.
+ * Nesses casos fica a ilustração em SVG.
+ */
+function isSoftwareRenderer(gl: WebGLRenderingContext | WebGL2RenderingContext) {
+  const info = gl.getExtension("WEBGL_debug_renderer_info");
+  const renderer = info ? String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL)) : "";
+  return /swiftshader|llvmpipe|software|basic render/i.test(renderer);
+}
+
 function detectCapable() {
   if (capableCache !== undefined) return capableCache;
   const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection
@@ -30,7 +40,9 @@ function detectCapable() {
   if (saveData) return (capableCache = false);
   try {
     const canvas = document.createElement("canvas");
-    capableCache = Boolean(canvas.getContext("webgl2") ?? canvas.getContext("webgl"));
+    const gl = canvas.getContext("webgl2") ?? canvas.getContext("webgl");
+    capableCache = Boolean(gl) && !isSoftwareRenderer(gl!);
+    gl?.getExtension("WEBGL_lose_context")?.loseContext();
   } catch {
     capableCache = false;
   }

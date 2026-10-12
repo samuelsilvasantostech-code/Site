@@ -1,6 +1,5 @@
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
-import { ScrollReveal } from "@/components/motion/scroll-reveal";
 
 /** Moldura de todas as páginas do site: header fixo, conteúdo e rodapé. */
 export default function SiteLayout({ children }: LayoutProps<"/">) {
@@ -15,7 +14,6 @@ export default function SiteLayout({ children }: LayoutProps<"/">) {
       <div className="print:hidden">
         <SiteFooter />
       </div>
-      <ScrollReveal />
     </>
   );
 }
