@@ -36,8 +36,12 @@ export type Metric = { value: string; label: string };
  */
 export type ProjectKind = "cliente" | "fundador" | "demonstracao";
 
+/** Área do projeto, usada nos filtros da página /projetos. */
+export type ProjectArea = "automacao" | "integracao" | "dados";
+
 export type CaseStudy = {
   kind: ProjectKind;
+  area: ProjectArea;
   slug: string;
   title: string;
   /** Caminho dos dados, da origem ao destino (2 a 4 sistemas). */
@@ -478,6 +482,13 @@ export const finalCta = {
 export const portfolioDisclaimer =
   "Os exemplos apresentados demonstram experiências e soluções técnicas desenvolvidas pelo fundador ao longo de sua trajetória profissional. Nem todos representam projetos contratados diretamente pela SSNEX. Informações confidenciais e dados de clientes não são divulgados.";
 
+/** Filtros da página /projetos. */
+export const projectAreas: Record<ProjectArea, string> = {
+  automacao: "Automação",
+  integracao: "Integração",
+  dados: "Dados",
+};
+
 export const projectKinds: Record<ProjectKind, { label: string; description: string }> = {
   cliente: {
     label: "Projeto SSNEX",
@@ -502,6 +513,7 @@ export const projects: { headline: string; intro: string; items: CaseStudy[] } =
     {
       kind: "fundador",
       slug: "disparo-boletos",
+      area: "automacao",
       title: "Automação de cobranças via WhatsApp",
       service: "automacao",
       featured: true,
@@ -530,6 +542,7 @@ export const projects: { headline: string; intro: string; items: CaseStudy[] } =
     {
       kind: "fundador",
       slug: "regua-cobranca",
+      area: "automacao",
       title: "Régua de cobrança automatizada",
       service: "automacao",
       featured: true,
@@ -556,6 +569,7 @@ export const projects: { headline: string; intro: string; items: CaseStudy[] } =
     {
       kind: "fundador",
       slug: "vendas-automaticas",
+      area: "integracao",
       title: "Criação automática de vendas",
       service: "integracao",
       featured: true,
@@ -580,6 +594,7 @@ export const projects: { headline: string; intro: string; items: CaseStudy[] } =
     {
       kind: "fundador",
       slug: "integracao-omie",
+      area: "integracao",
       title: "Integração de ERP com atendimento",
       service: "integracao",
       benefit: "Leva as informações do ERP para o contexto do atendimento, sem troca de tela.",
@@ -601,6 +616,7 @@ export const projects: { headline: string; intro: string; items: CaseStudy[] } =
     {
       kind: "fundador",
       slug: "integracao-cielo",
+      area: "integracao",
       title: "Integração de pagamentos",
       service: "integracao",
       benefit: "Substitui a conferência e o repasse manual de informações de vendas e pagamentos.",
@@ -622,6 +638,7 @@ export const projects: { headline: string; intro: string; items: CaseStudy[] } =
     {
       kind: "fundador",
       slug: "leads-tempo-real",
+      area: "integracao",
       title: "Integração de leads",
       service: "integracao",
       featured: true,
@@ -644,6 +661,7 @@ export const projects: { headline: string; intro: string; items: CaseStudy[] } =
     {
       kind: "fundador",
       slug: "bi-atendimento",
+      area: "dados",
       title: "Centralização de dados e dashboards",
       service: "integracao",
       benefit: "Reúne em uma só visão dados que estavam espalhados em fontes diferentes.",
@@ -665,6 +683,7 @@ export const projects: { headline: string; intro: string; items: CaseStudy[] } =
     {
       kind: "fundador",
       slug: "scripts-manutencao",
+      area: "integracao",
       title: "Integração por API para manutenção de CRM",
       service: "integracao",
       benefit:
@@ -877,6 +896,9 @@ export const contactPage = {
     messagePlaceholder:
       "Ex.: hoje copiamos os pedidos do e-commerce para o ERP manualmente, e isso gera erros.",
     optional: "opcional",
+    /** Etapas visuais do formulário (todas na mesma tela). */
+    steps: ["Sobre você", "O desafio", "Confirmação"],
+    progress: (done: number, total: number) => `${done} de ${total} campos obrigatórios`,
     consent: "Li e estou de acordo com o",
     privacyLink: "Aviso de Privacidade",
     submit: "Enviar solicitação",

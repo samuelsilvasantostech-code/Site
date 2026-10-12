@@ -12,15 +12,15 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <article className="mx-auto max-w-3xl px-6 pt-[calc(var(--header-h)+4rem)] pb-24">
-      <h1 className="text-4xl leading-[1.1] font-bold tracking-tight md:text-5xl">
-        {privacy.headline}
-      </h1>
-      <p className="mt-4 text-sm text-muted-foreground">Última atualização: {privacy.updatedAt}</p>
+    <article className="pb-section mx-auto max-w-3xl px-6 pt-[calc(var(--header-h)+clamp(3rem,10vh,6rem))]">
+      <h1 className="text-display">{privacy.headline}</h1>
+      <p className="mt-6 font-mono text-xs tracking-wide text-muted-foreground">
+        Última atualização: {privacy.updatedAt}
+      </p>
 
       {privacy.sections.map((section) => (
-        <section key={section.title} className="mt-12">
-          <h2 className="text-xl font-bold tracking-tight">{section.title}</h2>
+        <section key={section.title} className="mt-14 border-t border-line pt-10">
+          <h2 className="text-title">{section.title}</h2>
           <div className="mt-3 space-y-4">
             {section.paragraphs.map((paragraph) => (
               <p key={paragraph} className="leading-relaxed text-pretty text-muted-foreground">

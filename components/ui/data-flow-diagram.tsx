@@ -17,15 +17,19 @@ function roleOf(i: number, total: number) {
 
 /**
  * Diagrama do fluxo de dados entre sistemas: origem → processamento →
- * destino, ligados por conexões onde um pulso de dados corre. Em HTML
- * (quebra em coluna no celular). O estado padrão é o diagrama completo e
- * aceso; a animação (`animateFlow`) parte do apagado e acende em sequência.
+ * destino, ligados por conexões onde um pulso de dados corre. Em HTML,
+ * em linha quando o espaço comporta os sistemas e em coluna quando não. O estado padrão é o diagrama completo e
+ * aceso; a animação (`flowTimeline`) parte do apagado e acende em sequência.
  * Os rótulos são genéricos quando o nome real seria confidencial.
  */
 export function DataFlowDiagram({ steps, size = "md", className }: DataFlowDiagramProps) {
   const description = `Fluxo de dados: ${steps.join(", depois ")}.`;
   return (
-    <figure data-flow className={cn("flow", size === "lg" && "flow-lg", className)}>
+    <figure
+      data-flow
+      data-count={Math.min(steps.length, 4)}
+      className={cn("flow", size === "lg" && "flow-lg", className)}
+    >
       <figcaption className="sr-only">{description}</figcaption>
       <ol aria-hidden="true" className="flow-track">
         {steps.map((step, i) => (

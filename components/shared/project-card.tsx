@@ -2,15 +2,20 @@ import { ArrowUpRightIcon } from "lucide-react";
 import Link from "next/link";
 
 import { Spotlight } from "@/components/motion/spotlight";
+import { DataFlowDiagram } from "@/components/ui/data-flow-diagram";
 import { projectKinds, ui, type CaseStudy } from "@/content/data";
 import { cn } from "@/lib/utils";
 
-import { FlowDiagram } from "./flow-diagram";
-
 /** Selo que identifica a origem do projeto (SSNEX, fundador ou demonstração). */
-export function ProjectKindBadge({ kind }: { kind: CaseStudy["kind"] }) {
+export function ProjectKindBadge({
+  kind,
+  className,
+}: {
+  kind: CaseStudy["kind"];
+  className?: string;
+}) {
   return (
-    <span className="inline-flex items-center rounded-full border border-line bg-background px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
+    <span className={cn("eyebrow text-muted-foreground", className)}>
       {projectKinds[kind].label}
     </span>
   );
@@ -22,61 +27,38 @@ export function hasVerifiedMetrics(item: CaseStudy) {
 }
 
 /**
- * Card de projeto reutilizável (home e /projetos): origem, título, problema,
- * fluxo entre sistemas e o que melhora. `large` mostra também o problema.
+ * Card de projeto da grade editorial (/projetos): origem, título, resumo, o
+ * fluxo entre os sistemas e o que melhora. O card inteiro é clicável.
+ * `span` define a largura na grade de 12 colunas (7 ou 5).
  */
-export function ProjectCard({ item, large = false }: { item: CaseStudy; large?: boolean }) {
+export function ProjectCard({ item, span }: { item: CaseStudy; span: "7" | "5" }) {
   return (
-    <li data-animate className="h-full">
-      <Spotlight className="rounded-lg">
-        <Link
-          href={`/projetos/${item.slug}`}
-          className={cn(
-            "group flex h-full flex-col rounded-lg border border-line bg-surface transition-colors duration-300 ease-in-out hover:border-line-strong",
-            large ? "p-7 md:p-8" : "p-6",
-          )}
-        >
-          <ProjectKindBadge kind={item.kind} />
-          <h3
-            className={cn(
-              "mt-4 font-bold tracking-tight text-balance group-hover:text-link",
-              large ? "text-xl md:text-2xl" : "text-lg",
-            )}
+    <li data-area={item.area} data-span={span} className="project-grid-item">
+      <Spotlight className="flex h-full flex-col p-7 md:p-10">
+        <ProjectKindBadge kind={item.kind} />
+        <h2 className="mt-6 text-title">
+          <Link
+            href={`/projetos/${item.slug}`}
+            className="after:absolute after:inset-0 after:rounded-[inherit] hover:text-link"
           >
             {item.title}
-          </h3>
-          <p className="mt-2 leading-relaxed text-pretty text-muted-foreground">
-            {large ? item.problem : item.summary}
-          </p>
+          </Link>
+        </h2>
+        <p className="mt-3 max-w-xl text-pretty text-muted-foreground">{item.summary}</p>
 
-          <FlowDiagram steps={item.flow} className="mt-5" />
+        <DataFlowDiagram steps={item.flow} className="mt-auto pt-10" />
 
-          <p className="mt-5 border-t border-line pt-4 text-sm leading-relaxed text-pretty">
-            <span className="font-semibold">{ui.benefit}: </span>
-            <span className="text-muted-foreground">{item.benefit}</span>
-          </p>
-
-          {large && hasVerifiedMetrics(item) && (
-            <dl className="mt-5 flex flex-wrap gap-x-10 gap-y-4">
-              {item.metrics.map((metric) => (
-                <div key={metric.label} className="flex flex-col-reverse">
-                  <dt className="text-sm text-muted-foreground">{metric.label}</dt>
-                  <dd className="text-gradient font-display text-3xl font-bold tracking-tight">
-                    {metric.value}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          )}
-
-          <span className="mt-auto inline-flex items-center gap-1 pt-6 text-sm font-semibold text-link">
-            {ui.viewProject}
-            <ArrowUpRightIcon
-              aria-hidden="true"
-              className="size-4 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-            />
-          </span>
-        </Link>
+        <p className="mt-8 border-t border-line pt-6 text-sm leading-relaxed text-pretty">
+          <span className="font-medium">{ui.benefit}: </span>
+          <span className="text-muted-foreground">{item.benefit}</span>
+        </p>
+        <span
+          aria-hidden="true"
+          className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-link"
+        >
+          {ui.viewProject}
+          <ArrowUpRightIcon className="size-4" />
+        </span>
       </Spotlight>
     </li>
   );

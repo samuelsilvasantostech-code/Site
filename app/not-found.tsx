@@ -12,9 +12,9 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
-    <main id="conteudo" className="mx-auto grid min-h-svh max-w-xl content-center px-6 py-16">
-      <p className="text-sm text-muted-foreground">Erro 404</p>
-      <h1 className="mt-2 text-4xl font-extrabold tracking-tight">{notFound.title}</h1>
+    <main id="conteudo" className="mx-auto grid min-h-svh max-w-2xl content-center px-6 py-16">
+      <p className="eyebrow text-muted-foreground">Erro 404</p>
+      <h1 className="mt-6 text-display">{notFound.title}</h1>
       <p className="mt-4 text-pretty text-muted-foreground">
         {notFound.text}{" "}
         <code className="rounded-sm bg-surface px-1.5 py-0.5 text-sm text-foreground">

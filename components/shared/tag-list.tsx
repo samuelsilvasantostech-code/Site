@@ -6,13 +6,14 @@ type TagListProps = {
   className?: string;
 };
 
+/** Rótulos técnicos (ferramentas, tecnologias) em mono: a textura da marca. */
 export function TagList({ tags, label, className }: TagListProps) {
   return (
-    <ul aria-label={label} className={cn("flex flex-wrap gap-1.5", className)}>
+    <ul aria-label={label} className={cn("flex flex-wrap gap-2", className)}>
       {tags.map((tag) => (
         <li
           key={tag}
-          className="rounded-full bg-surface px-2.5 py-0.5 text-sm whitespace-nowrap text-muted-foreground"
+          className="rounded-full border border-line bg-surface px-3.5 py-1.5 font-mono text-xs tracking-wide whitespace-nowrap text-muted-foreground"
         >
           {tag}
         </li>

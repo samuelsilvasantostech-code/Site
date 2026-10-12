@@ -20,7 +20,7 @@ export function Metrics({
           <dd
             className={cn(
               "font-semibold tracking-[-0.02em] text-foreground",
-              size === "lg" ? "text-2xl" : "text-lg",
+              size === "lg" ? "text-display" : "text-lg",
             )}
           >
             {metric.value}

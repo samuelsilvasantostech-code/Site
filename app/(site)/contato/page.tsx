@@ -17,28 +17,26 @@ export const metadata: Metadata = {
 };
 
 const channelClass =
-  "flex items-center gap-3 rounded-md px-3 py-2.5 -mx-3 transition-colors duration-300 hover:bg-surface";
+  "flex items-center gap-3 rounded-2xl px-3 py-2.5 -mx-3 transition-colors duration-300 hover:bg-surface-2";
 
 export default function ContactPage() {
   return (
     <section
       aria-labelledby="contato-title"
-      className="relative isolate overflow-hidden pt-[calc(var(--header-h)+3.5rem)] pb-20 md:pt-[calc(var(--header-h)+5rem)] md:pb-28"
+      className="pb-section relative isolate overflow-hidden pt-[calc(var(--header-h)+clamp(3rem,10vh,6rem))]"
     >
-      <div aria-hidden="true" className="hero-backdrop absolute inset-0 -z-10 h-[32rem]" />
-      <div className="container-site grid gap-14 lg:grid-cols-[1fr_1.35fr] lg:gap-16">
+      <div aria-hidden="true" className="hero-backdrop absolute inset-0 -z-10 h-[40rem]" />
+      <div className="container-site grid gap-16 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
         <div>
           <h1
             id="contato-title"
-            className="text-4xl leading-[1.08] font-bold tracking-tight text-balance md:text-5xl"
+            className="font-display text-[clamp(2.25rem,4.2vw,4.25rem)] leading-[0.98] font-bold tracking-[-0.04em]"
           >
             {contactPage.headline}
           </h1>
-          <p className="mt-5 text-lg leading-relaxed text-pretty text-muted-foreground">
-            {contactPage.intro}
-          </p>
+          <p className="mt-8 text-lead text-pretty text-muted-foreground">{contactPage.intro}</p>
 
-          <h2 className="mt-12 font-display text-sm font-semibold">{contactPage.firstTalkTitle}</h2>
+          <h2 className="mt-14 eyebrow text-muted-foreground">{contactPage.firstTalkTitle}</h2>
           <ul className="mt-4 grid gap-2.5">
             {contactPage.firstTalk.map((item) => (
               <li
@@ -51,11 +49,11 @@ export default function ContactPage() {
             ))}
           </ul>
 
-          <h2 className="mt-12 font-display text-sm font-semibold">{contactPage.nextStepsTitle}</h2>
+          <h2 className="mt-14 eyebrow text-muted-foreground">{contactPage.nextStepsTitle}</h2>
           <ol className="mt-4 grid gap-4">
             {contactPage.nextSteps.map((step, i) => (
               <li key={step} className="flex gap-4">
-                <span className="grid size-7 shrink-0 place-items-center rounded-full border border-line font-display text-xs font-bold text-link">
+                <span className="grid size-7 shrink-0 place-items-center rounded-full border border-line-strong font-mono text-xs text-foreground">
                   {i + 1}
                 </span>
                 <span className="pt-0.5 leading-relaxed text-pretty text-muted-foreground">
@@ -65,7 +63,7 @@ export default function ContactPage() {
             ))}
           </ol>
 
-          <h2 className="mt-12 font-display text-sm font-semibold">{contactPage.channelsTitle}</h2>
+          <h2 className="mt-14 eyebrow text-muted-foreground">{contactPage.channelsTitle}</h2>
           <ul className="mt-3 grid gap-1">
             <li>
               <a href={`mailto:${links.email}`} className={channelClass}>
@@ -129,10 +127,10 @@ export default function ContactPage() {
               </a>
             </li>
           </ul>
-          <CopyEmailButton className="mt-6 border-line-strong bg-transparent dark:bg-transparent" />
+          <CopyEmailButton className="mt-6 h-11 rounded-full border-line-strong bg-transparent px-5 dark:bg-transparent" />
         </div>
 
-        <div className="rounded-xl border border-line bg-surface p-6 md:p-9">
+        <div className="rounded-[var(--radius-xl)] border border-line bg-elevated p-6 shadow-[var(--inner-glow)] md:p-12">
           <ContactForm />
         </div>
       </div>

@@ -35,10 +35,10 @@ const ICONS: Record<IconName, LucideIcon> = {
 export function FeatureIcon({ name }: { name: IconName }) {
   const Icon = ICONS[name];
   return (
-    <span className="relative inline-grid size-11 shrink-0 place-items-center rounded-md border border-line bg-background">
+    <span className="relative inline-grid size-11 shrink-0 place-items-center rounded-xl border border-line-strong bg-background shadow-[var(--inner-glow)]">
       <span
         aria-hidden="true"
-        className="absolute inset-0 rounded-md bg-gradient-to-br from-grad-from/12 to-grad-to/12"
+        className="absolute inset-0 rounded-xl bg-gradient-to-br from-grad-from/15 to-transparent"
       />
       <Icon aria-hidden="true" className="relative size-5 text-link" strokeWidth={1.75} />
     </span>

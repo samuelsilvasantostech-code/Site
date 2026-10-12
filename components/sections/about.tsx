@@ -8,56 +8,50 @@ import { about, ui } from "@/content/data";
 
 import { Experience } from "./experience";
 
-/** Como a SSNEX pensa tecnologia: três princípios de abordagem. */
+/**
+ * Como a SSNEX pensa tecnologia: três princípios em linhas editoriais,
+ * ligadas pela linha de conexão da marca.
+ */
 export function AboutApproach() {
   return (
     <Section id="abordagem" title={about.approachTitle}>
-      <ol className="grid gap-5 md:grid-cols-3">
+      <ul className="border-b border-line">
         {about.approach.map((item) => (
           <li
             key={item.title}
             data-animate
-            className="rounded-lg border border-line bg-surface p-7"
+            className="grid gap-4 border-t border-line py-10 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-16 md:py-14"
           >
-            <h3 className="text-lg font-bold tracking-tight">{item.title}</h3>
-            <p className="mt-2 leading-relaxed text-pretty text-muted-foreground">
-              {item.description}
-            </p>
+            <h3 className="text-title">{item.title}</h3>
+            <p className="text-lead text-pretty text-muted-foreground">{item.description}</p>
           </li>
         ))}
-      </ol>
+      </ul>
     </Section>
   );
 }
 
-/** O fundador: história real, trajetória e currículo. */
+/**
+ * O fundador: a história real em tamanho de leitura, a foto (quando houver,
+ * com leve parallax) e a trajetória como linha do tempo.
+ */
 export function About() {
+  const [lead, ...rest] = about.founderParagraphs;
   return (
     <Section id="fundador" tone="invert" title={about.founderTitle}>
-      <div className="grid gap-14 lg:grid-cols-[1.4fr_1fr] lg:gap-20">
-        <div data-animate>
-          {about.photo && (
-            <Image
-              src={about.photo}
-              alt={about.photoAlt}
-              width={600}
-              height={600}
-              className="mb-8 size-24 rounded-full object-cover"
-            />
-          )}
-          <div className="max-w-[62ch] space-y-5 text-pretty">
-            {about.founderParagraphs.map((paragraph, i) => (
-              <p
-                key={i}
-                className={
-                  i === 0 ? "text-xl leading-relaxed" : "leading-relaxed text-muted-foreground"
-                }
-              >
+      <div className="grid gap-14 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-20">
+        <div>
+          <p data-animate className="text-title text-pretty">
+            {lead}
+          </p>
+          <div className="mt-8 max-w-[62ch] space-y-5">
+            {rest.map((paragraph, i) => (
+              <p key={i} data-animate className="text-lead text-pretty text-muted-foreground">
                 {paragraph}
               </p>
             ))}
           </div>
-          <Button asChild variant="outline" className="mt-8 bg-transparent dark:bg-transparent">
+          <Button asChild variant="outline" className="mt-10 h-12 px-6">
             <Link href="/curriculo">
               <FileTextIcon aria-hidden="true" />
               {ui.resume}
@@ -65,9 +59,22 @@ export function About() {
           </Button>
         </div>
 
-        <div data-animate className="rounded-lg border border-line bg-surface p-7">
-          <Experience />
-        </div>
+        {about.photo && (
+          <div className="overflow-hidden rounded-[var(--radius-xl)]">
+            <Image
+              src={about.photo}
+              alt={about.photoAlt}
+              width={600}
+              height={750}
+              data-parallax="0.08"
+              className="aspect-[4/5] w-full scale-110 object-cover"
+            />
+          </div>
+        )}
+      </div>
+
+      <div className="mt-24">
+        <Experience />
       </div>
     </Section>
   );

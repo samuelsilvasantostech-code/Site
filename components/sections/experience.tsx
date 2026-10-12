@@ -1,37 +1,40 @@
 import { experience } from "@/content/data";
 import { cn } from "@/lib/utils";
 
-/* Ordem cronológica inversa: o emprego atual primeiro. */
-const jobs = [...experience.jobs].reverse();
-
-/** Linha do tempo compacta, usada dentro da seção "Sobre". */
+/**
+ * Trajetória do fundador como linha do tempo horizontal (em ordem
+ * cronológica, da esquerda para a direita): cada etapa é um nó ligado à
+ * seguinte, e o nó atual pulsa. Vertical no celular.
+ */
 export function Experience() {
   return (
     <div>
-      <h3 className="text-lg font-bold tracking-tight">{experience.title}</h3>
-      <ol className="mt-6 border-l border-line">
-        {jobs.map((job) => (
-          <li key={job.company} className="relative pb-8 pl-6 last:pb-0">
+      <h3 className="eyebrow text-muted-foreground">{experience.title}</h3>
+      <ol className="timeline mt-10">
+        {experience.jobs.map((job) => (
+          <li key={job.company} data-animate className="timeline-item">
             <span
               aria-hidden="true"
-              className={cn(
-                "absolute top-1.5 -left-[5px] size-[9px] rounded-full border border-line-strong bg-background",
-                job.current && "border-transparent bg-gradient-to-br from-grad-from to-grad-to",
-              )}
+              className={cn("timeline-node", job.current && "timeline-node-current")}
             />
-            <p className="text-sm text-muted-foreground">{job.period}</p>
-            <p className="mt-1 font-semibold">{job.role}</p>
-            <p className="text-muted-foreground">{job.company}</p>
+            <p className="font-mono text-xs tracking-widest text-muted-foreground uppercase">
+              {job.period}
+            </p>
+            <p className="mt-3 text-title">{job.role}</p>
+            <p className="mt-1 text-muted-foreground">{job.company}</p>
+            <p className="mt-4 max-w-md leading-relaxed text-pretty text-muted-foreground">
+              {job.text}
+            </p>
           </li>
         ))}
       </ol>
 
-      <h3 className="mt-10 text-lg font-bold tracking-tight">{experience.educationTitle}</h3>
-      <ul className="mt-4 grid gap-3">
+      <h3 className="mt-20 eyebrow text-muted-foreground">{experience.educationTitle}</h3>
+      <ul className="mt-6 grid gap-4">
         {experience.education.map((item) => (
-          <li key={item.course}>
-            <p className="font-semibold">{item.course}</p>
-            <p className="text-muted-foreground">
+          <li key={item.course} data-animate>
+            <p className="text-title">{item.course}</p>
+            <p className="mt-1 text-muted-foreground">
               {item.school}, {item.period.toLowerCase()}
             </p>
           </li>

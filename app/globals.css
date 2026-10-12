@@ -254,6 +254,13 @@
   }
 }
 
+/* Nó atual da linha do tempo: um pulso suave. */
+@keyframes node-pulse {
+  50% {
+    box-shadow: 0 0 0 10px color-mix(in srgb, var(--data) 0%, transparent);
+  }
+}
+
 /* Pulsos nas conexões do diagrama de fluxo. */
 @keyframes flow-right {
   0% {
@@ -625,6 +632,13 @@
     }
   }
 
+  /* Nó atual da linha do tempo: um pulso suave. */
+  @keyframes node-pulse {
+    50% {
+      box-shadow: 0 0 0 10px color-mix(in srgb, var(--data) 0%, transparent);
+    }
+  }
+
   /* Pulsos nas conexões do diagrama de fluxo. */
   @keyframes flow-right {
     0% {
@@ -898,6 +912,9 @@
    * sistema e `--draw` (0 → 1) desenha cada conexão; o padrão é tudo aceso.
    * Com `data-live`, pulsos correm pelas conexões.
    */
+  .flow {
+    container: flow / inline-size;
+  }
   .flow-track {
     display: flex;
     flex-direction: column;
@@ -907,7 +924,8 @@
     --lit: 1;
     display: grid;
     gap: 0.35rem;
-    padding: 1rem 1.25rem;
+    min-width: 0;
+    padding: 0.85rem 1.15rem;
     border: 1px solid color-mix(in srgb, var(--data) calc(var(--lit) * 55%), var(--line-strong));
     border-radius: 1rem;
     background: var(--bg);
@@ -917,10 +935,13 @@
       0 0 40px -12px color-mix(in srgb, var(--data) calc(var(--lit) * 45%), transparent);
   }
   .flow-role {
+    overflow: hidden;
     font-family: var(--font-mono);
     font-size: 0.6875rem;
     letter-spacing: 0.16em;
+    text-overflow: ellipsis;
     text-transform: uppercase;
+    white-space: nowrap;
     color: var(--muted);
   }
   .flow-name {
@@ -928,6 +949,7 @@
     font-size: 1.05rem;
     font-weight: 600;
     letter-spacing: -0.01em;
+    overflow-wrap: anywhere;
   }
   .flow-lg .flow-name {
     font-size: clamp(1.1rem, 1.6vw, 1.4rem);
@@ -936,7 +958,7 @@
     position: relative;
     align-self: center;
     width: 1px;
-    height: 2.25rem;
+    height: 1.5rem;
   }
   .flow-link-line {
     --draw: 1;
@@ -963,129 +985,185 @@
   .flow[data-live] .flow-link:nth-child(4n) .flow-pulse {
     animation-delay: 0.6s;
   }
-  @media (min-width: 640px) {
-    .flow-track {
+  /*
+   * Em linha só quando o próprio espaço do diagrama comporta os sistemas
+   * (container query, ~10rem por sistema); senão, em coluna.
+   */
+  @container flow (min-width: 30rem) {
+    .flow:not([data-count="4"]) .flow-track {
       flex-direction: row;
       align-items: center;
     }
-    .flow-node {
+    .flow:not([data-count="4"]) .flow-node {
       flex: 1;
-      min-width: 0;
     }
-    .flow-link {
+    .flow:not([data-count="4"]) .flow-link {
       width: auto;
       height: 1px;
-      flex: 0 0 clamp(1.5rem, 4vw, 3.5rem);
+      flex: 0 0 clamp(1.25rem, 4cqi, 3.5rem);
     }
-    .flow-link-line {
+    .flow:not([data-count="4"]) .flow-link-line {
       background: linear-gradient(90deg, var(--cta), var(--data));
       transform: scaleX(var(--draw));
       transform-origin: left;
     }
-    .flow-pulse {
+    .flow:not([data-count="4"]) .flow-pulse {
       top: -2.5px;
       left: 0;
     }
-    .flow[data-live] .flow-pulse {
+    .flow:not([data-count="4"])[data-live] .flow-pulse {
+      animation-name: flow-right;
+    }
+  }
+  @container flow (min-width: 40rem) {
+    .flow[data-count="4"] .flow-track {
+      flex-direction: row;
+      align-items: center;
+    }
+    .flow[data-count="4"] .flow-node {
+      flex: 1;
+    }
+    .flow[data-count="4"] .flow-link {
+      width: auto;
+      height: 1px;
+      flex: 0 0 clamp(1.25rem, 4cqi, 3.5rem);
+    }
+    .flow[data-count="4"] .flow-link-line {
+      background: linear-gradient(90deg, var(--cta), var(--data));
+      transform: scaleX(var(--draw));
+      transform-origin: left;
+    }
+    .flow[data-count="4"] .flow-pulse {
+      top: -2.5px;
+      left: 0;
+    }
+    .flow[data-count="4"][data-live] .flow-pulse {
       animation-name: flow-right;
     }
   }
 
-  /*
-   * Trilho de projetos (ProjectsRail). Padrão: carrossel nativo com encaixe.
-   * Com `data-pinned` (desktop, com movimento), o GSAP move a faixa.
-   */
-  .projects-rail {
-    --rail-gutter: max(
-      clamp(1.25rem, 4vw, 2.5rem),
-      calc((100vw - var(--container)) / 2 + clamp(1.25rem, 4vw, 2.5rem))
-    );
-    margin-top: clamp(3rem, 8vh, 5rem);
-  }
-  .projects-track {
-    display: flex;
-    gap: 1.25rem;
-    padding-inline: var(--rail-gutter);
-    padding-bottom: 1rem;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-padding-inline: var(--rail-gutter);
-    scrollbar-width: thin;
-    scrollbar-color: var(--line-strong) transparent;
-  }
-  .project-panel {
-    position: relative;
-    flex: 0 0 min(86vw, 64rem);
-    scroll-snap-align: start;
-    padding: clamp(1.5rem, 3vw, 3rem);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-xl);
-    background: var(--bg-elevated);
-    box-shadow: var(--inner-glow);
-    transition: border-color var(--dur-ui) var(--ease);
-  }
-  .project-panel:hover,
-  .project-panel:focus-within {
-    border-color: var(--line-strong);
-  }
-  .projects-rail[data-pinned="true"] {
-    display: flex;
-    align-items: center;
-    min-height: 100svh;
-    margin-top: 0;
-  }
-  .projects-rail[data-pinned="true"] .projects-track {
-    width: max-content;
-    overflow: visible;
-    padding-bottom: 0;
-  }
-  .projects-rail[data-pinned="true"] .project-panel {
-    flex-basis: 80vw;
-    min-height: min(78svh, 46rem);
-  }
-
-  /* Número da etapa atual, em escala de cartaz (ProcessSteps). */
-  .process-number {
+  /* Grade editorial de projetos (ProjectFilter): ritmo 7/5, 5/7. */
+  .project-grid {
     display: grid;
-    font-family: var(--font-display);
-    font-size: clamp(8rem, 17vw, 16rem);
-    font-weight: 700;
-    line-height: 0.8;
-    letter-spacing: -0.06em;
+    gap: 1.25rem;
   }
-  .process-number > span {
-    grid-area: 1 / 1;
-    background: linear-gradient(
-      180deg,
-      var(--text),
-      color-mix(in srgb, var(--text) 25%, transparent)
-    );
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    transition:
-      opacity var(--dur-reveal) var(--ease),
-      transform var(--dur-reveal) var(--ease);
+  .project-grid-item {
+    position: relative;
+    min-width: 0;
   }
-  .process-number > span[data-active="false"] {
-    opacity: 0;
-    transform: translateY(18%);
+  @media (min-width: 1024px) {
+    .project-grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+    .project-grid-item[data-span="7"] {
+      grid-column: span 7;
+    }
+    .project-grid-item[data-span="5"] {
+      grid-column: span 5;
+    }
   }
 
-  /* Fechamento: halo central e véu atrás do título. */
-  .finale-glow {
-    background: radial-gradient(
-      50% 50% at 50% 50%,
-      color-mix(in srgb, var(--cta) calc(var(--glow-opacity) * 80%), transparent),
-      transparent 70%
-    );
+  /*
+   * Linha do tempo (Experience): vertical no celular, horizontal a partir do
+   * tablet. Os nós são ligados pela linha de conexão; o atual pulsa.
+   */
+  .timeline {
+    position: relative;
+    display: grid;
+    gap: 3rem;
+    padding-left: 2rem;
   }
-  .finale-scrim {
-    background: radial-gradient(
-      45% 40% at 50% 50%,
-      color-mix(in srgb, var(--bg) 70%, transparent),
-      transparent 80%
-    );
+  .timeline::before {
+    content: "";
+    position: absolute;
+    top: 0.5rem;
+    bottom: 0;
+    left: 0.3rem;
+    width: 1px;
+    background: linear-gradient(var(--line-strong), var(--data));
+  }
+  .timeline-item {
+    position: relative;
+  }
+  .timeline-node {
+    position: absolute;
+    top: 0.3rem;
+    left: calc(-2rem + 0.3rem - 5px);
+    width: 11px;
+    height: 11px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: var(--bg);
+  }
+  .timeline-node-current {
+    border-color: var(--data);
+    background: var(--data);
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--data) 18%, transparent);
+    animation: node-pulse 2.4s var(--ease) infinite;
+  }
+  @media (min-width: 768px) {
+    .timeline {
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(0, 1fr);
+      gap: 3rem;
+      padding-left: 0;
+      padding-top: 2.5rem;
+    }
+    .timeline::before {
+      top: 0.3rem;
+      bottom: auto;
+      left: 0;
+      right: 0;
+      width: auto;
+      height: 1px;
+      background: linear-gradient(90deg, var(--line-strong), var(--data));
+    }
+    .timeline-node {
+      top: calc(-2.5rem + 0.3rem - 5px);
+      left: 0;
+    }
+  }
+
+  /*
+   * Campos com rótulo flutuante (formulário de contato). O rótulo fica dentro
+   * do campo e sobe quando ele tem foco ou valor; no select e no texto longo,
+   * fica sempre em cima.
+   */
+  .field {
+    position: relative;
+  }
+  .field-label {
+    position: absolute;
+    top: 1.15rem;
+    left: 1rem;
+    max-width: calc(100% - 2rem);
+    overflow: hidden;
+    color: var(--muted);
+    font-size: 1rem;
+    font-weight: 400;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    pointer-events: none;
+    transform-origin: left top;
+    transition:
+      transform var(--dur-ui) var(--ease),
+      color var(--dur-ui) var(--ease);
+  }
+  .field:has(.field-input:focus, .field-input:not(:placeholder-shown)) .field-label,
+  .field-select .field-label,
+  .field-area .field-label {
+    transform: translateY(-0.6rem) scale(0.78);
+  }
+  .field:has(.field-input:focus) .field-label {
+    color: var(--data);
+  }
+  /* No texto longo, o exemplo só aparece com o campo em foco. */
+  .field-area .field-input::placeholder {
+    opacity: 0;
+    transition: opacity var(--dur-ui) var(--ease);
+  }
+  .field-area .field-input:focus::placeholder {
+    opacity: 1;
   }
 
   /* Ícones das ferramentas: monocromáticos; a cor original aparece no hover. */
