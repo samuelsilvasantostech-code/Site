@@ -5,7 +5,7 @@ import { finalCta } from "@/content/data";
 export function FinalCta({ source = "final-cta" }: { source?: string }) {
   return (
     <section aria-labelledby="cta-final-title" className="py-20 md:py-28">
-      <div className="mx-auto max-w-6xl px-6">
+      <div className="container-site">
         <div
           data-animate
           className="relative isolate overflow-hidden rounded-xl border border-line bg-surface px-8 py-14 text-center md:px-16 md:py-20"

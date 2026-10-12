@@ -32,7 +32,7 @@ export function Section({
         className,
       )}
     >
-      <div className="mx-auto max-w-6xl px-6">
+      <div className="container-site">
         <header className={cn("mb-14 max-w-2xl", align === "center" && "mx-auto text-center")}>
           <h2
             id={`${id}-title`}

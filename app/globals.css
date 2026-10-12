@@ -2,15 +2,15 @@
 @import "tw-animate-css";
 
 /*
- * Identidade SSNEX: grafite #0B0F14 e navy #111827 com seções claras
- * (#F8FAFC) intercaladas, azul principal #2563EB, azul elétrico #168BFF
- * (links e foco) e ciano #06B6D4. Bordas #263244. O gradiente azul → ciano
- * fica reservado a elementos de tecnologia (símbolo, números, brilhos).
- * Montserrat nos títulos, Inter no texto.
+ * Identidade SSNEX, "sistemas conectados e dados em movimento".
+ *
+ * 90% da tela em neutros profundos (#05070A, #0B0F14). Cor só como acento:
+ * azul #2F6BFF para CTA e estados ativos; ciano #00E0C6 exclusivamente para
+ * "dado em movimento" (pulsos, conexões, fluxos), nunca como texto corrido.
+ * Geist no display e no texto, Geist Mono nos rótulos técnicos.
  *
  * `.dark` é o padrão (next-themes). Uma seção com `.tone-invert` usa o tema
- * oposto ao da página: é assim que as faixas brancas aparecem no tema escuro
- * (e as escuras no claro).
+ * oposto ao da página.
  */
 
 @custom-variant dark (&:is(.dark *));
@@ -18,43 +18,61 @@
 /* ---------- Tema claro (e seções invertidas no tema escuro) ---------- */
 :root,
 .dark .tone-invert {
-  --bg: #f8fafc;
+  --bg: #f5f5f7;
+  --bg-elevated: #ffffff;
   --surface: #ffffff;
-  --surface-2: #eef2f7;
-  --line: #e2e8f0;
-  --line-strong: #cbd5e1;
-  --text: #0b0f14;
-  --muted: #475569;
-  --accent: #2563eb;
-  --cta: #2563eb;
+  --surface-2: #ebebef;
+  --line: rgb(10 10 11 / 0.09);
+  --line-strong: rgb(10 10 11 / 0.16);
+  --text: #0a0a0b;
+  --muted: #6e6e73;
+  /* Links: azul mais escuro para contraste AA sobre o fundo claro. */
+  --accent: #1f55e0;
+  --data: #00a08c;
+  --cta: #2f6bff;
+  --cta-hover: #1f55e0;
   --cta-ink: #ffffff;
   --danger: #b42318;
-  --glow-opacity: 0.12;
+  --glow-opacity: 0.1;
+  --inner-glow: inset 0 1px 0 rgb(255 255 255 / 0.9);
 }
 
 /* ---------- Tema escuro (e seções invertidas no tema claro) ---------- */
 .dark,
 :root:not(.dark) .tone-invert {
-  --bg: #0b0f14;
-  --surface: #111827;
-  --surface-2: #1a2333;
-  --line: #263244;
-  --line-strong: #334155;
-  --text: #f8fafc;
-  --muted: #94a3b8;
-  --accent: #168bff;
-  --cta: #2563eb;
+  --bg: #05070a;
+  --bg-elevated: #0b0f14;
+  --surface: rgb(255 255 255 / 0.04);
+  --surface-2: rgb(255 255 255 / 0.07);
+  --line: rgb(255 255 255 / 0.08);
+  --line-strong: rgb(255 255 255 / 0.15);
+  --text: #f5f7fa;
+  --muted: #8a94a6;
+  /* Links: azul mais claro para contraste AA sobre o fundo escuro. */
+  --accent: #6e9bff;
+  --data: #00e0c6;
+  --cta: #2f6bff;
+  --cta-hover: #4a7dff;
   --cta-ink: #ffffff;
   --danger: #f87171;
-  --glow-opacity: 0.22;
+  --glow-opacity: 0.35;
+  --inner-glow: inset 0 1px 0 rgb(255 255 255 / 0.06);
 }
 
 :root {
-  --grad-from: #2563eb;
-  --grad-to: #06b6d4;
-  --radius: 10px;
-  --header-h: 4rem;
-  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --grad-from: #2f6bff;
+  --grad-to: #00e0c6;
+  --radius: 12px;
+  --header-h: 4.25rem;
+  /* Easing da marca: padrão (saída suave) e expressivo (entrada e saída). */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-expressive: cubic-bezier(0.76, 0, 0.24, 1);
+  --dur-micro: 200ms;
+  --dur-ui: 400ms;
+  --dur-reveal: 900ms;
+  /* Ritmo vertical das seções e largura máxima do conteúdo. */
+  --section-y: clamp(6rem, 14vh, 12rem);
+  --container: 80rem;
 }
 
 /* Variáveis do shadcn, derivadas dos tokens acima. Ficam em todo elemento
@@ -66,7 +84,7 @@
   --foreground: var(--text);
   --card: var(--surface);
   --card-foreground: var(--text);
-  --popover: var(--bg);
+  --popover: var(--bg-elevated);
   --popover-foreground: var(--text);
   --primary: var(--cta);
   --primary-foreground: var(--cta-ink);
@@ -74,17 +92,18 @@
   --secondary-foreground: var(--text);
   --muted-background: var(--surface);
   --muted-foreground: var(--muted);
-  --accent-background: var(--surface);
+  --accent-background: var(--surface-2);
   --accent-foreground: var(--text);
   --destructive: var(--danger);
   --border: var(--line);
   --input: var(--line-strong);
-  --ring: var(--accent);
+  --ring: var(--data);
 }
 
 @theme inline {
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, "Segoe UI", Roboto, sans-serif;
-  --font-display: var(--font-montserrat), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-display: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -105,22 +124,76 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
+  --color-elevated: var(--bg-elevated);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
   --color-line: var(--line);
   --color-line-strong: var(--line-strong);
   --color-link: var(--accent);
+  --color-data: var(--data);
+  --color-cta-hover: var(--cta-hover);
   --color-grad-from: var(--grad-from);
   --color-grad-to: var(--grad-to);
 
-  --radius-sm: 6px;
+  --radius-sm: 8px;
   --radius-md: var(--radius);
-  --radius-lg: 14px;
-  --radius-xl: 20px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
 
   --ease-brand: var(--ease);
+  --ease-expressive: var(--ease-expressive);
+
+  --container-site: var(--container);
 
   --animate-marquee: marquee 40s linear infinite;
+}
+
+/* ---------- Escala tipográfica fluida ---------- */
+@utility text-hero {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 7vw, 7.5rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+}
+@utility text-display {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 6vw, 5.5rem);
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+}
+@utility text-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2.5vw, 2.25rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+}
+@utility text-lead {
+  font-size: clamp(1.125rem, 1.6vw, 1.5rem);
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+}
+/* Rótulo técnico em mono: a "textura" da marca (ERP, Webhook, n8n). */
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* Contêiner do site (1280px) e ritmo vertical das seções. */
+@utility container-site {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 2.5rem);
+}
+@utility py-section {
+  padding-block: var(--section-y);
 }
 
 /* Ângulo animável da borda de luz dos cards principais. */
@@ -203,26 +276,39 @@
   body {
     @apply bg-background font-sans text-foreground antialiased;
     font-size: 1rem;
-    line-height: 1.7;
+    line-height: 1.5;
     overflow-x: hidden;
+    font-feature-settings: "ss01", "cv11";
+  }
+
+  /* Textura: grão de 3–4% sobre a página toda, para profundidade. */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
   ::selection {
-    background: var(--grad-from);
+    background: var(--cta);
     color: #ffffff;
   }
 
-  /* Títulos em Montserrat, como no manual da marca. */
   h1,
   h2,
   h3 {
     font-family: var(--font-display);
+    text-wrap: balance;
   }
 
+  /* Foco visível na cor de "dado em movimento". */
   :focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 3px;
-    border-radius: 4px;
+    outline: 2px solid var(--data);
+    outline-offset: 4px;
+    border-radius: 6px;
   }
 
   main:focus {
@@ -417,5 +503,8 @@
   }
   [data-sonner-toaster] {
     display: none !important;
+  }
+  body::after {
+    display: none;
   }
 }

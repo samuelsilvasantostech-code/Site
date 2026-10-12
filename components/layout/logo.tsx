@@ -21,9 +21,9 @@ export function LogoMark({ className }: { className?: string }) {
     <svg viewBox={MARK_VIEWBOX} aria-hidden="true" focusable="false" className={className}>
       <defs>
         <linearGradient id={gradient} x1="0" y1="1" x2="1" y2="0.2">
-          <stop offset="0" stopColor="#1D4ED8" />
-          <stop offset="0.55" stopColor="#2563EB" />
-          <stop offset="1" stopColor="#06B6D4" />
+          <stop offset="0" stopColor="#1F4FE0" />
+          <stop offset="0.55" stopColor="#2F6BFF" />
+          <stop offset="1" stopColor="#00E0C6" />
         </linearGradient>
       </defs>
       <g

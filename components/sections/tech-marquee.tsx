@@ -15,7 +15,7 @@ export function TechMarquee() {
     <section aria-labelledby="tecnologias-faixa" className="border-y border-line py-10">
       <h2
         id="tecnologias-faixa"
-        className="mx-auto max-w-6xl px-6 text-center text-sm font-medium text-muted-foreground"
+        className="container-site text-center text-sm font-medium text-muted-foreground"
       >
         Ferramentas e tecnologias usadas em projetos reais
       </h2>

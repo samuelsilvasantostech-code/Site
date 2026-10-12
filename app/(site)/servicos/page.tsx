@@ -96,7 +96,7 @@ function ServiceDetail({ service, index }: { service: Service; index: number }) 
         index % 2 === 1 && "tone-invert",
       )}
     >
-      <div className="mx-auto grid max-w-6xl gap-12 px-6 lg:grid-cols-[1fr_1.3fr] lg:gap-16">
+      <div className="container-site grid gap-12 lg:grid-cols-[1fr_1.3fr] lg:gap-16">
         <div data-animate>
           <FeatureIcon name={service.icon} />
           <h2
@@ -160,7 +160,7 @@ export default function ServicesPage() {
       ))}
 
       <div className="border-y border-line bg-background">
-        <div className="mx-auto max-w-6xl px-6 py-12">
+        <div className="container-site py-12">
           <h2 className="text-2xl font-bold tracking-tight">{servicesPage.complementaryTitle}</h2>
           <p className="mt-2 max-w-2xl text-pretty text-muted-foreground">
             {servicesPage.complementaryIntro}
@@ -173,7 +173,7 @@ export default function ServicesPage() {
       ))}
 
       <section aria-labelledby="contratacao-title" className="py-20 md:py-24">
-        <div className="mx-auto max-w-6xl px-6">
+        <div className="container-site">
           <div data-animate className="rounded-lg border border-line bg-surface p-7 md:p-10">
             <h2 id="contratacao-title" className="text-2xl font-bold tracking-tight">
               {servicesPage.hiring.title}

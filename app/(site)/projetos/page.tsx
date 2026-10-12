@@ -25,7 +25,7 @@ export default function ProjectsPage() {
       <PageIntro title={projects.headline} intro={projects.intro} />
 
       <section aria-label="Lista de projetos" className="py-16 md:py-20">
-        <div className="mx-auto max-w-6xl px-6">
+        <div className="container-site">
           <p className="mb-6 flex max-w-3xl gap-3 rounded-md border border-link/30 bg-link/5 px-4 py-3 leading-relaxed text-pretty">
             <InfoIcon aria-hidden="true" className="mt-1 size-4 shrink-0 text-link" />
             {portfolioDisclaimer}

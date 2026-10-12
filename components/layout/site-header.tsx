@@ -46,7 +46,7 @@ export function SiteHeader() {
           : "border-transparent bg-transparent",
       )}
     >
-      <div className="mx-auto flex h-(--header-h) max-w-6xl items-center gap-6 px-6">
+      <div className="container-site flex h-(--header-h) items-center gap-6">
         <Brand />
 
         <nav

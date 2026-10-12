@@ -26,7 +26,7 @@ export default function ContactPage() {
       className="relative isolate overflow-hidden pt-[calc(var(--header-h)+3.5rem)] pb-20 md:pt-[calc(var(--header-h)+5rem)] md:pb-28"
     >
       <div aria-hidden="true" className="hero-backdrop absolute inset-0 -z-10 h-[32rem]" />
-      <div className="mx-auto grid max-w-6xl gap-14 px-6 lg:grid-cols-[1fr_1.35fr] lg:gap-16">
+      <div className="container-site grid gap-14 lg:grid-cols-[1fr_1.35fr] lg:gap-16">
         <div>
           <h1
             id="contato-title"

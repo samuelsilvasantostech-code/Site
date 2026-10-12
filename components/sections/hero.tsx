@@ -22,7 +22,7 @@ export function Hero() {
       <div aria-hidden="true" className="hero-backdrop absolute inset-0 -z-10" />
       <PointerSpotlight />
 
-      <div className="mx-auto grid max-w-6xl items-center gap-14 px-6 lg:grid-cols-[1.25fr_1fr]">
+      <div className="container-site grid items-center gap-14 lg:grid-cols-[1.25fr_1fr]">
         <div>
           <p className={`${enter} text-sm font-medium text-muted-foreground`}>
             <span className="text-foreground">{brand.tagline.lead}</span>{" "}
