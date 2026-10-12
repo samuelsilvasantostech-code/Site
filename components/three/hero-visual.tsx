@@ -1,11 +1,11 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState, useSyncExternalStore, type ReactNode } from "react";
+import { useEffect, useState, useSyncExternalStore, type ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
-import { useReducedMotion } from "./use-reduced-motion";
+import { useReducedMotion } from "@/components/motion/use-reduced-motion";
 
 /* A cena 3D (three.js) só é baixada no navegador, depois do resto da página. */
 const HeroScene = dynamic(() => import("./hero-scene"), { ssr: false });
@@ -67,40 +67,57 @@ function useCanRender3D() {
   return useSyncExternalStore(subscribeNoop, detectCapable, () => false);
 }
 
+/** `true` depois do primeiro paint, quando o navegador fica ocioso. */
+function useIdle() {
+  const [idle, setIdle] = useState(false);
+  useEffect(() => {
+    if ("requestIdleCallback" in window) {
+      const id = window.requestIdleCallback(() => setIdle(true), { timeout: 1500 });
+      return () => window.cancelIdleCallback(id);
+    }
+    const id = setTimeout(() => setIdle(true), 300);
+    return () => clearTimeout(id);
+  }, []);
+  return idle;
+}
+
 /**
- * Visual do hero: mostra a ilustração em SVG (`fallback`) de imediato e a
- * troca pela cena 3D animada quando ela termina de carregar (versão leve no
- * celular). Sem WebGL ou com economia de dados, a ilustração continua e a cena
- * nem é baixada.
- * Com "reduzir movimento", a cena 3D aparece parada.
+ * Visual do hero, em tela cheia: mostra a ilustração estática (`fallback`) de
+ * imediato e a troca pela cena 3D quando ela fica pronta, com um leve zoom de
+ * entrada. O three.js só é baixado depois do primeiro paint, com o navegador
+ * ocioso. Sem WebGL, com WebGL emulado na CPU, com economia de dados, com
+ * "reduzir movimento" ou se a máquina não sustentar a cena, fica a ilustração.
  */
 export function HeroVisual({ fallback }: { fallback: ReactNode }) {
   const webgl = useCanRender3D();
   const wide = useWide();
   const reduceMotion = useReducedMotion();
+  const idle = useIdle();
   const [ready, setReady] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const show3D = webgl && !reduceMotion && !failed && idle;
 
   return (
-    <div aria-hidden="true" className="relative mx-auto aspect-[1.1] w-full max-w-[560px]">
+    <div aria-hidden="true" className="absolute inset-0">
       <div
         className={cn(
-          "absolute inset-0 flex items-center transition-opacity duration-700 ease-out",
-          ready && "opacity-0",
+          "absolute inset-0 transition-opacity duration-700 ease-brand",
+          show3D && ready && "opacity-0",
         )}
       >
         {fallback}
       </div>
-      {webgl && (
+      {show3D && (
         <div
           className={cn(
-            "absolute inset-0 opacity-0 transition-opacity duration-1000 ease-out",
-            ready && "opacity-100",
+            "absolute inset-0 scale-90 opacity-0 transition-[opacity,scale] duration-[1400ms] ease-brand",
+            ready && "scale-100 opacity-100",
           )}
         >
           <HeroScene
-            animate={!reduceMotion}
             quality={wide ? "high" : "low"}
             onReady={() => setReady(true)}
+            onFallback={() => setFailed(true)}
           />
         </div>
       )}

@@ -29,12 +29,12 @@ export function SystemsDiagram() {
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full overflow-visible">
         <defs>
           <linearGradient id="flow-line" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="#2563EB" />
-            <stop offset="1" stopColor="#06B6D4" />
+            <stop offset="0" stopColor="#2F6BFF" />
+            <stop offset="1" stopColor="#00E0C6" />
           </linearGradient>
           <radialGradient id="hub-glow">
-            <stop offset="0" stopColor="#2563EB" stopOpacity="0.35" />
-            <stop offset="1" stopColor="#2563EB" stopOpacity="0" />
+            <stop offset="0" stopColor="#2F6BFF" stopOpacity="0.35" />
+            <stop offset="1" stopColor="#2F6BFF" stopOpacity="0" />
           </radialGradient>
         </defs>
 
@@ -83,11 +83,11 @@ export function SystemsDiagram() {
               rx={10}
               className="fill-surface stroke-line-strong"
             />
-            <circle cx={node.x - NODE_W / 2 + 16} cy={node.y} r={4} fill="#06B6D4" />
+            <circle cx={node.x - NODE_W / 2 + 16} cy={node.y} r={4} fill="#00E0C6" />
             <text
               x={node.x - NODE_W / 2 + 28}
               y={node.y + 5}
-              className="fill-foreground font-sans"
+              className="fill-foreground font-mono"
               fontSize={14}
               fontWeight={600}
             >

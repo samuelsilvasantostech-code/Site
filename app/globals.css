@@ -151,7 +151,7 @@
 /* ---------- Escala tipográfica fluida ---------- */
 @utility text-hero {
   font-family: var(--font-display);
-  font-size: clamp(3rem, 7vw, 7.5rem);
+  font-size: clamp(2.75rem, 5vw, 6rem);
   font-weight: 700;
   line-height: 0.95;
   letter-spacing: -0.045em;
@@ -251,6 +251,13 @@
   from {
     opacity: 0;
     transform: translateY(16px);
+  }
+}
+
+/* Palavras do hero subindo de trás da máscara. */
+@keyframes rise {
+  from {
+    transform: translateY(105%);
   }
 }
 
@@ -481,44 +488,101 @@
     color: transparent;
   }
 
-  /* Fundo do hero: brilho azul + faixas diagonais de luz, como o banner da marca. */
-  .hero-backdrop {
-    background-image:
-      linear-gradient(
-        115deg,
-        transparent 62%,
-        color-mix(in srgb, var(--grad-from) calc(var(--glow-opacity) * 70%), transparent) 62.3%,
+  /*
+   * Gradiente assinatura: um halo azul profundo atrás do elemento-chave,
+   * nunca uma lavagem de cor na página inteira.
+   */
+  .signature-glow {
+    background:
+      radial-gradient(
+        42% 55% at 72% 46%,
+        color-mix(in srgb, var(--cta) calc(var(--glow-opacity) * 100%), transparent),
         transparent 70%
-      ),
-      linear-gradient(
-        115deg,
-        transparent 72%,
-        color-mix(in srgb, var(--grad-from) calc(var(--glow-opacity) * 110%), transparent) 72.2%,
-        color-mix(in srgb, var(--grad-to) calc(var(--glow-opacity) * 40%), transparent) 80%,
-        transparent 80.4%
       ),
       radial-gradient(
-        60% 55% at 50% 0%,
-        color-mix(in srgb, var(--grad-from) calc(var(--glow-opacity) * 100%), transparent),
+        30% 35% at 78% 60%,
+        color-mix(in srgb, var(--data) calc(var(--glow-opacity) * 22%), transparent),
         transparent 70%
-      ),
-      linear-gradient(
-        to right,
-        color-mix(in srgb, var(--line) 45%, transparent) 1px,
-        transparent 1px
-      ),
-      linear-gradient(
-        to bottom,
-        color-mix(in srgb, var(--line) 45%, transparent) 1px,
-        transparent 1px
       );
-    background-size:
-      100% 100%,
-      100% 100%,
-      100% 100%,
-      64px 64px,
-      64px 64px;
-    mask-image: linear-gradient(to bottom, #000 45%, transparent 100%);
+  }
+  @media (max-width: 767px) {
+    .signature-glow {
+      background: radial-gradient(
+        80% 40% at 50% 22%,
+        color-mix(in srgb, var(--cta) calc(var(--glow-opacity) * 100%), transparent),
+        transparent 70%
+      );
+    }
+  }
+
+  /* Abertura das páginas internas: o mesmo halo, vindo de cima. */
+  .hero-backdrop {
+    background: radial-gradient(
+      60% 60% at 50% 0%,
+      color-mix(in srgb, var(--cta) calc(var(--glow-opacity) * 70%), transparent),
+      transparent 70%
+    );
+  }
+
+  /* Véu sob o texto do hero (mais forte à esquerda, onde fica a manchete). */
+  .hero-scrim {
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--bg) 70%, transparent) 0%,
+      color-mix(in srgb, var(--bg) 25%, transparent) 45%,
+      transparent 65%
+    );
+  }
+  @media (max-width: 767px) {
+    .hero-scrim {
+      background: linear-gradient(
+        to top,
+        var(--bg) 35%,
+        color-mix(in srgb, var(--bg) 60%, transparent) 62%,
+        transparent 80%
+      );
+    }
+  }
+
+  /* Palavras do hero subindo de trás de uma máscara. */
+  .word-mask {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+    /* Folga para descendentes (g, p, ç) não serem cortados pela máscara. */
+    padding-bottom: 0.1em;
+    margin-bottom: -0.1em;
+  }
+  .word-rise {
+    display: inline-block;
+    animation: rise var(--dur-reveal) var(--ease) both;
+  }
+
+  /* Rótulo técnico de um sistema na cena 3D. */
+  .node-label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0.2rem 0.6rem;
+    border: 1px solid rgb(255 255 255 / 0.12);
+    border-radius: 999px;
+    background: rgb(5 7 10 / 0.6);
+    color: #f5f7fa;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    opacity: 0;
+    backdrop-filter: blur(8px);
+    will-change: transform, opacity;
+    transition:
+      border-color var(--dur-micro) var(--ease),
+      box-shadow var(--dur-micro) var(--ease);
+  }
+  .node-label[data-active="true"] {
+    border-color: var(--data);
+    box-shadow: 0 0 24px -4px color-mix(in srgb, var(--data) 60%, transparent);
   }
 
   /* Borda de luz girando (cards de destaque). Mais forte no hover. */
