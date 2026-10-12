@@ -49,6 +49,8 @@ export function ScrollReveal() {
         const tween = gsap.from(el, {
           opacity: 0,
           y: 24,
+          // `data-animate="scale"`: blocos que também crescem levemente (0.96 → 1).
+          scale: el.dataset.animate === "scale" ? 0.96 : 1,
           duration: 0.9,
           ease: EASE,
           // Itens vizinhos que entram juntos ganham um pequeno atraso em cascata.

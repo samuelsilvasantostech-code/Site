@@ -254,6 +254,87 @@
   }
 }
 
+/* Pulsos nas conexões do diagrama de fluxo. */
+@keyframes flow-right {
+  0% {
+    left: 0;
+    opacity: 0;
+  }
+  15%,
+  80% {
+    opacity: 1;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+@keyframes flow-down {
+  0% {
+    top: 0;
+    opacity: 0;
+  }
+  15%,
+  80% {
+    opacity: 1;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+/* Micro-visualizações dos serviços. */
+@keyframes viz-row {
+  0%,
+  6% {
+    opacity: 0.35;
+  }
+  14%,
+  88% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.35;
+  }
+}
+@keyframes viz-tick {
+  0%,
+  6% {
+    background: transparent;
+    color: transparent;
+  }
+  14%,
+  88% {
+    background: var(--data);
+    border-color: var(--data);
+    color: #05070a;
+  }
+  100% {
+    background: transparent;
+    color: transparent;
+  }
+}
+@keyframes viz-travel {
+  from {
+    left: 0%;
+    opacity: 0;
+  }
+  15%,
+  85% {
+    opacity: 1;
+  }
+  to {
+    left: 100%;
+    opacity: 0;
+  }
+}
+@keyframes viz-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
 /* Palavras do hero subindo de trás da máscara. */
 @keyframes rise {
   from {
@@ -544,6 +625,87 @@
     }
   }
 
+  /* Pulsos nas conexões do diagrama de fluxo. */
+  @keyframes flow-right {
+    0% {
+      left: 0;
+      opacity: 0;
+    }
+    15%,
+    80% {
+      opacity: 1;
+    }
+    100% {
+      left: 100%;
+      opacity: 0;
+    }
+  }
+  @keyframes flow-down {
+    0% {
+      top: 0;
+      opacity: 0;
+    }
+    15%,
+    80% {
+      opacity: 1;
+    }
+    100% {
+      top: 100%;
+      opacity: 0;
+    }
+  }
+
+  /* Micro-visualizações dos serviços. */
+  @keyframes viz-row {
+    0%,
+    6% {
+      opacity: 0.35;
+    }
+    14%,
+    88% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.35;
+    }
+  }
+  @keyframes viz-tick {
+    0%,
+    6% {
+      background: transparent;
+      color: transparent;
+    }
+    14%,
+    88% {
+      background: var(--data);
+      border-color: var(--data);
+      color: #05070a;
+    }
+    100% {
+      background: transparent;
+      color: transparent;
+    }
+  }
+  @keyframes viz-travel {
+    from {
+      left: 0%;
+      opacity: 0;
+    }
+    15%,
+    85% {
+      opacity: 1;
+    }
+    to {
+      left: 100%;
+      opacity: 0;
+    }
+  }
+  @keyframes viz-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
   /* Palavras do hero subindo de trás de uma máscara. */
   .word-mask {
     display: inline-block;
@@ -619,6 +781,322 @@
     margin-bottom: -0.1em;
   }
 
+  /*
+   * Problemas (componente ProblemsStory). Padrão: lista vertical. Com
+   * `data-pinned`, a seção ganha 400svh de altura e o palco fica fixo
+   * enquanto a rolagem conduz a narrativa; tudo empilhado na mesma célula.
+   */
+  .problems {
+    padding-block: var(--section-y);
+  }
+  .problems-list {
+    display: grid;
+    gap: clamp(4rem, 10vh, 7rem);
+    margin-top: clamp(4rem, 10vh, 7rem);
+  }
+  .problem {
+    display: grid;
+    gap: 1.5rem;
+    max-width: 62rem;
+  }
+  .problem-detail {
+    display: grid;
+    justify-items: start;
+  }
+  .problems-counter {
+    display: none;
+  }
+  .problems[data-pinned="true"] {
+    height: 400svh;
+    padding-block: 0;
+  }
+  .problems[data-pinned="true"] .problems-stage {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    overflow: hidden;
+  }
+  .problems[data-pinned="true"] .problems-inner {
+    display: grid;
+    height: 100%;
+    align-items: center;
+  }
+  .problems[data-pinned="true"] .problems-intro,
+  .problems[data-pinned="true"] .problems-list {
+    grid-area: 1 / 1;
+  }
+  .problems[data-pinned="true"] .problems-list {
+    margin-top: 0;
+    display: grid;
+  }
+  .problems[data-pinned="true"] .problem {
+    grid-area: 1 / 1;
+  }
+  .problems[data-pinned="true"] .problem-number {
+    display: none;
+  }
+  .problems[data-pinned="true"] .problems-counter {
+    display: block;
+    position: absolute;
+    top: calc(var(--header-h) + 2.5rem);
+    right: clamp(1.25rem, 4vw, 2.5rem);
+    font-size: 0.875rem;
+  }
+
+  /* Micro-visualizações dos serviços: só animam na tela (componente InView). */
+  .viz[data-inview="false"] * {
+    animation-play-state: paused !important;
+  }
+  .viz-row {
+    animation: viz-row 4.8s var(--ease) infinite both;
+  }
+  .viz-row .viz-tick {
+    animation: viz-tick 4.8s var(--ease) infinite both;
+    animation-delay: inherit;
+  }
+  .viz-node {
+    border: 1px solid var(--line-strong);
+    border-radius: 0.875rem;
+    background: var(--bg);
+    padding: 0.6rem 0.9rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+  }
+  .viz-node-hub {
+    border-color: color-mix(in srgb, var(--data) 60%, transparent);
+    box-shadow: 0 0 30px -8px color-mix(in srgb, var(--data) 50%, transparent);
+  }
+  .viz-packet {
+    position: absolute;
+    top: -2px;
+    left: 0;
+    width: 5px;
+    height: 5px;
+    border-radius: 999px;
+    background: var(--data);
+    box-shadow: 0 0 10px 2px color-mix(in srgb, var(--data) 70%, transparent);
+    animation: viz-travel 2.4s linear infinite;
+  }
+  .viz-packet-back {
+    animation-direction: reverse;
+    animation-delay: 1.2s;
+    background: var(--cta);
+    box-shadow: 0 0 10px 2px color-mix(in srgb, var(--cta) 70%, transparent);
+  }
+  .viz-chart {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+  .viz[data-inview="true"] .viz-chart {
+    animation: viz-draw 2.2s var(--ease) forwards;
+  }
+
+  /*
+   * Diagrama de fluxo de dados (DataFlowDiagram). `--lit` (0 → 1) acende cada
+   * sistema e `--draw` (0 → 1) desenha cada conexão; o padrão é tudo aceso.
+   * Com `data-live`, pulsos correm pelas conexões.
+   */
+  .flow-track {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .flow-node {
+    --lit: 1;
+    display: grid;
+    gap: 0.35rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid color-mix(in srgb, var(--data) calc(var(--lit) * 55%), var(--line-strong));
+    border-radius: 1rem;
+    background: var(--bg);
+    opacity: calc(0.35 + var(--lit) * 0.65);
+    box-shadow:
+      var(--inner-glow),
+      0 0 40px -12px color-mix(in srgb, var(--data) calc(var(--lit) * 45%), transparent);
+  }
+  .flow-role {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .flow-name {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .flow-lg .flow-name {
+    font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+  }
+  .flow-link {
+    position: relative;
+    align-self: center;
+    width: 1px;
+    height: 2.25rem;
+  }
+  .flow-link-line {
+    --draw: 1;
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(var(--cta), var(--data));
+    transform: scaleY(var(--draw));
+    transform-origin: top;
+  }
+  .flow-pulse {
+    position: absolute;
+    left: -2.5px;
+    top: 0;
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--data);
+    box-shadow: 0 0 12px 3px color-mix(in srgb, var(--data) 70%, transparent);
+    opacity: 0;
+  }
+  .flow[data-live] .flow-pulse {
+    animation: flow-down 1.8s var(--ease-expressive) infinite;
+  }
+  .flow[data-live] .flow-link:nth-child(4n) .flow-pulse {
+    animation-delay: 0.6s;
+  }
+  @media (min-width: 640px) {
+    .flow-track {
+      flex-direction: row;
+      align-items: center;
+    }
+    .flow-node {
+      flex: 1;
+      min-width: 0;
+    }
+    .flow-link {
+      width: auto;
+      height: 1px;
+      flex: 0 0 clamp(1.5rem, 4vw, 3.5rem);
+    }
+    .flow-link-line {
+      background: linear-gradient(90deg, var(--cta), var(--data));
+      transform: scaleX(var(--draw));
+      transform-origin: left;
+    }
+    .flow-pulse {
+      top: -2.5px;
+      left: 0;
+    }
+    .flow[data-live] .flow-pulse {
+      animation-name: flow-right;
+    }
+  }
+
+  /*
+   * Trilho de projetos (ProjectsRail). Padrão: carrossel nativo com encaixe.
+   * Com `data-pinned` (desktop, com movimento), o GSAP move a faixa.
+   */
+  .projects-rail {
+    --rail-gutter: max(
+      clamp(1.25rem, 4vw, 2.5rem),
+      calc((100vw - var(--container)) / 2 + clamp(1.25rem, 4vw, 2.5rem))
+    );
+    margin-top: clamp(3rem, 8vh, 5rem);
+  }
+  .projects-track {
+    display: flex;
+    gap: 1.25rem;
+    padding-inline: var(--rail-gutter);
+    padding-bottom: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--rail-gutter);
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-strong) transparent;
+  }
+  .project-panel {
+    position: relative;
+    flex: 0 0 min(86vw, 64rem);
+    scroll-snap-align: start;
+    padding: clamp(1.5rem, 3vw, 3rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl);
+    background: var(--bg-elevated);
+    box-shadow: var(--inner-glow);
+    transition: border-color var(--dur-ui) var(--ease);
+  }
+  .project-panel:hover,
+  .project-panel:focus-within {
+    border-color: var(--line-strong);
+  }
+  .projects-rail[data-pinned="true"] {
+    display: flex;
+    align-items: center;
+    min-height: 100svh;
+    margin-top: 0;
+  }
+  .projects-rail[data-pinned="true"] .projects-track {
+    width: max-content;
+    overflow: visible;
+    padding-bottom: 0;
+  }
+  .projects-rail[data-pinned="true"] .project-panel {
+    flex-basis: 80vw;
+    min-height: min(78svh, 46rem);
+  }
+
+  /* Número da etapa atual, em escala de cartaz (ProcessSteps). */
+  .process-number {
+    display: grid;
+    font-family: var(--font-display);
+    font-size: clamp(8rem, 17vw, 16rem);
+    font-weight: 700;
+    line-height: 0.8;
+    letter-spacing: -0.06em;
+  }
+  .process-number > span {
+    grid-area: 1 / 1;
+    background: linear-gradient(
+      180deg,
+      var(--text),
+      color-mix(in srgb, var(--text) 25%, transparent)
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    transition:
+      opacity var(--dur-reveal) var(--ease),
+      transform var(--dur-reveal) var(--ease);
+  }
+  .process-number > span[data-active="false"] {
+    opacity: 0;
+    transform: translateY(18%);
+  }
+
+  /* Fechamento: halo central e véu atrás do título. */
+  .finale-glow {
+    background: radial-gradient(
+      50% 50% at 50% 50%,
+      color-mix(in srgb, var(--cta) calc(var(--glow-opacity) * 80%), transparent),
+      transparent 70%
+    );
+  }
+  .finale-scrim {
+    background: radial-gradient(
+      45% 40% at 50% 50%,
+      color-mix(in srgb, var(--bg) 70%, transparent),
+      transparent 80%
+    );
+  }
+
+  /* Ícones das ferramentas: monocromáticos; a cor original aparece no hover. */
+  .tool-icon {
+    fill: currentColor;
+    transition: color var(--dur-ui) var(--ease);
+  }
+  .tool:hover .tool-icon[style] {
+    color: var(--brand);
+  }
+
   /* Bordas laterais esmaecidas na faixa de logos. */
   .marquee-mask {
     mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
@@ -634,6 +1112,22 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* Faixas paradas: a lista quebra em linhas, centralizada, sem a cópia. */
+  .marquee-track {
+    width: auto;
+  }
+  .marquee-track > div:first-child {
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 0.75rem;
+    padding-inline: 1.25rem;
+  }
+  .marquee-track > div[aria-hidden] {
+    display: none;
+  }
+  .marquee-mask {
+    mask-image: none;
+  }
   html {
     scroll-behavior: auto;
   }

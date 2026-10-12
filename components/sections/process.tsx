@@ -1,28 +1,51 @@
+import { ProcessSteps } from "@/components/motion/process-steps";
 import { Section } from "@/components/shared/section";
 import { howItWorks } from "@/content/data";
 
-/** Etapas em sequência: aqui a numeração é informação, não enfeite. */
+const pad = (n: number) => String(n).padStart(2, "0");
+
+/**
+ * Etapas em sequência (aqui a numeração é informação, não enfeite). No
+ * desktop, o número da etapa atual fica fixo à esquerda, em escala de cartaz,
+ * e troca conforme a rolagem; uma linha vertical se preenche ao lado dos
+ * passos. No celular, cada passo mostra o próprio número.
+ */
 export function Process() {
   return (
     <Section id="como-funciona" tone="invert" title={howItWorks.headline} intro={howItWorks.intro}>
-      <ol className="relative grid gap-10 md:grid-cols-4 md:gap-6">
-        <span
-          aria-hidden="true"
-          data-scrub-line
-          className="absolute top-6 right-[12.5%] left-[12.5%] hidden h-0.5 origin-left rounded-full bg-gradient-to-r from-grad-from to-grad-to md:block"
-        />
-        {howItWorks.steps.map((step, i) => (
-          <li key={step.title} data-animate className="relative md:text-center">
-            <span className="relative grid size-12 place-items-center rounded-full border border-line bg-surface font-display text-sm font-bold text-link md:mx-auto">
-              {String(i + 1).padStart(2, "0")}
-            </span>
-            <h3 className="mt-5 text-lg font-bold tracking-tight">{step.title}</h3>
-            <p className="mt-2 leading-relaxed text-pretty text-muted-foreground">
-              {step.description}
-            </p>
-          </li>
-        ))}
-      </ol>
+      <ProcessSteps>
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20">
+          <div aria-hidden="true" className="hidden lg:block">
+            <div className="process-number sticky top-[30vh]">
+              {howItWorks.steps.map((step, i) => (
+                <span key={step.title} data-step-number={i} data-active={i === 0}>
+                  {pad(i + 1)}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="relative">
+            <span aria-hidden="true" className="absolute top-0 bottom-0 left-0 w-px bg-line" />
+            <span
+              aria-hidden="true"
+              data-scrub-line="y"
+              className="absolute top-0 bottom-0 left-0 w-px origin-top bg-gradient-to-b from-grad-from to-grad-to"
+            />
+            <ol className="grid gap-[clamp(4rem,14vh,9rem)] py-4 pl-8 md:pl-12">
+              {howItWorks.steps.map((step, i) => (
+                <li key={step.title} data-step={i} data-animate className="max-w-xl">
+                  <span className="eyebrow text-muted-foreground lg:hidden">{pad(i + 1)}</span>
+                  <h3 className="mt-3 text-title lg:mt-0">{step.title}</h3>
+                  <p className="mt-4 text-lead text-pretty text-muted-foreground">
+                    {step.description}
+                  </p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
+      </ProcessSteps>
     </Section>
   );
 }

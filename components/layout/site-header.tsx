@@ -30,6 +30,25 @@ export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
+  // Uma seção com o próprio CTA em destaque (fechamento) dispensa o flutuante.
+  const [ctaZone, setCtaZone] = useState(false);
+
+  useEffect(() => {
+    const zones = document.querySelectorAll("[data-cta-zone]");
+    const visible = new Set<Element>();
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) visible.add(entry.target);
+        else visible.delete(entry.target);
+      }
+      setCtaZone(visible.size > 0);
+    });
+    zones.forEach((zone) => observer.observe(zone));
+    return () => {
+      observer.disconnect();
+      setCtaZone(false);
+    };
+  }, [pathname]);
 
   useEffect(() => {
     let last = window.scrollY;
@@ -65,7 +84,7 @@ export function SiteHeader() {
   }, [open]);
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
-  const showFloatingCta = hidden && !open && pathname !== primaryCta.href;
+  const showFloatingCta = hidden && !open && !ctaZone && pathname !== primaryCta.href;
 
   return (
     <>

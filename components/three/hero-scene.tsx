@@ -6,9 +6,12 @@ import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import * as THREE from "three";
 
 import { hero } from "@/content/data";
+import { cn } from "@/lib/utils";
 
 import { CoreLogo } from "./core-logo";
 import { SystemNetwork, type SceneState } from "./system-network";
+
+export type SceneVariant = "hero" | "finale";
 
 /** Inclinação máxima da cena seguindo o mouse (12°). */
 const MAX_TILT = THREE.MathUtils.degToRad(12);
@@ -57,10 +60,16 @@ function Particles({ count }: { count: number }) {
 }
 
 /** Atualiza o progresso de saída do hero (0 → 1) no estado da cena. */
-function readScroll(state: SceneState, el: HTMLElement | null) {
+/**
+ * Progresso da rolagem no estado da cena. No hero, 0 → 1 conforme ele sai
+ * da tela (os sistemas se alinham). No fechamento, 1 → 0 conforme a seção
+ * entra (os sistemas se reconectam em órbita).
+ */
+function readScroll(state: SceneState, el: HTMLElement | null, variant: SceneVariant) {
   if (el) {
     const rect = el.getBoundingClientRect();
-    state.scroll = THREE.MathUtils.clamp(-rect.top / rect.height, 0, 1);
+    const value = variant === "hero" ? -rect.top / rect.height : rect.top / rect.height;
+    state.scroll = THREE.MathUtils.clamp(value, 0, 1);
   }
   return state.scroll;
 }
@@ -78,30 +87,38 @@ function Rig({
   container,
   labelsRef,
   glass,
+  variant,
 }: {
   state: RefObject<SceneState>;
   container: RefObject<HTMLDivElement | null>;
   labelsRef: RefObject<HTMLDivElement | null>;
   glass: boolean;
+  variant: SceneVariant;
 }) {
   const group = useRef<THREE.Group>(null);
   const frameGroup = useRef<THREE.Group>(null);
   const viewport = useThree((s) => s.viewport);
   const wide = viewport.aspect > 1.15;
-  // Em telas estreitas a cena encolhe e sobe, longe do texto.
-  const offset: [number, number, number] = wide
-    ? [viewport.width * 0.27, 0.15, 0]
-    : [0, viewport.height * 0.2, 0];
-  const scale = wide ? 1 : 0.62;
+  const finale = variant === "finale";
+  // Hero: à direita no desktop; em telas estreitas encolhe e sobe, longe do
+  // texto. Fechamento: centralizada, atrás do título.
+  const offset: [number, number, number] = finale
+    ? [0, 0.1, -1.5]
+    : wide
+      ? [viewport.width * 0.27, 0.15, 0]
+      : [0, viewport.height * 0.2, 0];
+  const scale = finale ? (wide ? 1.55 : 0.9) : wide ? 1 : 0.62;
 
   useFrame((frame, delta) => {
-    const scroll = readScroll(state.current, container.current);
+    const scroll = readScroll(state.current, container.current, variant);
     // Ao rolar, a câmera recua e a cena "abre espaço" para a seção seguinte.
     dampCameraZ(frame.camera, 10 + scroll * 4, delta);
 
     // A cena vem para o centro conforme os sistemas se alinham.
     const outer = frameGroup.current;
-    if (outer) outer.position.x = offset[0] * (1 - Math.min(scroll / 0.85, 1) * 0.85);
+    if (outer && !finale) {
+      outer.position.x = offset[0] * (1 - Math.min(scroll / 0.85, 1) * 0.85);
+    }
 
     const g = group.current;
     if (!g) return;
@@ -122,6 +139,8 @@ function Rig({
 }
 
 type HeroSceneProps = {
+  /** `hero` (abertura) ou `finale` (chamada final, sistemas se reconectando). */
+  variant?: SceneVariant;
   /** `low` no celular: sem refração, menos partículas e resolução menor. */
   quality?: "high" | "low";
   onReady?: () => void;
@@ -129,14 +148,25 @@ type HeroSceneProps = {
   onFallback?: () => void;
 };
 
-export default function HeroScene({ quality = "high", onReady, onFallback }: HeroSceneProps) {
+export default function HeroScene({
+  variant = "hero",
+  quality = "high",
+  onReady,
+  onFallback,
+}: HeroSceneProps) {
   const low = quality === "low";
   const container = useRef<HTMLDivElement>(null);
   const labelsRef = useRef<HTMLDivElement>(null);
   const state = useRef<SceneState>({ scroll: 0, hovered: -1 });
   const [visible, setVisible] = useState(true);
   const maxDpr = low ? 1.5 : 1.75;
-  const [dpr, setDpr] = useState(maxDpr);
+  const [dpr, setDprState] = useState(maxDpr);
+  const dprRef = useRef(maxDpr);
+  const slowRef = useRef(0);
+  const setDpr = (value: number) => {
+    dprRef.current = value;
+    setDprState(value);
+  };
 
   // Pausa a renderização quando o hero sai da tela (economiza bateria e CPU).
   useEffect(() => {
@@ -157,17 +187,26 @@ export default function HeroScene({ quality = "high", onReady, onFallback }: Her
         onCreated={() => onReady?.()}
       >
         <PerformanceMonitor
-          onDecline={() => setDpr(1)}
+          flipflops={Infinity}
           onIncline={() => setDpr(maxDpr)}
-          flipflops={3}
-          onFallback={() => onFallback?.()}
+          onDecline={() => {
+            // Primeiro reduz a resolução; se continuar lento já em 1×, desiste.
+            if (dprRef.current > 1) setDpr(1);
+            else if (++slowRef.current >= 2) onFallback?.();
+          }}
         />
         <ambientLight intensity={0.35} />
         <directionalLight position={[4, 6, 6]} intensity={1.5} />
         <pointLight position={[-5, -2, 4]} intensity={10} color="#00E0C6" distance={14} />
         <pointLight position={[5, 3, -2]} intensity={26} color="#2F6BFF" distance={16} />
 
-        <Rig state={state} container={container} labelsRef={labelsRef} glass={!low} />
+        <Rig
+          state={state}
+          container={container}
+          labelsRef={labelsRef}
+          glass={!low}
+          variant={variant}
+        />
         <Particles count={low ? 90 : 220} />
 
         {/* Reflexos: luzes de estúdio geradas na hora, sem baixar imagens. */}
@@ -194,7 +233,13 @@ export default function HeroScene({ quality = "high", onReady, onFallback }: Her
       </Canvas>
 
       {/* Rótulos dos sistemas, na mesma ordem dos nós. */}
-      <div ref={labelsRef} className="pointer-events-none absolute inset-0 overflow-hidden">
+      <div
+        ref={labelsRef}
+        className={cn(
+          "pointer-events-none absolute inset-0 overflow-hidden",
+          variant === "finale" && "hidden",
+        )}
+      >
         {hero.diagram.nodes.map((name) => (
           <span key={name} className="node-label">
             {name}

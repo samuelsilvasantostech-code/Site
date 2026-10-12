@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useState, useSyncExternalStore, type ReactNode } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -88,17 +88,34 @@ function useIdle() {
  * ocioso. Sem WebGL, com WebGL emulado na CPU, com economia de dados, com
  * "reduzir movimento" ou se a máquina não sustentar a cena, fica a ilustração.
  */
-export function HeroVisual({ fallback }: { fallback: ReactNode }) {
+export function HeroVisual({
+  fallback,
+  variant = "hero",
+}: {
+  fallback: ReactNode;
+  variant?: "hero" | "finale";
+}) {
   const webgl = useCanRender3D();
   const wide = useWide();
   const reduceMotion = useReducedMotion();
   const idle = useIdle();
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
-  const show3D = webgl && !reduceMotion && !failed && idle;
+  // O fechamento só carrega a cena quando chega perto da tela.
+  const root = useRef<HTMLDivElement>(null);
+  const [near, setNear] = useState(variant === "hero");
+  useEffect(() => {
+    if (near || !root.current) return;
+    const observer = new IntersectionObserver(([entry]) => entry.isIntersecting && setNear(true), {
+      rootMargin: "600px 0px",
+    });
+    observer.observe(root.current);
+    return () => observer.disconnect();
+  }, [near]);
+  const show3D = webgl && !reduceMotion && !failed && idle && near;
 
   return (
-    <div aria-hidden="true" className="absolute inset-0">
+    <div ref={root} aria-hidden="true" className="absolute inset-0">
       <div
         className={cn(
           "absolute inset-0 transition-opacity duration-700 ease-brand",
@@ -115,6 +132,7 @@ export function HeroVisual({ fallback }: { fallback: ReactNode }) {
           )}
         >
           <HeroScene
+            variant={variant}
             quality={wide ? "high" : "low"}
             onReady={() => setReady(true)}
             onFallback={() => setFailed(true)}
