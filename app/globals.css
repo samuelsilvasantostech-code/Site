@@ -196,7 +196,7 @@
   padding-block: var(--section-y);
 }
 
-/* Ângulo animável da borda de luz dos cards principais. */
+/* Ângulo animável do pulso de luz na borda do CTA. */
 @property --angle {
   syntax: "<angle>";
   initial-value: 0deg;
@@ -206,30 +206,6 @@
 @keyframes spin-border {
   to {
     --angle: 360deg;
-  }
-}
-
-/* Setas dos fluxos: um "empurrão" curto, como dados passando. */
-@keyframes nudge-x {
-  0%,
-  100% {
-    transform: translateX(-2px);
-    opacity: 0.55;
-  }
-  50% {
-    transform: translateX(3px);
-    opacity: 1;
-  }
-}
-@keyframes nudge-y {
-  0%,
-  100% {
-    transform: translateY(-2px);
-    opacity: 0.55;
-  }
-  50% {
-    transform: translateY(3px);
-    opacity: 1;
   }
 }
 
@@ -632,94 +608,6 @@
     }
   }
 
-  /* Nó atual da linha do tempo: um pulso suave. */
-  @keyframes node-pulse {
-    50% {
-      box-shadow: 0 0 0 10px color-mix(in srgb, var(--data) 0%, transparent);
-    }
-  }
-
-  /* Pulsos nas conexões do diagrama de fluxo. */
-  @keyframes flow-right {
-    0% {
-      left: 0;
-      opacity: 0;
-    }
-    15%,
-    80% {
-      opacity: 1;
-    }
-    100% {
-      left: 100%;
-      opacity: 0;
-    }
-  }
-  @keyframes flow-down {
-    0% {
-      top: 0;
-      opacity: 0;
-    }
-    15%,
-    80% {
-      opacity: 1;
-    }
-    100% {
-      top: 100%;
-      opacity: 0;
-    }
-  }
-
-  /* Micro-visualizações dos serviços. */
-  @keyframes viz-row {
-    0%,
-    6% {
-      opacity: 0.35;
-    }
-    14%,
-    88% {
-      opacity: 1;
-    }
-    100% {
-      opacity: 0.35;
-    }
-  }
-  @keyframes viz-tick {
-    0%,
-    6% {
-      background: transparent;
-      color: transparent;
-    }
-    14%,
-    88% {
-      background: var(--data);
-      border-color: var(--data);
-      color: #05070a;
-    }
-    100% {
-      background: transparent;
-      color: transparent;
-    }
-  }
-  @keyframes viz-travel {
-    from {
-      left: 0%;
-      opacity: 0;
-    }
-    15%,
-    85% {
-      opacity: 1;
-    }
-    to {
-      left: 100%;
-      opacity: 0;
-    }
-  }
-  @keyframes viz-draw {
-    to {
-      stroke-dashoffset: 0;
-    }
-  }
-
   /* Palavras do hero subindo de trás de uma máscara. */
   .word-mask {
     display: inline-block;
@@ -759,34 +647,6 @@
   .node-label[data-active="true"] {
     border-color: var(--data);
     box-shadow: 0 0 24px -4px color-mix(in srgb, var(--data) 60%, transparent);
-  }
-
-  /* Borda de luz girando (cards de destaque). Mais forte no hover. */
-  .glow-border::before {
-    content: "";
-    position: absolute;
-    inset: -1px;
-    z-index: 1;
-    border-radius: inherit;
-    padding: 1px;
-    background: conic-gradient(
-      from var(--angle),
-      transparent 0 65%,
-      var(--grad-from) 80%,
-      var(--grad-to) 92%,
-      transparent
-    );
-    mask:
-      linear-gradient(#000 0 0) content-box,
-      linear-gradient(#000 0 0);
-    mask-composite: exclude;
-    animation: spin-border 6s linear infinite;
-    opacity: 0.55;
-    transition: opacity 300ms var(--ease);
-    pointer-events: none;
-  }
-  .glow-border:hover::before {
-    opacity: 1;
   }
 
   /* Linhas dos títulos revelados por SplitText (a máscara não corta descendentes). */
@@ -1040,6 +900,103 @@
     .flow[data-count="4"][data-live] .flow-pulse {
       animation-name: flow-right;
     }
+  }
+
+  /*
+   * Trilho de projetos (ProjectsRail). Padrão: carrossel nativo com encaixe.
+   * Com `data-pinned` (desktop, com movimento), o GSAP move a faixa.
+   */
+  .projects-rail {
+    --rail-gutter: max(
+      clamp(1.25rem, 4vw, 2.5rem),
+      calc((100vw - var(--container)) / 2 + clamp(1.25rem, 4vw, 2.5rem))
+    );
+    margin-top: clamp(3rem, 8vh, 5rem);
+  }
+  .projects-track {
+    display: flex;
+    gap: 1.25rem;
+    padding-inline: var(--rail-gutter);
+    padding-bottom: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--rail-gutter);
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-strong) transparent;
+  }
+  .project-panel {
+    position: relative;
+    flex: 0 0 min(86vw, 64rem);
+    scroll-snap-align: start;
+    padding: clamp(1.5rem, 3vw, 3rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl);
+    background: var(--bg-elevated);
+    box-shadow: var(--inner-glow);
+    transition: border-color var(--dur-ui) var(--ease);
+  }
+  .project-panel:hover,
+  .project-panel:focus-within {
+    border-color: var(--line-strong);
+  }
+  .projects-rail[data-pinned="true"] {
+    display: flex;
+    align-items: center;
+    min-height: 100svh;
+    margin-top: 0;
+  }
+  .projects-rail[data-pinned="true"] .projects-track {
+    width: max-content;
+    overflow: visible;
+    padding-bottom: 0;
+  }
+  .projects-rail[data-pinned="true"] .project-panel {
+    flex-basis: 80vw;
+    min-height: min(78svh, 46rem);
+  }
+
+  /* Número da etapa atual, em escala de cartaz (ProcessSteps). */
+  .process-number {
+    display: grid;
+    font-family: var(--font-display);
+    font-size: clamp(8rem, 17vw, 16rem);
+    font-weight: 700;
+    line-height: 0.8;
+    letter-spacing: -0.06em;
+  }
+  .process-number > span {
+    grid-area: 1 / 1;
+    background: linear-gradient(
+      180deg,
+      var(--text),
+      color-mix(in srgb, var(--text) 25%, transparent)
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    transition:
+      opacity var(--dur-reveal) var(--ease),
+      transform var(--dur-reveal) var(--ease);
+  }
+  .process-number > span[data-active="false"] {
+    opacity: 0;
+    transform: translateY(18%);
+  }
+
+  /* Fechamento: halo central e véu atrás do título. */
+  .finale-glow {
+    background: radial-gradient(
+      50% 50% at 50% 50%,
+      color-mix(in srgb, var(--cta) calc(var(--glow-opacity) * 80%), transparent),
+      transparent 70%
+    );
+  }
+  .finale-scrim {
+    background: radial-gradient(
+      45% 40% at 50% 50%,
+      color-mix(in srgb, var(--bg) 70%, transparent),
+      transparent 80%
+    );
   }
 
   /* Grade editorial de projetos (ProjectFilter): ritmo 7/5, 5/7. */

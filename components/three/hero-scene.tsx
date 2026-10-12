@@ -106,8 +106,8 @@ function Rig({
     ? [0, 0.1, -1.5]
     : wide
       ? [viewport.width * 0.27, 0.15, 0]
-      : [0, viewport.height * 0.2, 0];
-  const scale = finale ? (wide ? 1.55 : 0.9) : wide ? 1 : 0.62;
+      : [0, viewport.height * 0.33, 0];
+  const scale = finale ? (wide ? 1.55 : 0.9) : wide ? 1 : 0.5;
 
   useFrame((frame, delta) => {
     const scroll = readScroll(state.current, container.current, variant);
@@ -236,7 +236,7 @@ export default function HeroScene({
       <div
         ref={labelsRef}
         className={cn(
-          "pointer-events-none absolute inset-0 overflow-hidden",
+          "pointer-events-none absolute inset-0 overflow-hidden max-md:hidden",
           variant === "finale" && "hidden",
         )}
       >
