@@ -92,7 +92,7 @@ function ServiceDetail({ service, index }: { service: Service; index: number }) 
       id={service.slug}
       aria-labelledby={`${service.slug}-title`}
       className={cn(
-        "scroll-mt-16 bg-background py-20 text-foreground md:py-24",
+        "bg-background py-20 text-foreground md:py-24",
         index % 2 === 1 && "tone-invert",
       )}
     >

@@ -1,5 +1,6 @@
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import { SmoothScroll } from "@/components/motion/smooth-scroll";
 
 /** Moldura de todas as páginas do site: header fixo, conteúdo e rodapé. */
 export default function SiteLayout({ children }: LayoutProps<"/">) {
@@ -14,6 +15,7 @@ export default function SiteLayout({ children }: LayoutProps<"/">) {
       <div className="print:hidden">
         <SiteFooter />
       </div>
+      <SmoothScroll />
     </>
   );
 }

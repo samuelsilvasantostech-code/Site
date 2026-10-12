@@ -27,7 +27,7 @@ export function Section({
       id={id}
       aria-labelledby={`${id}-title`}
       className={cn(
-        "scroll-mt-16 bg-background py-20 text-foreground md:py-28",
+        "bg-background py-20 text-foreground md:py-28",
         tone === "invert" && "tone-invert",
         className,
       )}
