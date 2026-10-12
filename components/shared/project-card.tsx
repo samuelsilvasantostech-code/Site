@@ -1,7 +1,7 @@
 import { ArrowUpRightIcon } from "lucide-react";
 import Link from "next/link";
 
-import { Tilt } from "@/components/motion/tilt";
+import { Spotlight } from "@/components/motion/spotlight";
 import { projectKinds, ui, type CaseStudy } from "@/content/data";
 import { cn } from "@/lib/utils";
 
@@ -28,7 +28,7 @@ export function hasVerifiedMetrics(item: CaseStudy) {
 export function ProjectCard({ item, large = false }: { item: CaseStudy; large?: boolean }) {
   return (
     <li data-animate className="h-full">
-      <Tilt className="rounded-lg">
+      <Spotlight className="rounded-lg">
         <Link
           href={`/projetos/${item.slug}`}
           className={cn(
@@ -77,7 +77,7 @@ export function ProjectCard({ item, large = false }: { item: CaseStudy; large?: 
             />
           </span>
         </Link>
-      </Tilt>
+      </Spotlight>
     </li>
   );
 }

@@ -1,6 +1,6 @@
 import { ArrowRightIcon, CheckIcon } from "lucide-react";
 
-import { Tilt } from "@/components/motion/tilt";
+import { Spotlight } from "@/components/motion/spotlight";
 import type { Service } from "@/content/data";
 import { cn } from "@/lib/utils";
 
@@ -15,7 +15,7 @@ export function ServiceCard({ service }: { service: Service }) {
   const principal = service.tier === "principal";
   return (
     <li data-animate className="md:col-span-3">
-      <Tilt
+      <Spotlight
         className={cn(
           "flex flex-col rounded-lg border bg-surface transition-colors duration-300 ease-in-out",
           principal
@@ -55,7 +55,7 @@ export function ServiceCard({ service }: { service: Service }) {
             className="size-4 transition-transform duration-300 ease-in-out group-hover:translate-x-1"
           />
         </TrackedLink>
-      </Tilt>
+      </Spotlight>
     </li>
   );
 }

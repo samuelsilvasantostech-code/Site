@@ -296,7 +296,7 @@ export function ContactForm() {
           type="submit"
           size="lg"
           disabled={pending}
-          className="btn-glow h-12 justify-self-start px-6 text-base disabled:cursor-progress disabled:opacity-65"
+          className="btn-pulse h-12 justify-self-start px-7 text-base disabled:cursor-progress disabled:opacity-65"
         >
           {pending ? f.sending : f.submit}
         </Button>

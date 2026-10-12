@@ -1,15 +1,18 @@
-import { ArrowRightIcon, MessageCircleIcon } from "lucide-react";
-import Link from "next/link";
+import { MessageCircleIcon } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-import { finalCta, links, primaryCta, ui } from "@/content/data";
+import { finalCta, links, ui } from "@/content/data";
 import { cn } from "@/lib/utils";
 
+import { PrimaryCta } from "./primary-cta";
 import { WhatsappLink } from "./whatsapp-link";
 
 type CtaButtonsProps = {
   /** De onde veio o clique, para as métricas do WhatsApp. */
   source: string;
+  /** Tamanho do botão principal (`xl` no fechamento das páginas). */
+  size?: "lg" | "xl";
+  /** Atração magnética discreta no botão principal. */
+  magnetic?: boolean;
   className?: string;
 };
 
@@ -17,15 +20,10 @@ type CtaButtonsProps = {
  * CTA padrão: um único botão principal ("Solicitar diagnóstico") e, como
  * alternativa discreta, um link para o WhatsApp. Evita botões disputando atenção.
  */
-export function CtaButtons({ source, className }: CtaButtonsProps) {
+export function CtaButtons({ source, size = "lg", magnetic = false, className }: CtaButtonsProps) {
   return (
     <div className={cn("flex flex-wrap items-center gap-x-6 gap-y-4", className)}>
-      <Button asChild size="lg" className="btn-glow h-12 px-6 text-base">
-        <Link href={primaryCta.href}>
-          {primaryCta.label}
-          <ArrowRightIcon aria-hidden="true" />
-        </Link>
-      </Button>
+      <PrimaryCta magnetic={magnetic} size={size} />
       {links.whatsapp && (
         <p className="text-sm text-muted-foreground">
           {ui.orWhatsapp}{" "}

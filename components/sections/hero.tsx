@@ -3,7 +3,6 @@ import Link from "next/link";
 import { Fragment } from "react";
 
 import { HeroVisual } from "@/components/motion/hero-visual";
-import { PointerSpotlight } from "@/components/motion/pointer-spotlight";
 import { Button } from "@/components/ui/button";
 import { brand, hero, primaryCta } from "@/content/data";
 
@@ -20,7 +19,6 @@ export function Hero() {
       className="relative isolate overflow-hidden pt-[calc(var(--header-h)+3.5rem)] pb-20 md:pt-[calc(var(--header-h)+5rem)] md:pb-28"
     >
       <div aria-hidden="true" className="hero-backdrop absolute inset-0 -z-10" />
-      <PointerSpotlight />
 
       <div className="container-site grid items-center gap-14 lg:grid-cols-[1.25fr_1fr]">
         <div>

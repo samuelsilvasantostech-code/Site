@@ -9,12 +9,11 @@ export default function SiteLayout({ children }: LayoutProps<"/">) {
       <div className="print:hidden">
         <SiteHeader />
       </div>
-      <main id="conteudo" tabIndex={-1}>
+      {/* Acima do rodapé: a página sobe e revela o rodapé fixo por baixo. */}
+      <main id="conteudo" tabIndex={-1} className="relative z-10 bg-background">
         {children}
       </main>
-      <div className="print:hidden">
-        <SiteFooter />
-      </div>
+      <SiteFooter />
       <SmoothScroll />
     </>
   );
