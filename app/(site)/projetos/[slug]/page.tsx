@@ -179,7 +179,7 @@ export default async function ProjectPage({ params }: PageProps<"/projetos/[slug
                 <span className="mt-6 block max-w-[18ch] text-display transition-colors duration-500 ease-brand group-hover:text-link">
                   {next.title}
                 </span>
-                <span className="mt-8 block max-w-3xl opacity-70 transition-opacity duration-500 group-hover:opacity-100">
+                <span className="mt-8 block max-w-3xl">
                   <DataFlowDiagram steps={next.flow} />
                 </span>
               </span>

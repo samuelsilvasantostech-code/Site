@@ -29,7 +29,7 @@
   /* Links: azul mais escuro para contraste AA sobre o fundo claro. */
   --accent: #1f55e0;
   --data: #00a08c;
-  --cta: #2f6bff;
+  --cta: #2a62f0;
   --cta-hover: #1f55e0;
   --cta-ink: #ffffff;
   --danger: #b42318;
@@ -51,8 +51,8 @@
   /* Links: azul mais claro para contraste AA sobre o fundo escuro. */
   --accent: #6e9bff;
   --data: #00e0c6;
-  --cta: #2f6bff;
-  --cta-hover: #4a7dff;
+  --cta: #2a62f0;
+  --cta-hover: #1f55e0;
   --cta-ink: #ffffff;
   --danger: #f87171;
   --glow-opacity: 0.35;

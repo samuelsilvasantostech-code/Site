@@ -4,7 +4,12 @@ import { useRef, useState, type ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
-import { Flip, gsap, MOTION_REDUCED, ScrollTrigger } from "./gsap";
+import { Flip } from "gsap/Flip";
+
+import { gsap, MOTION_REDUCED, ScrollTrigger } from "./gsap";
+
+/* Flip só é usado aqui: registrado neste módulo, fica fora das outras páginas. */
+gsap.registerPlugin(Flip);
 
 type Option = { value: string; label: string };
 

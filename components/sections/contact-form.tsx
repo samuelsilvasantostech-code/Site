@@ -71,8 +71,10 @@ export function ContactForm() {
       website: "",
       startedAt: 0,
     },
-    // Validação em linha: ao sair de cada campo e, depois, a cada digitação.
-    mode: "onTouched",
+    // Valida no envio e, depois disso, em linha a cada digitação. Validar ao
+    // sair do campo faria a mensagem de erro empurrar o botão para baixo no
+    // meio do toque em "Enviar" (o clique se perde, principalmente no celular).
+    mode: "onSubmit",
     reValidateMode: "onChange",
   });
 

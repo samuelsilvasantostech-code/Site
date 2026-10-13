@@ -6,14 +6,13 @@
  */
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { Flip } from "gsap/Flip";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 
-gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText, Flip);
+gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText);
 
 /** Media query usada em `gsap.matchMedia()` para respeitar a preferência do sistema. */
 export const MOTION_OK = "(prefers-reduced-motion: no-preference)";
 export const MOTION_REDUCED = "(prefers-reduced-motion: reduce)";
 
-export { Flip, gsap, ScrollTrigger, SplitText, useGSAP };
+export { gsap, ScrollTrigger, SplitText, useGSAP };
