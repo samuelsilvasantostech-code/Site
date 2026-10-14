@@ -124,7 +124,7 @@ export function CommandMenu({ compact = false }: { compact?: boolean }) {
             {projects.items.map((item) => (
               <CommandItem
                 key={item.slug}
-                value={`${item.title} ${item.stack.join(" ")}`}
+                value={`${item.title} ${item.summary}`}
                 onSelect={() => run(() => router.push(`/projetos/${item.slug}`))}
               >
                 <FileTextIcon aria-hidden="true" />

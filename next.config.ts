@@ -33,7 +33,19 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     // Endereços antigos dos cases, que podem já ter sido compartilhados.
-    return [{ source: "/cases/:slug", destination: "/projetos/:slug", permanent: true }];
+    return [
+      { source: "/cases/:slug", destination: "/projetos/:slug", permanent: true },
+      {
+        source: "/projetos/integracao-omie",
+        destination: "/projetos/erp-no-atendimento",
+        permanent: true,
+      },
+      {
+        source: "/projetos/integracao-cielo",
+        destination: "/projetos/pagamentos-integrados",
+        permanent: true,
+      },
+    ];
   },
 };
 

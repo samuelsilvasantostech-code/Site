@@ -8,7 +8,6 @@ import { FlowReveal } from "@/components/motion/flow-reveal";
 import { FinalCta } from "@/components/sections/final-cta";
 import { Metrics } from "@/components/shared/metrics";
 import { hasVerifiedMetrics, ProjectKindBadge } from "@/components/shared/project-card";
-import { TagList } from "@/components/shared/tag-list";
 import { DataFlowDiagram } from "@/components/ui/data-flow-diagram";
 import { projectKinds, projects, services, ui } from "@/content/data";
 import { cn } from "@/lib/utils";
@@ -132,9 +131,6 @@ export default async function ProjectPage({ params }: PageProps<"/projetos/[slug
               </StepList>
             </Block>
           )}
-          <Block title={ui.stack}>
-            <TagList tags={item.stack} />
-          </Block>
           <Block title={ui.benefit}>
             <p className="text-display text-pretty">{item.benefit}</p>
           </Block>

@@ -11,7 +11,7 @@ test.describe("página inicial", () => {
     for (const title of [
       "Problemas que resolvemos",
       "Soluções tecnológicas para sua operação",
-      "Projetos e aplicações reais",
+      "Soluções que já funcionam na prática",
       "Como trabalhamos",
       "Vamos identificar onde a tecnologia pode melhorar sua operação?",
     ]) {
@@ -75,14 +75,12 @@ test("projeto mostra origem, fluxo e serviço relacionado, sem métricas não ve
 }) => {
   await gotoReady(page, "/projetos");
   await expect(page.getByText(/Nem todos representam projetos contratados/)).toBeVisible();
-  await page.getByRole("link", { name: /Régua de cobrança automatizada/ }).click();
+  await page.getByRole("link", { name: /Régua de cobrança inteligente/ }).click();
   await expect(page).toHaveURL(/\/projetos\/regua-cobranca$/);
   const article = page.getByRole("article");
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-    "Régua de cobrança automatizada",
-  );
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Régua de cobrança inteligente");
   await expect(article.getByText("Experiência profissional do fundador")).toBeVisible();
-  await expect(article.getByRole("heading", { name: "Fluxo da integração" })).toBeVisible();
+  await expect(article.getByRole("heading", { name: "Como funciona" })).toBeVisible();
   await expect(article.getByRole("heading", { name: "Resultado verificado" })).toHaveCount(0);
   await article.getByRole("link", { name: /Automação de Processos/ }).click();
   await expect(page).toHaveURL(/\/servicos#automacao$/);
@@ -106,9 +104,9 @@ test("menu de comandos abre com Ctrl+K e leva a um projeto", async ({ page }) =>
   await page.keyboard.press("Control+k");
   const dialog = page.getByRole("dialog", { name: "Menu de comandos" });
   await expect(dialog).toBeVisible();
-  await dialog.getByPlaceholder(/Digite um comando/).fill("Cielo");
+  await dialog.getByPlaceholder(/Digite um comando/).fill("Pagamentos integrados");
   await page.keyboard.press("Enter");
-  await expect(page).toHaveURL(/\/projetos\/integracao-cielo$/);
+  await expect(page).toHaveURL(/\/projetos\/pagamentos-integrados$/);
 });
 
 test("dúvidas frequentes abrem e fecham pelo teclado", async ({ page }) => {

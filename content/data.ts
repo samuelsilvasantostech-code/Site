@@ -44,7 +44,10 @@ export type CaseStudy = {
   area: ProjectArea;
   slug: string;
   title: string;
-  /** Caminho dos dados, da origem ao destino (2 a 4 sistemas). */
+  /**
+   * Caminho da informação, da origem ao destino (2 a 4 etapas), em linguagem
+   * de negócio: sem nomes de ferramentas.
+   */
   flow: string[];
   /** Objetivo em uma frase. */
   summary: string;
@@ -52,6 +55,7 @@ export type CaseStudy = {
   solution: string;
   /** `true` exibe os passos numerados (use quando forem uma sequência). */
   stepsOrdered?: boolean;
+  /** O que a solução faz pelo cliente (benefícios, não detalhes técnicos). */
   steps: string[];
   /** O que a solução automatiza ou melhora (benefício operacional, sem números). */
   benefit: string;
@@ -66,7 +70,6 @@ export type CaseStudy = {
    * publicados (sem dados de cliente) antes de marcar `true`.
    */
   metricsVerified: boolean;
-  stack: string[];
 };
 
 /** Tecnologias agrupadas por finalidade (sem parcerias ou certificações implícitas). */
@@ -175,15 +178,14 @@ export const ui = {
   footerNav: "Rodapé",
   social: "Redes e contato",
   home: "Página inicial",
-  problem: "Problema de negócio",
-  solution: "Solução",
-  benefit: "O que melhora",
-  flow: "Fluxo da integração",
+  problem: "O desafio",
+  solution: "O que fizemos",
+  benefit: "Resultado para o negócio",
+  flow: "Como funciona",
   relatedService: "Serviço relacionado",
   relatedProjects: "Exemplos relacionados",
-  implementation: "Implementação",
+  implementation: "O que a solução faz",
   results: "Resultado verificado",
-  stack: "Tecnologias",
   allProjects: "Todos os projetos",
   previousProject: "Projeto anterior",
   nextProject: "Próximo projeto",
@@ -506,202 +508,197 @@ export const projectKinds: Record<ProjectKind, { label: string; description: str
 };
 
 export const projects: { headline: string; intro: string; items: CaseStudy[] } = {
-  headline: "Projetos e aplicações reais",
+  headline: "Soluções que já funcionam na prática",
   intro:
-    "Exemplos de automação, integração e dados em produção: o problema, a solução, o fluxo entre os sistemas e o que melhorou na operação.",
+    "Veja como automação e integração tiram o trabalho manual das mãos da equipe e deixam a operação mais ágil, em empresas com desafios parecidos com os seus.",
   items: [
     {
       kind: "fundador",
       slug: "disparo-boletos",
       area: "automacao",
-      title: "Automação de cobranças via WhatsApp",
+      title: "Cobranças enviadas pelo WhatsApp, sem trabalho manual",
       service: "automacao",
       featured: true,
       benefit:
-        "Elimina o envio manual de boletos, um a um, e reduz erros de digitação no processo de cobrança.",
-      flow: ["Conta Azul", "n8n", "WhatsApp"],
+        "Equipe financeira livre do envio manual, cobranças entregues no prazo e menos erros no contato com o cliente.",
+      flow: ["Sistema financeiro", "Automação SSNEX", "WhatsApp do cliente"],
       summary:
-        "O ERP gera as cobranças e o WhatsApp entrega, sem ninguém copiar boleto por boleto.",
+        "O financeiro deixou de enviar boleto por boleto. As cobranças chegam ao cliente no canal que ele mais usa.",
       problem:
-        "O financeiro enviava os boletos um a um pelo WhatsApp, a partir do ERP. Com centenas de cobranças por mês, o envio atrasava e erros de digitação geravam retrabalho.",
+        "O financeiro enviava cada boleto à mão pelo WhatsApp. Com centenas de cobranças por mês, o envio atrasava, tomava horas da equipe e qualquer erro de digitação virava retrabalho.",
       solution:
-        "Workflow no n8n que consulta as cobranças no Conta Azul, monta a mensagem com o boleto e envia pelo WhatsApp em duas execuções diárias.",
+        "Criamos uma rotina de cobrança que trabalha sozinha: todos os dias, em horários definidos, ela reúne as cobranças do sistema financeiro, prepara a mensagem com o boleto e entrega ao cliente pelo WhatsApp.",
       steps: [
-        "Consulta paginada às cobranças do ERP, sem perder registros entre páginas",
-        "Processamento em lotes, com pausas para respeitar o rate limit das APIs",
-        "Envio da mensagem com o boleto e registro do resultado de cada disparo",
-        "Duas execuções agendadas por dia",
+        "Reúne todas as cobranças do período, sem deixar nenhuma de fora",
+        "Envia cada boleto com uma mensagem clara e personalizada",
+        "Registra cada envio, para o financeiro acompanhar o que foi entregue",
+        "Funciona todos os dias, em horários definidos, sem ninguém precisar lembrar",
       ],
       metrics: [
         { value: "450–600", label: "cobranças por mês" },
         { value: "2", label: "execuções diárias" },
       ],
       metricsVerified: false,
-      stack: ["n8n", "API Conta Azul", "WhatsApp", "JavaScript"],
     },
     {
       kind: "fundador",
       slug: "regua-cobranca",
       area: "automacao",
-      title: "Régua de cobrança automatizada",
+      title: "Régua de cobrança inteligente",
       service: "automacao",
       featured: true,
       benefit:
-        "Organiza o envio das mensagens conforme a situação de cada cobrança, evitando mensagens duplicadas.",
-      flow: ["ERP", "n8n", "Supabase", "WhatsApp"],
-      summary: "Cinco workflows coordenados decidem quem recebe qual mensagem, e quando.",
+        "Cobrança organizada e profissional, sem mensagens duplicadas e sem constranger quem já pagou.",
+      flow: ["Sistema financeiro", "Régua SSNEX", "WhatsApp do cliente"],
+      summary:
+        "Cada cliente recebe a mensagem certa, no momento certo, conforme a situação da sua cobrança.",
       problem:
-        "Cobrar no dia certo, com a mensagem certa, exige saber o estado de cada cobrança. Sem guardar esse estado, cada execução recomeçava do zero e o risco de mensagem duplicada era alto.",
+        "Cobrar no dia certo e com o tom certo exige saber em que pé está cada cobrança. Sem esse controle, quem já tinha pago podia receber lembrete, e quem estava em atraso podia ficar sem contato.",
       solution:
-        "Arquitetura com cinco workflows independentes no n8n, cada um com uma responsabilidade, e o Supabase guardando o estado entre as execuções.",
+        "Desenvolvemos uma régua de cobrança que acompanha cada título do vencimento ao pagamento e decide sozinha quem deve ser lembrado, quando e com qual mensagem.",
       stepsOrdered: true,
       steps: [
-        "Gestão de tokens OAuth: renova o acesso ao ERP antes de expirar",
-        "Sincronização incremental: traz só o que mudou desde a última execução",
-        "Resolução de cobranças: identifica o que está pago, em aberto ou vencido",
-        "Motor de regras: decide quem recebe qual mensagem e em que momento",
-        "Envio em lote: dispara as mensagens e grava o resultado no Supabase",
+        "Acompanha a situação de cada cobrança: em aberto, vencida ou paga",
+        "Aplica as regras de contato definidas junto com o financeiro",
+        "Envia lembretes antes e depois do vencimento, no tom adequado",
+        "Evita mensagens repetidas e não cobra quem já pagou",
+        "Guarda o histórico de cada contato realizado",
       ],
-      metrics: [{ value: "5", label: "workflows coordenados" }],
+      metrics: [{ value: "5", label: "etapas coordenadas" }],
       metricsVerified: false,
-      stack: ["n8n", "Supabase (PostgREST)", "OAuth 2.0", "SQL", "WhatsApp"],
     },
     {
       kind: "fundador",
       slug: "vendas-automaticas",
       area: "integracao",
-      title: "Criação automática de vendas",
+      title: "Vendas do CRM direto no ERP",
       service: "integracao",
       featured: true,
       benefit:
-        "Dispensa o recadastro manual de vendas no ERP e reduz divergências entre os sistemas.",
-      flow: ["CRM", "Webhook", "n8n", "ERP"],
-      summary: "Venda fechada no CRM vira venda no ERP, sem recadastro.",
+        "Faturamento mais ágil, fim do recadastro e comercial e financeiro trabalhando com os mesmos dados.",
+      flow: ["CRM", "Integração SSNEX", "ERP"],
+      summary: "Negócio fechado pelo comercial já nasce no sistema de gestão, sem digitar de novo.",
       problem:
-        "Cada venda fechada no CRM precisava ser cadastrada de novo no ERP, à mão. Isso atrasava o faturamento e abria espaço para divergência entre os dois sistemas.",
+        "Cada venda fechada no CRM precisava ser cadastrada outra vez no ERP, à mão. O faturamento atrasava e os dois sistemas mostravam informações diferentes.",
       solution:
-        "Webhooks do CRM disparam workflows que criam a venda no ERP automaticamente, com fluxos separados para vendas avulsas e recorrentes, porque cada tipo tem regras próprias de cobrança.",
+        "Conectamos o CRM ao ERP: quando o vendedor fecha o negócio, a venda é criada automaticamente no sistema de gestão, já seguindo as regras de cobrança de vendas avulsas e de contratos recorrentes.",
       steps: [
-        "Gatilho por webhook no momento em que a venda é fechada",
-        "Fluxo para vendas avulsas",
-        "Fluxo para vendas recorrentes, com contrato e periodicidade",
-        "Validação de cliente e produto antes de gravar no ERP",
+        "Venda registrada no ERP no momento em que o negócio é fechado",
+        "Tratamento próprio para vendas avulsas e para contratos recorrentes",
+        "Conferência de cliente e produto antes de registrar, para evitar erros",
       ],
       metrics: [],
       metricsVerified: false,
-      stack: ["Webhooks", "n8n", "API REST", "ERP"],
     },
     {
       kind: "fundador",
-      slug: "integracao-omie",
+      slug: "erp-no-atendimento",
       area: "integracao",
-      title: "Integração de ERP com atendimento",
+      title: "Dados do ERP dentro do atendimento",
       service: "integracao",
-      benefit: "Leva as informações do ERP para o contexto do atendimento, sem troca de tela.",
-      flow: ["Omie", "API", "Plataforma de atendimento"],
-      summary: "Dados do ERP disponíveis para quem está atendendo o cliente.",
+      benefit:
+        "Atendimento mais ágil e seguro, com a informação certa na tela de quem está falando com o cliente.",
+      flow: ["ERP", "Integração SSNEX", "Atendimento"],
+      summary:
+        "Quem atende vê cadastro, pedidos e financeiro do cliente na mesma tela da conversa.",
       problem:
-        "A equipe de atendimento precisava consultar o ERP em outra tela para responder dúvidas de cadastro, pedidos e financeiro, o que deixava o cliente esperando.",
+        "Para responder dúvidas sobre pedidos e pagamentos, a equipe de atendimento precisava consultar o ERP em outra tela. O cliente ficava esperando e a conversa perdia o ritmo.",
       solution:
-        "Sincronização via API entre o Omie e a plataforma de atendimento, levando os dados do ERP para o contexto da conversa.",
+        "Integramos o ERP à plataforma de atendimento: as informações do cliente aparecem junto da conversa, prontas para a resposta.",
       steps: [
-        "Autenticação e consumo da API do Omie",
-        "Mapeamento dos campos entre o ERP e a plataforma de atendimento",
-        "Sincronização dos dados para consulta durante o atendimento",
+        "Cadastro, pedidos e situação financeira visíveis durante o atendimento",
+        "Informações sempre atualizadas com o sistema de gestão",
+        "Respostas sem precisar sair da conversa nem trocar de tela",
       ],
       metrics: [],
       metricsVerified: false,
-      stack: ["API Omie", "API REST", "Plataforma de atendimento", "n8n"],
     },
     {
       kind: "fundador",
-      slug: "integracao-cielo",
+      slug: "pagamentos-integrados",
       area: "integracao",
-      title: "Integração de pagamentos",
+      title: "Pagamentos integrados à gestão",
       service: "integracao",
-      benefit: "Substitui a conferência e o repasse manual de informações de vendas e pagamentos.",
-      flow: ["Cielo", "n8n", "Sistemas integrados"],
-      summary: "Vendas e pagamentos saem do portal e entram no processo automaticamente.",
+      benefit:
+        "Fechamento financeiro com menos trabalho manual e informações de pagamento sempre à mão.",
+      flow: ["Operadora de cartão", "Integração SSNEX", "Gestão financeira"],
+      summary: "Vendas e recebimentos chegam aos sistemas da empresa sem conferência manual.",
       problem:
-        "As informações de vendas e pagamentos ficavam no portal do meio de pagamento e eram conferidas e repassadas manualmente.",
+        "As informações de vendas e pagamentos ficavam no portal da operadora de cartão e eram conferidas e repassadas à mão, com risco de erro e atraso no fechamento.",
       solution:
-        "Conexão com a API da Cielo para automatizar a coleta de informações de vendas e pagamentos e entregá-las aos sistemas que precisam delas.",
+        "Conectamos a operadora de pagamentos aos sistemas da empresa: vendas e recebimentos são coletados e entregues automaticamente a quem precisa deles.",
       steps: [
-        "Autenticação e consulta à API da Cielo",
-        "Tratamento dos dados de vendas e pagamentos",
-        "Envio das informações para os sistemas de destino",
+        "Coleta automática das vendas e dos recebimentos",
+        "Informações organizadas e prontas para conferência",
+        "Dados entregues aos sistemas que usam essa informação no dia a dia",
       ],
       metrics: [],
       metricsVerified: false,
-      stack: ["API Cielo", "API REST", "n8n"],
     },
     {
       kind: "fundador",
       slug: "leads-tempo-real",
       area: "integracao",
-      title: "Integração de leads",
+      title: "Leads das campanhas direto no CRM",
       service: "integracao",
       featured: true,
-      benefit: "Leva cada lead ao CRM assim que o formulário é preenchido, sem exportar planilhas.",
-      flow: ["Lead Ads", "Webhook", "CRM"],
-      summary: "Formulário preenchido no Facebook vira lead no CRM na mesma hora.",
+      benefit: "Comercial falando com o lead enquanto o interesse ainda está quente.",
+      flow: ["Anúncios", "Integração SSNEX", "CRM"],
+      summary: "Quem preenche o formulário do anúncio aparece para o comercial na mesma hora.",
       problem:
-        "Os leads das campanhas no Facebook chegavam ao time comercial com atraso, exportados em planilha, e esfriavam antes do primeiro contato.",
+        "Os leads das campanhas no Facebook e no Instagram chegavam ao comercial com atraso, em planilhas exportadas, e esfriavam antes do primeiro contato.",
       solution:
-        "Integração do Facebook Lead Ads com o CRM: cada formulário preenchido cria um lead no CRM em tempo real, pronto para o atendimento.",
+        "Integramos os formulários dos anúncios ao CRM: cada contato entra no funil em tempo real, com a campanha de origem identificada e pronto para o vendedor agir.",
       steps: [
-        "Assinatura do webhook de leads da Meta",
-        "Busca dos dados completos do formulário",
-        "Criação do lead no CRM com origem e campanha identificadas",
+        "Lead criado no CRM assim que o formulário é enviado",
+        "Origem e campanha identificadas em cada contato",
+        "Fim das planilhas exportadas e importadas à mão",
       ],
       metrics: [],
       metricsVerified: false,
-      stack: ["Facebook Lead Ads", "Webhooks", "Graph API", "CRM"],
     },
     {
       kind: "fundador",
       slug: "bi-atendimento",
       area: "dados",
-      title: "Centralização de dados e dashboards",
+      title: "Indicadores do negócio em um só painel",
       service: "integracao",
-      benefit: "Reúne em uma só visão dados que estavam espalhados em fontes diferentes.",
-      flow: ["Atendimento", "BigQuery", "Power BI"],
-      summary: "Atendimento, CRM, leads e Meta Ads na mesma visão.",
+      benefit: "Decisões tomadas com base em dados, com a operação inteira visível em um só lugar.",
+      flow: ["Atendimento e vendas", "Dados SSNEX", "Painéis de gestão"],
+      summary: "Atendimento, vendas, leads e anúncios reunidos em uma única visão para decidir.",
       problem:
-        "Dados de atendimento, CRM, leads e Meta Ads estavam espalhados em fontes diferentes, e a gestão não tinha uma visão única para decidir.",
+        "Os dados de atendimento, vendas, leads e anúncios estavam espalhados em fontes diferentes. Montar um relatório dava trabalho, e a gestão decidia sem enxergar o todo.",
       solution:
-        "Consolidação dos dados no BigQuery e dashboards com indicadores de atendimento, funil do CRM, origem dos leads e desempenho de mídia.",
+        "Centralizamos as informações em uma base única e criamos painéis com os indicadores que a gestão acompanha: atendimento, funil de vendas, origem dos leads e desempenho dos anúncios.",
       steps: [
-        "Carga dos dados de atendimento, CRM, leads e Meta Ads no BigQuery",
-        "Modelagem e consultas em SQL",
-        "Dashboards com os indicadores de cada área",
+        "Dados de diferentes áreas reunidos em um só lugar",
+        "Indicadores definidos junto com a gestão",
+        "Painéis sempre atualizados, sem montar planilhas à mão",
       ],
       metrics: [],
       metricsVerified: false,
-      stack: ["BigQuery", "SQL", "Power BI", "Meta Ads"],
     },
     {
       kind: "fundador",
       slug: "scripts-manutencao",
       area: "integracao",
-      title: "Integração por API para manutenção de CRM",
+      title: "CRM limpo e confiável",
       service: "integracao",
       benefit:
-        "Permite corrigir e carregar dados em massa com mais segurança, simulando as alterações antes de executá-las.",
-      flow: ["Script", "API", "CRM"],
-      summary: "Limpeza em massa com simulação antes de qualquer alteração.",
+        "CRM organizado, relatórios em que dá para confiar e equipe trabalhando sobre dados corretos.",
+      flow: ["Base desorganizada", "Revisão SSNEX", "CRM confiável"],
+      summary: "Correção e carga de dados em massa, com conferência antes de qualquer alteração.",
       problem:
-        "Bases de CRM acumulam oportunidades antigas e duplicadas. Corrigir isso pela interface, registro a registro, é inviável e arriscado.",
+        "Com o tempo, o CRM acumulou oportunidades antigas e duplicadas. Corrigir registro por registro pela tela era inviável e arriscado, e os relatórios perdiam a confiabilidade.",
       solution:
-        "Scripts de limpeza em massa de oportunidades com modo de simulação (dry-run): primeiro mostram o que seria alterado, depois executam. E upload em lote via API para cargas de dados.",
+        "Criamos rotinas de limpeza e carga de dados em massa que primeiro mostram tudo o que será alterado e só executam depois da aprovação.",
       steps: [
-        "Modo dry-run que lista as alterações sem gravar nada",
-        "Execução em lote, com log de cada registro",
-        "Upload em massa via API para cargas iniciais e correções",
+        "Simulação que mostra cada alteração antes de gravar",
+        "Correções em massa, com registro de cada item alterado",
+        "Carga de dados para implantações e grandes ajustes",
       ],
       metrics: [],
       metricsVerified: false,
-      stack: ["Python", "Node.js", "API REST", "Postman"],
     },
   ],
 };
