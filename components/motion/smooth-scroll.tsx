@@ -39,7 +39,7 @@ export function SmoothScroll() {
     if (window.matchMedia(MOTION_REDUCED).matches) return;
 
     const instance = new Lenis({
-      lerp: 0.1,
+      lerp: 0.14,
       autoRaf: false,
       // Modais e listas com rolagem própria (menu de comandos) rolam nativamente.
       prevent: (node) => Boolean(node.closest("[role='dialog'], [data-lenis-prevent]")),

@@ -54,17 +54,15 @@ export function CoreLogo({ glass }: { glass: boolean }) {
       {glass ? (
         <MeshTransmissionMaterial
           background={background}
-          samples={6}
-          resolution={512}
+          samples={3}
+          resolution={256}
           transmission={1}
           thickness={0.55}
           roughness={0.08}
           ior={1.45}
           chromaticAberration={0.06}
-          anisotropicBlur={0.15}
           distortion={0.12}
           distortionScale={0.4}
-          temporalDistortion={0.08}
           clearcoat={1}
           attenuationColor="#2F6BFF"
           attenuationDistance={0.35}

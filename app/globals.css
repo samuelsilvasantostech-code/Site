@@ -630,7 +630,8 @@
     padding: 0.2rem 0.6rem;
     border: 1px solid rgb(255 255 255 / 0.12);
     border-radius: 999px;
-    background: rgb(5 7 10 / 0.6);
+    /* Fundo opaco no lugar de backdrop-filter: o rótulo se move a cada quadro. */
+    background: rgb(5 7 10 / 0.85);
     color: #f5f7fa;
     font-family: var(--font-mono);
     font-size: 0.6875rem;
@@ -638,7 +639,6 @@
     letter-spacing: 0.08em;
     white-space: nowrap;
     opacity: 0;
-    backdrop-filter: blur(8px);
     will-change: transform, opacity;
     transition:
       border-color var(--dur-micro) var(--ease),

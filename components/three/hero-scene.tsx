@@ -159,7 +159,7 @@ export default function HeroScene({
   const labelsRef = useRef<HTMLDivElement>(null);
   const state = useRef<SceneState>({ scroll: 0, hovered: -1 });
   const [visible, setVisible] = useState(true);
-  const maxDpr = low ? 1.5 : 1.75;
+  const maxDpr = low ? 1.25 : 1.5;
   const [dpr, setDprState] = useState(maxDpr);
   const dprRef = useRef(maxDpr);
   const slowRef = useRef(0);
@@ -204,13 +204,13 @@ export default function HeroScene({
           state={state}
           container={container}
           labelsRef={labelsRef}
-          glass={!low}
+          glass={!low && variant === "hero"}
           variant={variant}
         />
-        <Particles count={low ? 90 : 220} />
+        <Particles count={low ? 60 : 160} />
 
         {/* Reflexos: luzes de estúdio geradas na hora, sem baixar imagens. */}
-        <Environment resolution={low ? 128 : 256}>
+        <Environment resolution={low ? 64 : 128}>
           <Lightformer form="rect" intensity={3} position={[0, 6, -4]} scale={[12, 2, 1]} />
           <Lightformer
             form="rect"
