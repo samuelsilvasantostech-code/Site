@@ -19,6 +19,9 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
   outputFileTracingRoot: projectRoot,
+  experimental: {
+    agentUpgrade: "security",
+  },
   turbopack: {
     root: projectRoot,
     rules: {
