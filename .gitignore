@@ -48,6 +48,7 @@ next-env.d.ts
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+/.playwright-mcp/
 
 # site estático antigo (backup local; apague quando não precisar mais)
 /legacy/
