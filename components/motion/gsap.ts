@@ -11,8 +11,13 @@ import { SplitText } from "gsap/SplitText";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText);
 
-/** Media query usada em `gsap.matchMedia()` para respeitar a preferência do sistema. */
-export const MOTION_OK = "(prefers-reduced-motion: no-preference)";
-export const MOTION_REDUCED = "(prefers-reduced-motion: reduce)";
+/**
+ * Media queries de movimento usadas em `gsap.matchMedia()` e `matchMedia()`.
+ * Por decisão de design, o site anima para todos e ignora o
+ * "reduzir movimento" do sistema: `MOTION_OK` sempre casa e
+ * `MOTION_REDUCED` nunca casa.
+ */
+export const MOTION_OK = "all";
+export const MOTION_REDUCED = "not all";
 
 export { gsap, ScrollTrigger, SplitText, useGSAP };

@@ -1146,45 +1146,6 @@
   animation: page-in 400ms var(--ease) 60ms both;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  /* Faixas paradas: a lista quebra em linhas, centralizada, sem a cópia. */
-  .marquee-track {
-    width: auto;
-  }
-  .marquee-track > div:first-child {
-    flex-wrap: wrap;
-    justify-content: center;
-    row-gap: 0.75rem;
-    padding-inline: 1.25rem;
-  }
-  .marquee-track > div[aria-hidden] {
-    display: none;
-  }
-  .marquee-mask {
-    mask-image: none;
-  }
-  html {
-    scroll-behavior: auto;
-  }
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    animation-delay: 0s !important;
-    transition-duration: 0.01ms !important;
-    transition-delay: 0s !important;
-  }
-  .connection-line::after {
-    display: none;
-  }
-  ::view-transition-group(*),
-  ::view-transition-old(*),
-  ::view-transition-new(*) {
-    animation: none !important;
-  }
-}
-
 /* Impressão (currículo): sempre preto no branco, qualquer que seja o tema. */
 @media print {
   :root,

@@ -7,6 +7,7 @@ import { gotoReady } from "./utils";
 const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 
 async function expectNoViolations(page: Page) {
+  await showFinalMotionState(page);
   const results = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
   const summary = results.violations.map((v) => ({
     id: v.id,
@@ -14,6 +15,15 @@ async function expectNoViolations(page: Page) {
     nodes: v.nodes.map((n) => n.target.join(" ")),
   }));
   expect(summary, JSON.stringify(summary, null, 2)).toEqual([]);
+}
+
+/**
+ * O site anima para todos (ignora o "reduzir movimento" do sistema). Antes do
+ * axe, força o estado final das animações que começam esmaecidas: os diagramas
+ * de fluxo só acendem quando o painel chega ao centro da tela.
+ */
+async function showFinalMotionState(page: Page) {
+  await page.addStyleTag({ content: ".flow-node { opacity: 1 !important; }" });
 }
 
 async function setTheme(page: Page, theme: "dark" | "light") {
@@ -26,7 +36,6 @@ test.describe("acessibilidade (axe)", () => {
 
     test(`página inicial no tema ${label}`, async ({ page }) => {
       await setTheme(page, theme);
-      await page.emulateMedia({ reducedMotion: "reduce" });
       await gotoReady(page, "/");
       await expect(page.locator("html")).toHaveClass(new RegExp(theme));
       await expectNoViolations(page);
@@ -35,7 +44,6 @@ test.describe("acessibilidade (axe)", () => {
     for (const path of ["/servicos", "/projetos", "/projetos/regua-cobranca", "/sobre"]) {
       test(`${path} no tema ${label}`, async ({ page }) => {
         await setTheme(page, theme);
-        await page.emulateMedia({ reducedMotion: "reduce" });
         await gotoReady(page, path);
         await expectNoViolations(page);
       });
@@ -43,7 +51,6 @@ test.describe("acessibilidade (axe)", () => {
   }
 
   test("contato com erros de validação", async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
     await gotoReady(page, "/contato");
     await page.getByRole("button", { name: "Enviar solicitação" }).click();
     await expect(page.getByText("Informe o seu nome.")).toBeVisible();
@@ -51,7 +58,6 @@ test.describe("acessibilidade (axe)", () => {
   });
 
   test("menu de comandos aberto", async ({ page }) => {
-    await page.emulateMedia({ reducedMotion: "reduce" });
     await gotoReady(page, "/");
     await page.keyboard.press("Control+k");
     await expect(page.getByRole("dialog", { name: "Menu de comandos" })).toBeVisible();
